@@ -1,6 +1,7 @@
 package GUI;
 
 import DTO.ThongKeDTO;
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -15,16 +16,19 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
-public class PieChart_BanChay extends JFrame {
+public class PieChart_BanChay extends JPanel {
 
     static ArrayList<ThongKeDTO> thk;
     Font font = new Font("Tahoma", Font.BOLD, 13);
 
     public PieChart_BanChay(String title, ArrayList<ThongKeDTO> thk) {
-        super(title);
         this.thk = thk;
-        setContentPane(createDemoPanel());
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        
+        JFreeChart chart = createChart(createDataset());
+        ChartPanel chartPanel = new ChartPanel(chart);
+//        chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
+        this.setLayout(new BorderLayout());
+        this.add(chartPanel,BorderLayout.CENTER);
     }
 
     private static PieDataset createDataset() {
@@ -55,7 +59,7 @@ public class PieChart_BanChay extends JFrame {
 
         // Đặt phông chữ cho nhãn mục
         StandardChartTheme chartTheme = (StandardChartTheme) StandardChartTheme.createJFreeTheme();
-        chartTheme.setExtraLargeFont(new Font("Tahoma", Font.BOLD, 13)); // tiêu đề
+        chartTheme.setExtraLargeFont(new Font("Tahoma", Font.BOLD, 20)); // tiêu đề
         chartTheme.setRegularFont(new Font("Tahoma", Font.BOLD, 13));   // nhãn mục
         chartTheme.setLargeFont(new Font("Tahoma", Font.BOLD, 13));     // chú thích
         chartTheme.apply(chart);
@@ -76,9 +80,13 @@ public class PieChart_BanChay extends JFrame {
         currentday.add("10");
         tkGUI.ShowbanChay(currentday);
         System.out.println(tkGUI.ds.size());
+        
         PieChart_BanChay demo = new PieChart_BanChay("Sản phẩm bán chạy", tkGUI.ds);
-        demo.setSize(560, 367);
-        demo.setLocationRelativeTo(null);  // Tương đương với RefineryUtilities.centerFrameOnScreen(demo)
-        demo.setVisible(true);
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setSize(1000, 500);
+        f.add(demo);
+        f.setVisible(true);
+        f.setLocationRelativeTo(null);
     }
 }
