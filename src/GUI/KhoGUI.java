@@ -109,8 +109,8 @@ public class KhoGUI extends JPanel{
     public static void main(String[] args) {
         KhoGUI k = new KhoGUI(800, 600);
         ArrayList<String> currentday = new ArrayList<>();
-        currentday.add("2023/01/01");
-        currentday.add("2024/01/01");
+        currentday.add("2024/09/06");
+        currentday.add("2024/09/06");
         k.data(currentday);
         JFrame frame = new JFrame("Thống Kê Sản Phẩm");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -166,6 +166,9 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
                 case "Đăng xuất":
                     nameIcon += "signout_icon.png";
                     break;
+                case "Kho":
+                    nameIcon += "icons8-warehouse-24.png";
+                    break;
             }
             JPanel chucnang;
             if (cnDTO_listByMAQUYEN.size() < 9) {
