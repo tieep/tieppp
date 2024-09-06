@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI;
-
 import BUS.chitietquyenBUS;
 import DTO.chitietquyenDTO;
 import DTO.chucnangDTO;
@@ -109,7 +108,7 @@ public class chucnangHoadon extends JPanel implements MouseListener {
         JP_listNameChucnangConCuaHoadon.setBackground(Cacthuoctinh_phuongthuc_chung.light_gray);
         JP_listNameChucnangConCuaHoadon.setOpaque(true);
 
-        JP_contentCuaNameChucnangCon = new JPanel();
+        JP_contentCuaNameChucnangCon = new JPanel(new BorderLayout(0,0));
         //JP_contentCuaNameChucnangCon.setPreferredSize(new Dimension(crong,ccao - (int)JP_listNameChucnangConCuaTaikhoan.getPreferredSize().getHeight()));
         JP_contentCuaNameChucnangCon.setBackground(Color.WHITE);
         JP_contentCuaNameChucnangCon.setOpaque(true);
@@ -117,15 +116,17 @@ public class chucnangHoadon extends JPanel implements MouseListener {
 
         switch (cnDTO.getMACHUCNANG()) {
             case "NULLHD":
-                ShoppingCartUI p = new ShoppingCartUI(crong, heightJP_content,
-                        view_chi_tiet_san_pham.dssptt, view_chi_tiet_san_pham.dsctsptt, view_chi_tiet_san_pham.soluong,
-                        view_chi_tiet_san_pham.maSizeThem, maNV);
+//                ShoppingCartUI p = new ShoppingCartUI(crong, heightJP_content,
+//                        view_chi_tiet_san_pham.dssptt, view_chi_tiet_san_pham.dsctsptt, view_chi_tiet_san_pham.soluong,
+//                        view_chi_tiet_san_pham.maSizeThem, maNV);
                 // p.setPreferredSize(new Dimension(crong,heightJP_content));
-                JP_contentCuaNameChucnangCon.add(p);
+                JP_contentCuaNameChucnangCon.setBackground(Color.black);
+                CartGUI p = new CartGUI(crong, heightJP_content);
+                JP_contentCuaNameChucnangCon.add(p,BorderLayout.CENTER);
                 break;
             case "HD":
                 TrangLichsuHD hdGUI = new TrangLichsuHD(crong, heightJP_content);
-                JP_contentCuaNameChucnangCon.add(hdGUI);
+                JP_contentCuaNameChucnangCon.add(hdGUI,BorderLayout.CENTER);
                 break;
         }
 
