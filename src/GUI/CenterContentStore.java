@@ -67,10 +67,11 @@ public class CenterContentStore extends JPanel {
 //
 
     }
+
     public void changeCenterContent(chucnangDTO cnDTO, String maquyen, int thongkeloai) {
-         SearchInStore JP_search = new SearchInStore(cnDTO.getMACHUCNANG(), pageContent,thongkeloai);
+        SearchInStore JP_search = new SearchInStore(cnDTO.getMACHUCNANG(), pageContent, thongkeloai);
         showSearch(JP_search);
-        
+
         pageContent.removeAll();
 
         Component[] JP_childSearch = JP_search.getComponents();
@@ -83,55 +84,51 @@ public class CenterContentStore extends JPanel {
         } else {
             pageContent.setPreferredSize(new Dimension(chieurong, chieucao - (int) search.getPreferredSize().getHeight() - (int) thaotac.getPreferredSize().getHeight()));
         }
-       
- chucnangThongke cnThK = new chucnangThongke(this, cnDTO, maquyen, thongkeloai);
-ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnThK,SS_main);
-                showThaotac(JP_thaotac);
-                showPageContent(cnThK);
-        
+
+        chucnangThongke cnThK = new chucnangThongke(this, cnDTO, maquyen, thongkeloai);
+        ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnThK, SS_main);
+        showThaotac(JP_thaotac);
+        showPageContent(cnThK);
+
     }
 
     public void changeCenterContent(chucnangDTO cnDTO, String maquyen) throws SQLException {
         this.search.removeAll();
-     this.search.revalidate();
+        this.search.revalidate();
         this.search.repaint();
-         this.thaotac.removeAll();
-     this.thaotac.revalidate();
+        this.thaotac.removeAll();
+        this.thaotac.revalidate();
         this.thaotac.repaint();
- if(cnDTO.getMACHUCNANG().equals("KH")){
-     
-     this.pageContent.removeAll();
-      this.pageContent.setLayout(new BorderLayout(0, 0));
-      
-      view_quan_li_khach_hang qlkh = new view_quan_li_khach_hang(chieurong, chieucao,SS_main.getTaiKhoanDTO());
-        this.pageContent.add(qlkh, BorderLayout.CENTER);
+//        if (cnDTO.getMACHUCNANG().equals("KH")) {
+//
+//            this.pageContent.removeAll();
+//            this.pageContent.setLayout(new BorderLayout(0, 0));
+//
+////            view_quan_li_khach_hang qlkh = new view_quan_li_khach_hang(chieurong, chieucao, SS_main.getTaiKhoanDTO());
+//            khachHangGUI kh = new khachHangGUI(chieurong,chieucao);
+//            this.pageContent.add(kh, BorderLayout.CENTER);
+//
+//            this.pageContent.revalidate();
+//            this.pageContent.repaint();
+//
+//            return;
+//        }
+        if (cnDTO.getMACHUCNANG().equals("PN")) {
 
-        this.pageContent.revalidate();
-        this.pageContent.repaint();
+            this.pageContent.removeAll();
+            this.pageContent.setLayout(new BorderLayout(0, 0));
 
-     return;
- }
-  if(cnDTO.getMACHUCNANG().equals("PN")){
-     
-     this.pageContent.removeAll();
-      this.pageContent.setLayout(new BorderLayout(0, 0));
-      
-      JPanel pn = new JPanel();
-      TaiKhoanDTO h = new TaiKhoanDTO();
-                phieunhap_GUI phieunhap = new phieunhap_GUI(chieurong, chieucao,SS_main.getTaiKhoanDTO());
-        this.pageContent.add(phieunhap, BorderLayout.CENTER);
+            JPanel pn = new JPanel();
+            TaiKhoanDTO h = new TaiKhoanDTO();
+            phieunhap_GUI phieunhap = new phieunhap_GUI(chieurong, chieucao, SS_main.getTaiKhoanDTO());
+            this.pageContent.add(phieunhap, BorderLayout.CENTER);
 
-        
-        
-        this.pageContent.revalidate();
-        this.pageContent.repaint();
+            this.pageContent.revalidate();
+            this.pageContent.repaint();
 
-     return;
- }
-  
-                  
+            return;
+        }
 
-         
         SearchInStore JP_search = new SearchInStore(cnDTO.getMACHUCNANG(), pageContent);
         showSearch(JP_search);
 
@@ -158,22 +155,20 @@ ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, c
                 showPageContent(cntk);
                 break;
             }
-            case "NULLHD":{
+            case "NULLHD": {
                 String maNV = SS_main.getTaiKhoanDTO().getMaNV();
                 chucnangHoadon cnhd;
                 try {
-                    cnhd = new chucnangHoadon(this, cnDTO, maquyen,maNV);
+                    cnhd = new chucnangHoadon(this, cnDTO, maquyen, maNV);
                     ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnhd);
                     showThaotac(JP_thaotac);
                     showPageContent(cnhd);
                 } catch (SQLException ex) {
                     Logger.getLogger(CenterContentStore.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 break;
             }
-
-               
 
             case "NCC": {
 
@@ -210,55 +205,53 @@ ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, c
                 showPageContent(spGUI);
                 break;
             }
-            case "TK":{
+            case "TK": {
                 chucnangTaikhoan cntk = new chucnangTaikhoan(this, cnDTO, maquyen);
                 ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cntk);
                 showThaotac(JP_thaotac);
                 showPageContent(cntk);
                 break;
             }
-                
-            case "HD":{
+
+            case "HD": {
                 String maNV = SS_main.getTaiKhoanDTO().getMaNV();
-                 chucnangHoadon cnhd;
+                chucnangHoadon cnhd;
                 try {
-                    cnhd = new chucnangHoadon(this, cnDTO, maquyen,maNV);
+                    cnhd = new chucnangHoadon(this, cnDTO, maquyen, maNV);
                     ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnhd);
-                showThaotac(JP_thaotac);
-                showPageContent(cnhd);
+                    showThaotac(JP_thaotac);
+                    showPageContent(cnhd);
                 } catch (SQLException ex) {
                     Logger.getLogger(CenterContentStore.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 break;
             }
 
-               
-            case "PQ":{
-                phanquyen pq = new phanquyen(widthPageContent, heightPageContent,SS_main.quyenUser);
-                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, pq,SS_main);
+            case "PQ": {
+                phanquyen pq = new phanquyen(widthPageContent, heightPageContent, SS_main.quyenUser);
+                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, pq, SS_main);
                 showThaotac(JP_thaotac);
                 showPageContent(pq);
                 break;
             }
-                
-           
-            case "SIZE":{
+
+            case "SIZE": {
                 SizeGUI sizeGUI = new SizeGUI(widthPageContent, heightPageContent);
                 ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, sizeGUI);
                 showThaotac(JP_thaotac);
                 showPageContent(sizeGUI);
                 break;
             }
-                
-            case "NULLThK":{
+
+            case "NULLThK": {
                 chucnangThongke cnThK = new chucnangThongke(this, cnDTO, maquyen, 0);
-                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnThK,SS_main);
+                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, cnThK, SS_main);
                 showThaotac(JP_thaotac);
                 showPageContent(cnThK);
                 break;
             }
-               
+
             case "NULLDX":
                 JPanel dx = new JPanel();
                 dx.setPreferredSize(new Dimension(widthPageContent, heightPageContent));
@@ -266,13 +259,13 @@ ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, c
                 dx.setOpaque(true);
                 showPageContent(dx);
                 Object[] options = {"Có", "Không"};
-                int r2 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn đăng xuất?", "Đăng xuất", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-                        if (r2 == JOptionPane.YES_OPTION) {
-                            SS_main.dispose();
-                            LoginUI login = new LoginUI();
-                        }
+                int r2 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn đăng xuất?", "Đăng xuất", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (r2 == JOptionPane.YES_OPTION) {
+                    SS_main.dispose();
+                    LoginUI login = new LoginUI();
+                }
                 break;
-            case "PN":{
+            case "PN": {
                 TaiKhoanDTO d = new TaiKhoanDTO();
                 JPanel pn = new JPanel();
                 pn.setPreferredSize(new Dimension(widthPageContent, heightPageContent));
@@ -280,6 +273,13 @@ ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, c
                 ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, pn);
                 showThaotac(JP_thaotac);
                 showPageContent(pn);
+                break;
+            }
+            case "KH": {
+                khachHangGUI kh = new khachHangGUI(widthPageContent, heightPageContent);
+                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, kh);
+                showThaotac(JP_thaotac);
+                showPageContent(kh);
                 break;
             }
             default:
