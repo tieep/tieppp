@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import java.util.ArrayList;
 import BUS.chitietquyenBUS;
+import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
 import BUS.quyenBUS;
@@ -34,6 +35,7 @@ import DTO.chucnangDTO;
 import DAO.chucnangDAO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
+import DTO.khachHangDTO;
 import DTO.loaiSP;
 import DTO.nhacungcapDTO;
 import java.awt.Container;
@@ -236,7 +238,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                             Object[] options = {"Có", "Không"};
                             int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá tài khoản này ?", "Xác nhận xoá",
                                     JOptionPane.YES_NO_OPTION,
-                                     JOptionPane.QUESTION_MESSAGE, null, options, options[0]
+                                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]
                             );
 
                             // Xử lý kết quả
@@ -267,6 +269,10 @@ public class ThaotacInStore extends JPanel implements MouseListener {
             }
             case "LOAI": {
                 thaotacLOAI(ctqDTO.getHANHDONG(), itemClicked);
+                break;
+            }
+            case "KH": {
+                thaotacKH(ctqDTO.getHANHDONG(), itemClicked);
                 break;
             }
             case "SIZE": {
@@ -495,7 +501,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         break;
                     case "Lưu/Thoát":
                         Object[] options = {"Có", "Không"};
-                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn lưu chỉnh sửa?", "Sửa quyền ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn lưu chỉnh sửa?", "Sửa quyền ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                         if (r2 == JOptionPane.YES_OPTION) {
                             itemClicked.title.setText("Sửa");
                             itemClicked.icon = new JLabel(new ImageIcon("./src/images/edit_icon.png"));
@@ -513,9 +519,9 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                             s.menu.repaint();
 
                         } else {
-                            int r2_1 = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục chỉnh sửa?", "Sửa quyền ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                            int r2_1 = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục chỉnh sửa?", "Sửa quyền ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                             if (r2_1 == JOptionPane.NO_OPTION) {
-                                int r2_2 = JOptionPane.showOptionDialog(null, "Những sửa đổi sẽ không được lưu sau khi bạn thoát!!\nBạn có chắc chắn thoát chỉnh sửa??", "Thoát", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                                int r2_2 = JOptionPane.showOptionDialog(null, "Những sửa đổi sẽ không được lưu sau khi bạn thoát!!\nBạn có chắc chắn thoát chỉnh sửa??", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                 if (r2_2 == JOptionPane.YES_OPTION) {
 
                                     itemClicked.title.setText("Sửa");
@@ -533,7 +539,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
             }
             case "Xóa": {
                 Object[] options = {"Có", "Không"};
-                int r2 = JOptionPane.showOptionDialog(null, "Chỉ có thể xóa quyền này khi không tồn tại tài khoản thuộc quyền này\nBạn có chắc chắn muốn xóa quyền đang chọn?", "Xóa quyền ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                int r2 = JOptionPane.showOptionDialog(null, "Chỉ có thể xóa quyền này khi không tồn tại tài khoản thuộc quyền này\nBạn có chắc chắn muốn xóa quyền đang chọn?", "Xóa quyền ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (r2 == JOptionPane.YES_OPTION) {
                     System.out.println(pq.currentQuyen);
                     System.out.println(qBUS.checkCanDelete(pq.currentQuyen));
@@ -592,7 +598,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                             cellEditor.cancelCellEditing();
                         }
                         Object[] options = {"Có", "Không"};
-                        int r1 = JOptionPane.showOptionDialog(null, "kiểm tra chắc chắn:\nTên nhà cung cấp không chứa số và các kí tự đặc biệt\nSố điện thoại 10 số bắt đầu là số 0\nNếu có dữ liệu để trống hoặc nhập sai dữ liệu, tất cả dữ liệu sẽ không được lưu thay đổi\nBạn có chắc chắn lưu?", "Sửa nhà cung cấp ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                        int r1 = JOptionPane.showOptionDialog(null, "kiểm tra chắc chắn:\nTên nhà cung cấp không chứa số và các kí tự đặc biệt\nSố điện thoại 10 số bắt đầu là số 0\nNếu có dữ liệu để trống hoặc nhập sai dữ liệu, tất cả dữ liệu sẽ không được lưu thay đổi\nBạn có chắc chắn lưu?", "Sửa nhà cung cấp ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                         if (r1 == JOptionPane.YES_OPTION) {
                             if (nccBUS.checkNewListNCC(nccGUI.getListNCC())) {
                                 nccGUI.addDataInTable(nccBUS.getList());
@@ -607,9 +613,9 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                             itemClicked.icon = new JLabel(new ImageIcon("./src/images/edit_icon.png"));
                             nccGUI.isEditingEnabled = false;
                         } else {
-                            int r11 = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục sửa?", "Sửa nhà cung cấp ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                            int r11 = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục sửa?", "Sửa nhà cung cấp ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                             if (!(r11 == JOptionPane.YES_OPTION)) {
-                                int r111 = JOptionPane.showOptionDialog(null, "Những dữ liệu sẽ không được lưu sau khi thoát\nBạn có chắc chắn thoát?", "Thoát", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+                                int r111 = JOptionPane.showOptionDialog(null, "Những dữ liệu sẽ không được lưu sau khi thoát\nBạn có chắc chắn thoát?", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                 if (r111 == JOptionPane.YES_OPTION) {
                                     nccGUI.addDataInTable(nccBUS.getList());
                                     itemClicked.title.setText("Sửa");
@@ -876,6 +882,49 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 }
             }
 
+        }
+    }
+
+    public void thaotacKH(String hanhdong, hanhdongGUI itemClicked) {
+        khachHangGUI KHGUI = (khachHangGUI) pageContent;
+        khachHangBUS KHBUS = new khachHangBUS();
+        switch (hanhdong) {
+            case "Thêm": {
+                addKhachHangGUI addNCC = new addKhachHangGUI(KHGUI);
+                break;
+            }
+            case "Sửa": {
+                int id = KHGUI.lay_id_table();
+                khachHangDTO x = KHGUI.lay_mot_kh(id);
+                new updateKhachHang(x,KHGUI);
+                break;
+            }
+            case "Xóa": {
+                switch (itemClicked.title.getText()) {
+                    case "Xóa":
+                        JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
+                        itemClicked.title.setText("Lưu/Thoát");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+                        break;
+                    case "Lưu/Thoát":
+                        Object[] options = {"Có", "Không"};
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa Khách hàng ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (r2 == JOptionPane.YES_OPTION) {
+                            ArrayList<Integer> listDelete = KHGUI.lay_sd_chon();
+                            for (int i : listDelete) {
+                                KHBUS.xoakhSql(i);
+                                KHBUS.xoakh(i);
+                            }
+                            KHGUI.reloadData(KHBUS.getDs_khachHang());
+                            JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        }
+                        itemClicked.title.setText("Xóa");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                    default:
+                        throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
+                }
+                break;
+            }
         }
     }
 }
