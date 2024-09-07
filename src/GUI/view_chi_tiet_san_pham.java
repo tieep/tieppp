@@ -344,7 +344,7 @@ public class view_chi_tiet_san_pham extends JPanel implements MouseListener {
                             trongkho=c.getSoluong();
                         }
                     }
-                    for(chitietsanpham_DTO ctsptt : view_chi_tiet_san_pham.dsctsptt){
+                    for(chitietsanpham_DTO ctsptt : CartGUI.dsctspAdd){
                                     if(ctsptt.getMASP().equals(sanpham_DTO.getMaSP()) && ctsptt.getMASIZE().equals(maSizeThem)){
                                         tronggiohang=ctsptt.getSoluong();
                                     }
@@ -355,17 +355,17 @@ public class view_chi_tiet_san_pham extends JPanel implements MouseListener {
                 }
                 if(checkIsFull){
                     boolean flag = true;// true la chua co ton tai
-                for(SanPhamDTO spDTO: dssptt){
+                for(SanPhamDTO spDTO: CartGUI.dsspAdd){
                     if(spDTO.getMaSP().equals(sanpham_DTO.getMaSP()))  flag = false;// false la co ton tai
                     //kiem tra san pham vua bam them vao gio, da co trong gio hang chua
                     //neu tim thay san pham vua them vao gio da ton tai trong gio hang thi chuyen trang thai sang false
                 }
                 if(flag) // neu flag = tue la chua ton tai thi them vao dssptt, false thi khong them vao dssptt
-                    view_chi_tiet_san_pham.dssptt.add(sanpham_DTO);
+                    CartGUI.dsspAdd.add(sanpham_DTO);
                 
                 
                  flag = true;// true la chua co ton tai
-                for(chitietsanpham_DTO ctspDTO: dsctsptt){
+                for(chitietsanpham_DTO ctspDTO: CartGUI.dsctspAdd){
                     if(ctspDTO.getMASP().equals(sanpham_DTO.getMaSP()) && ctspDTO.getMASIZE().equals(maSizeThem) ) {
                         ctspDTO.setSoluong(ctspDTO.getSoluong()+soluong);
                         flag = false;//neu co tim thay san pham vua them trong chitietsan pham va size = size thi flag=false
@@ -375,7 +375,7 @@ public class view_chi_tiet_san_pham extends JPanel implements MouseListener {
                     }
                 }
                 if(flag)//falg= true thi them vao dsctsptt
-                    view_chi_tiet_san_pham.dsctsptt.add(ctsp);
+                    CartGUI.dsctspAdd.add(ctsp);
                 JOptionPane.showMessageDialog(null,
                     "Bạn đã thêm sản phẩm thành công ! \n"
                             + "Hãy vào hoá đơn để xem đơn hàng vừa thêm.", "Thông báo", JOptionPane.DEFAULT_OPTION);
