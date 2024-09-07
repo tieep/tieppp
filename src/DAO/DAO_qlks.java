@@ -194,16 +194,7 @@ public class DAO_qlks {
 	
 		
 	try {
-		
-		
-//		Connection conn = jdbc_do_an.getconnection();
-//		Statement st = conn.createStatement();
-		
-		
-		
-		
-                
-                
+	 
                 
 		String sql = "select * from khachhang where TENKH like '%" + ten + "%' and SDT like '%" + sdt +"%' " +
 				"and MAKH like '%" + ma_kh +"%' "+ "and DIEMTICHLUY BETWEEN "+ diemmin  +" AND " + diemmax  ;

@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.SanPhamBUS;
+import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
 import BUS.quyenBUS;
@@ -115,7 +116,7 @@ public class SearchInStore extends JPanel implements MouseListener {
             case "Tất cả":
             case "Theo tên sản phẩm, theo MASP":
             case "Theo mã nhân viên, theo tên đăng nhập, theo mã quyền":
-            case "Theo tên hoặc MAKH":
+            case "Theo tên hoặc Sdt":
             case "Theo tên nhân viên, theo MANV, theo SĐT":
             case "Theo MAPN":
             case "Theo MAHD, theo MAKH, theo MANV":
@@ -310,7 +311,7 @@ public class SearchInStore extends JPanel implements MouseListener {
                 break;
             }
             case "KH": {
-                String[] list = {"Theo tên hoặc MAKH", "Điểm tích lũy"};
+                String[] list = {"Theo tên hoặc Sdt", "Điểm tích lũy"};
                 listTitle.addAll(Arrays.asList(list));
                 break;
             }
@@ -488,14 +489,27 @@ public class SearchInStore extends JPanel implements MouseListener {
                 nvGUI.repaint();
                 nvGUI.validate();
                 break;
+//<<<<<<< HEAD
+            case "KH": {
+                khachHangBUS busKH = new khachHangBUS();
+                khachHangGUI khGUI = (khachHangGUI) components[0];
+                khGUI.reloadData(busKH.search(data_filter));
+                khGUI.repaint();
+                khGUI.validate();
+
+                break;
+            }
+//=======
             case "QLK":
                 KhoGUI k = (KhoGUI) components[0];
                 k.data(data_filter);
                 k.repaint();
                 k.validate();
                 break;
+//>>>>>>> e21f13e080e87a8f6b4836c080defab66dad1c9b
         }
     }
+
 
     public void resetOfChucnang() throws SQLException, ParseException {
         ArrayList<String> data_filter = new ArrayList<>();
