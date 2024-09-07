@@ -121,7 +121,7 @@ public class DAO_qlks {
 				danhsach.add(k);
 			}
 
-			c.disconnect();
+			
 			
 			
 		} catch (SQLException e) {
