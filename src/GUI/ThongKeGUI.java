@@ -32,9 +32,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public class ThongKeGUI extends JPanel {
-
-    private ConnectDataBase mySQL;
-
     JPanel pnHeader;
     JPanel pnBieuDo;
     JPanel pnDoanhThu;
@@ -57,12 +54,6 @@ public class ThongKeGUI extends JPanel {
     public ThongKeGUI(int width, int height) {
         this.width = width;
         this.height = height;
-
-        try {
-            mySQL = new ConnectDataBase();
-        } catch (SQLException e) {
-            System.out.println("That bai");
-        }
 
         LocalDate ngayHienTai = LocalDate.now();
 
