@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.ThongKeBus;
 import BUS.loaiSPBUS;
 import DAO.ConnectDataBase;
 import DTO.ThongKeDTO;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,10 +32,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public class ThongKeGUI extends JPanel {
-
-    private ConnectDataBase mySQL;
-
     JPanel pnHeader;
+    JPanel pnBieuDo;
     JPanel pnDoanhThu;
     double doanhThu;
     JTable table;
@@ -55,12 +55,6 @@ public class ThongKeGUI extends JPanel {
         this.width = width;
         this.height = height;
 
-        try {
-            mySQL = new ConnectDataBase();
-        } catch (SQLException e) {
-            System.out.println("That bai");
-        }
-
         LocalDate ngayHienTai = LocalDate.now();
 
         // Định dạng ngày theo định dạng dd/MM/yyyy
@@ -81,52 +75,10 @@ public class ThongKeGUI extends JPanel {
 
     public void ShowdoanhThu(ArrayList<String> data_filters) {
         lblHeader.setText("THỐNG KÊ DOANH THU");
-        String tuNgay = data_filters.get(0);
-        String denNgay = data_filters.get(1);
-        String loai = data_filters.get(2);
-        loaiSPBUS loaiBUS = new loaiSPBUS();
-        for (int i = 0; i < loaiBUS.getListFull().size(); i++) {
-            if (loaiBUS.getListFull().get(i).getTENLOAI().equals(loai)) {
-                loai = loaiBUS.getListFull().get(i).getMALOAI();
-            }
-        }
         df.setRowCount(0);
         ds = new ArrayList<>();
-        String query = "SELECT * FROM"
-                + "("
-                + "    SELECT sp.MASP, sp.MALOAI,sp.TENSP,SUM(cthd.SOLUONG) AS SL,"
-                + "           sp.PRICE, sp.PRICE * SUM(cthd.SOLUONG) AS TT"
-                + "    FROM hoadon hd"
-                + "    INNER JOIN chitiethoadon cthd ON hd.SOHD = cthd.SOHD"
-                + "    INNER JOIN sanpham sp ON sp.MASP = cthd.MASP"
-                + "    WHERE hd.NGAYHD BETWEEN '" + tuNgay + "' AND '" + denNgay + "'"
-                + "    GROUP BY sp.MASP, sp.MALOAI, sp.TENSP, sp.PRICE"
-                + ")"
-                + "AS subquery ";
-        if (!loai.equalsIgnoreCase("Tất cả")) {
-            query += "where subquery.maloai ='" + loai + "'";
-        }
-        System.out.println(query);
-        try {
-            mySQL.connect();
-            ResultSet rs = mySQL.executeQuery(query);
-            while (rs.next()) {
-                String maSP = rs.getString("MASP");
-                String maLoai = rs.getString("MALOAI");
-                String tenSP = rs.getString("TENSP");
-                int soLuong = rs.getInt("SL");
-                double donGia = rs.getDouble("PRICE");
-                double thanhTien = rs.getDouble("TT");
-                ThongKeDTO thongKe = new ThongKeDTO(maSP, maLoai, tenSP, soLuong, donGia, thanhTien);
-                ds.add(thongKe);
-            }
-            rs.close();
-            mySQL.disconnect();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ThongKeGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("danh sach thong ke " + ds.size());
+        ThongKeBus thkBus = new ThongKeBus();
+        ds = thkBus.listDoanhThu(data_filters);
         for (ThongKeDTO row : ds) {
             //gọi lại hàm format cho cách hiện thị cho các số có giá trị quá lớn hoặc nhở
             String donGia = FormatDouble.format(row.getDonGia());
@@ -138,50 +90,19 @@ public class ThongKeGUI extends JPanel {
         table.setModel(df);
         df.fireTableDataChanged();
         tinhDoanhThu();
+        BarChart_DoanhThu chart = new BarChart_DoanhThu("Sơ đồ thống kê doanh thu", ds, data_filters);
+        pnBieuDo.removeAll();
+        pnBieuDo.add(chart,BorderLayout.CENTER);
+        this.revalidate(); // Cập nhật bố trí
+        this.repaint();
     }
 
     public void ShowbanChay(ArrayList<String> data_filters) {
         lblHeader.setText("SẢN PHẨM BÁN CHẠY");
-        String tuNgay = data_filters.get(0);
-        String denNgay = data_filters.get(1);
-        int top = Integer.parseInt(data_filters.get(2));
         df.setRowCount(0);
         ds = new ArrayList<>();
-        String query = "SELECT * FROM"
-                + "("
-                + "    SELECT sp.MASP, sp.MALOAI, sp.TENSP, SUM(cthd.SOLUONG) AS SL,"
-                + "           sp.PRICE, sp.PRICE * SUM(cthd.SOLUONG) AS TT"
-                + "    FROM hoadon hd"
-                + "    INNER JOIN chitiethoadon cthd ON hd.SOHD = cthd.SOHD"
-                + "    INNER JOIN sanpham sp ON sp.MASP = cthd.MASP"
-                + "    WHERE hd.NGAYHD BETWEEN '" + tuNgay + "' AND '" + denNgay + "'"
-                + "    GROUP BY sp.MASP, sp.MALOAI, sp.TENSP, sp.PRICE"
-                + ")"
-                + " AS subquery ";
-
-        // Sắp xếp theo số lượng sản phẩm bán ra (SL) và giới hạn top 10
-        query += "ORDER BY subquery.SL DESC LIMIT " + top;
-
-        System.out.println(query);
-        try {
-            mySQL.connect();
-            ResultSet rs = mySQL.executeQuery(query);
-            while (rs.next()) {
-                String maSP = rs.getString("MASP");
-                String maLoai = rs.getString("MALOAI");
-                String tenSP = rs.getString("TENSP");
-                int soLuong = rs.getInt("SL");
-                double donGia = rs.getDouble("PRICE");
-                double thanhTien = rs.getDouble("TT");
-                ThongKeDTO thongKe = new ThongKeDTO(maSP, maLoai, tenSP, soLuong, donGia, thanhTien);
-                ds.add(thongKe);
-            }
-            rs.close();
-            mySQL.disconnect();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ThongKeGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ThongKeBus thkBus = new ThongKeBus();
+        ds = thkBus.listBanChay(data_filters);
         for (ThongKeDTO row : ds) {
             //gọi lại hàm format cho cách hiện thị cho các số có giá trị quá lớn hoặc nhở
             String donGia = FormatDouble.format(row.getDonGia());
@@ -193,6 +114,11 @@ public class ThongKeGUI extends JPanel {
         }
         table.setModel(df);
         df.fireTableDataChanged();
+        PieChart_BanChay demo = new PieChart_BanChay("Sản phẩm bán chạy", ds);
+        pnBieuDo.removeAll();
+        pnBieuDo.add(demo,BorderLayout.CENTER);
+        this.revalidate(); // Cập nhật bố trí
+        this.repaint();
     }
 
     public void initPnDoanhThu() {
@@ -200,7 +126,7 @@ public class ThongKeGUI extends JPanel {
         tinhDoanhThu(); // Đảm bảo gọi tinhDoanhThu trước khi cập nhật nhãn
         if (pnDoanhThu == null) {
             pnDoanhThu = new JPanel(new FlowLayout());
-            pnDoanhThu.setPreferredSize(new Dimension(width, 100));
+            pnDoanhThu.setPreferredSize(new Dimension(width, 50));
         }
 
         String dt = FormatDouble.format(doanhThu); // Định dạng doanh thu
@@ -219,7 +145,7 @@ public class ThongKeGUI extends JPanel {
         this.setPreferredSize(new Dimension(width, height));
         this.setLayout(new BorderLayout());
 
-        //Header
+        ///Header
         pnHeader = new JPanel();
         pnHeader.setLayout(new FlowLayout());
         pnHeader.setBorder(new EmptyBorder(20, 0, 20, 0));
@@ -227,8 +153,15 @@ public class ThongKeGUI extends JPanel {
         lblHeader.setFont(fontHeader);
         pnHeader.add(lblHeader);
         this.add(pnHeader, BorderLayout.NORTH);
-
-        //tạo bảng thống kê
+        
+        ///Biểu đồ
+        pnBieuDo = new JPanel();
+        pnBieuDo.setLayout(new BorderLayout());
+        pnBieuDo.setPreferredSize(new Dimension(width,height/2));
+        pnBieuDo.setBorder(BorderFactory.createEmptyBorder(0, 20, 40, 20));
+        this.add(pnBieuDo,BorderLayout.NORTH);
+        
+        ///tạo bảng thống kê
         table = new JTable();
         table.setDefaultEditor(Object.class, null);
         table.setRowHeight(30); //thiết lập chiều cao các cột

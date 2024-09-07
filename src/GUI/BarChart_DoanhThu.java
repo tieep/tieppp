@@ -5,8 +5,10 @@
 package GUI;
 
 import DTO.ThongKeDTO;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -15,12 +17,11 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-public class BarChart_DoanhThu extends JFrame {
+public class BarChart_DoanhThu extends JPanel {
 
     private ArrayList<ThongKeDTO> thk;
 
     public BarChart_DoanhThu(String applicationTitle, ArrayList<ThongKeDTO> thk, ArrayList<String> currentday) {
-        super(applicationTitle);
         this.thk = thk;
         JFreeChart barChart = ChartFactory.createBarChart(
                 "Thống kê doanh thu",
@@ -31,11 +32,9 @@ public class BarChart_DoanhThu extends JFrame {
                 true, true, false);
 
         ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
-        setContentPane(chartPanel);
-        
-        // Thiết lập hành động đóng cửa sổ
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
+        this.setLayout(new BorderLayout());
+        this.add(chartPanel,BorderLayout.CENTER);
     }
 
     private CategoryDataset createDataset() {
@@ -54,8 +53,12 @@ public class BarChart_DoanhThu extends JFrame {
         currentday.add("Tất cả");
         tkGUI.ShowdoanhThu(currentday);
         BarChart_DoanhThu chart = new BarChart_DoanhThu("Sơ đồ thống kê doanh thu", tkGUI.ds, currentday);
-        chart.pack();
-        chart.setLocationRelativeTo(null); // Center the frame
-        chart.setVisible(true);
+        
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setSize(1000, 500);
+        f.add(chart);
+        f.setVisible(true);
+        f.setLocationRelativeTo(null);
     }
 }

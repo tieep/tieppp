@@ -14,6 +14,9 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -107,6 +110,23 @@ public class CenterContentStore extends JPanel {
 ////            view_quan_li_khach_hang qlkh = new view_quan_li_khach_hang(chieurong, chieucao, SS_main.getTaiKhoanDTO());
 //            khachHangGUI kh = new khachHangGUI(chieurong,chieucao);
 //            this.pageContent.add(kh, BorderLayout.CENTER);
+//
+//            this.pageContent.revalidate();
+//            this.pageContent.repaint();
+//
+//            return;
+//        }
+//        if (cnDTO.getMACHUCNANG().equals("PN")) {
+//
+//            this.pageContent.removeAll();
+//            this.pageContent.setLayout(new BorderLayout(0, 0));
+//
+//            JPanel pn = new JPanel();
+//            TaiKhoanDTO h = new TaiKhoanDTO();
+//            phieunhap_GUI phieunhap = new phieunhap_GUI(chieurong, chieucao, SS_main.getTaiKhoanDTO());
+//            this.pageContent.add(phieunhap, BorderLayout.CENTER);
+//            view_quan_li_khach_hang qlkh = new view_quan_li_khach_hang(chieurong, chieucao, SS_main.getTaiKhoanDTO());
+//            this.pageContent.add(qlkh, BorderLayout.CENTER);
 //
 //            this.pageContent.revalidate();
 //            this.pageContent.repaint();
@@ -275,11 +295,31 @@ public class CenterContentStore extends JPanel {
                 showPageContent(pn);
                 break;
             }
+//<<<<<<< HEAD
             case "KH": {
                 khachHangGUI kh = new khachHangGUI(widthPageContent, heightPageContent);
                 ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, kh);
                 showThaotac(JP_thaotac);
                 showPageContent(kh);
+                break;
+            }
+            case "QLK": {
+                KhoGUI k = new KhoGUI(widthPageContent, heightPageContent);
+                LocalDate ngayHienTai = LocalDate.now();
+
+                // Định dạng ngày theo định dạng dd/MM/yyyy
+                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String ngayDinhDang = ngayHienTai.format(dinhDang);
+                
+                ArrayList<String> currentday = new ArrayList<>();
+                currentday.add(ngayDinhDang);
+                currentday.add(ngayDinhDang);
+                
+                k.data(currentday);
+                ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, k, SS_main);
+                showThaotac(JP_thaotac);
+                showPageContent(k);
+//>>>>>>> e21f13e080e87a8f6b4836c080defab66dad1c9b
                 break;
             }
             default:

@@ -363,6 +363,11 @@ public class SearchInStore extends JPanel implements MouseListener {
                 listTitle.addAll(Arrays.asList(list));
                 break;
             }
+            case "QLK": {
+                String[] list = {"Ngày bắt đầu", "đến", "Ngày kết thúc"};
+                listTitle.addAll(Arrays.asList(list));
+                break;
+            }
 
         }
         if (!listTitle.isEmpty()) {
@@ -484,6 +489,7 @@ public class SearchInStore extends JPanel implements MouseListener {
                 nvGUI.repaint();
                 nvGUI.validate();
                 break;
+//<<<<<<< HEAD
             case "KH": {
                 khachHangBUS busKH = new khachHangBUS();
                 khachHangGUI khGUI = (khachHangGUI) components[0];
@@ -493,6 +499,14 @@ public class SearchInStore extends JPanel implements MouseListener {
 
                 break;
             }
+//=======
+            case "QLK":
+                KhoGUI k = (KhoGUI) components[0];
+                k.data(data_filter);
+                k.repaint();
+                k.validate();
+                break;
+//>>>>>>> e21f13e080e87a8f6b4836c080defab66dad1c9b
         }
     }
 
@@ -547,6 +561,16 @@ public class SearchInStore extends JPanel implements MouseListener {
             case "NV": {
                 data_filter.add("");
                 data_filter.add("Tất cả");
+                break;
+            }
+            case "QLK": {
+                LocalDate ngayHienTai = LocalDate.now();
+
+                // Định dạng ngày theo định dạng dd/MM/yyyy
+                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                String ngayDinhDang = ngayHienTai.format(dinhDang);
+                data_filter.add(ngayDinhDang);
+                data_filter.add(ngayDinhDang);
                 break;
             }
         }

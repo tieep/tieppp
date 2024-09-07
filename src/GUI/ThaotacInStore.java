@@ -132,9 +132,9 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                     case "In PDF":
                         pathImangeIcon += "pdf_icon.png";
                         break;
-                    case "Xem biểu đồ":
-                        pathImangeIcon += "graph_icon.png";
-                        break;
+//                    case "Xem biểu đồ":
+//                        pathImangeIcon += "graph_icon.png";
+//                        break;
 
                 }
                 hanhdongGUI thaotac = new hanhdongGUI(listHanhdong.get(i).getHANHDONG(), pathImangeIcon);
@@ -173,9 +173,9 @@ public class ThaotacInStore extends JPanel implements MouseListener {
         if (MACHUCNANG.equals("NCC")) {
             hanhdong.add(new chitietquyenDTO(MAQUYEN, MACHUCNANG, "Import Excel"));
         }
-        if (MACHUCNANG.equals("NULLThK")) {
-            hanhdong.add(new chitietquyenDTO(MAQUYEN, MACHUCNANG, "Xem biểu đồ"));
-        }
+//        if (MACHUCNANG.equals("NULLThK")) {
+//            hanhdong.add(new chitietquyenDTO(MAQUYEN, MACHUCNANG, "Xem biểu đồ"));
+//        }
         return hanhdong;
     }
 
@@ -373,26 +373,14 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 System.out.println(data_filter.get(0) + " " + data_filter.get(1) + " " + data_filter.get(2) + " ");
                 switch (hdGUI.thongkeloai) {
                     case 0: {
-//                        JOptionPane.showMessageDialog(null,"Chức năng sắp có");
                         ThongKeGUI tkGUI = new ThongKeGUI(800, 600);
-
                         tkGUI.ShowdoanhThu(data_filter);
-                        BarChart_DoanhThu chart = new BarChart_DoanhThu("Sơ đồ thống kê doanh thu", tkGUI.ds, data_filter);
-                        chart.pack();
-                        RefineryUtilities.centerFrameOnScreen(chart);
-                        chart.setVisible(true);
                         break;
                     }
 
                     case 1:
                         ThongKeGUI tkGUI = new ThongKeGUI(800, 600);
-
                         tkGUI.ShowbanChay(data_filter);
-                        System.out.println(tkGUI.ds.size());
-                        PieChart_BanChay demo = new PieChart_BanChay("Mobile Sales", tkGUI.ds);
-                        demo.setSize(560, 367);
-                        demo.setLocationRelativeTo(null);  // Tương đương với RefineryUtilities.centerFrameOnScreen(demo)
-                        demo.setVisible(true);
                         break;
                 }
             }
