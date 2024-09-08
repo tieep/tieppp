@@ -294,7 +294,7 @@ public class list_SPHD extends JPanel {
     for (ChitietHD_DTO n : list) {
         data = new Vector();
         data.add(n.getMaSP());
-        data.add(n.getTenSP());
+        data.add("");
         data.add(n.getMaSize());
         data.add(n.getSl());
         data.add((int)n.getGia());

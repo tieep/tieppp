@@ -27,9 +27,9 @@ public class ChitietHD_BUS {
     public ArrayList<ChitietHD_DTO> getList(){
         return list;
     }
-    public void delete(String maHD) throws SQLException {
+    public void delete(String sohd, String masp, String masize) throws SQLException {
         ChitietHD_DAO cdDAO = new ChitietHD_DAO();
-        cdDAO.delete(maHD);
+        cdDAO.delete(sohd, masp, masize);
     }
     public ArrayList<chitietsanpham_DTO> listtorestore(String maHD) throws SQLException {
         ChitietHD_DAO listsphd = new ChitietHD_DAO();

@@ -34,6 +34,7 @@ public class ChitietHD_DTO {
         this.maSize = maSize;
         this.sl = sl;
         this.gia = gia;
+        this.tt = sl * gia;
     }
     
     public String getMaHD() {
@@ -68,9 +69,7 @@ public class ChitietHD_DTO {
         this.tt = tt;
     }
 
-    public String getTenSP() {
-        return tenSP;
-    }
+    
 
     public String getMaSize() {
         return maSize;
