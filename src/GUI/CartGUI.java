@@ -1,9 +1,15 @@
 package GUI;
 
 import BUS.BUS_qlkh;
+import BUS.ChitietHD_BUS;
+import BUS.Hoadon_BUS;
+import BUS.SizeBUS;
 import BUS.chitietsanpham_BUS;
 import DAO.DAO_chitietsanpham;
+import DTO.ChitietHD_DTO;
+import DTO.Hoadon_DTO;
 import DTO.SanPhamDTO;
+import DTO.SizeDTO;
 import DTO.chitietsanpham_DTO;
 import DTO.model_qlkh;
 import java.awt.BorderLayout;
@@ -18,8 +24,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,8 +99,8 @@ public class CartGUI extends JPanel implements MouseListener {
 
         searchMAKH.setPreferredSize(new Dimension(width / 6, hHeader));
         JLabel MAKH = new JLabel("Tìm theo MAKH", JLabel.CENTER);
-        JTextField inputMAKH = new JTextField((kh == null)?"":(kh.getMakh()+""));
-        
+        JTextField inputMAKH = new JTextField((kh == null) ? "" : (kh.getMakh() + ""));
+
         searchMAKH.add(MAKH);
         searchMAKH.add(inputMAKH);
 
@@ -112,11 +121,11 @@ public class CartGUI extends JPanel implements MouseListener {
                                 kh = k;
                             }
                         }
-                        if (kh == null) 
+                        if (kh == null) {
                             JOptionPane.showMessageDialog(null, "Khách hàng không tồn tại", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
-                        else{
+                        } else {
                             JL_InforCus[0].setText(kh.getTen());
-                            JL_InforCus[1].setText(kh.getDiem()+"");
+                            JL_InforCus[1].setText(kh.getDiem() + "");
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "MAKH chỉ chứa số", "Sai định dạng", JOptionPane.WARNING_MESSAGE);
@@ -150,10 +159,10 @@ public class CartGUI extends JPanel implements MouseListener {
 
                     break;
                 case 1:
-                    JL_InforCus[0] = new JLabel((kh == null)?" ":kh.getTen(), JLabel.CENTER);
+                    JL_InforCus[0] = new JLabel((kh == null) ? " " : kh.getTen(), JLabel.CENTER);
                     JL_InforCus[0].setPreferredSize(new Dimension(width / 3, (int) JL_InforCus[0].getPreferredSize().getHeight()));
                     line.add(JL_InforCus[0]);
-                    JL_InforCus[1] = new JLabel((kh == null)?" ":kh.getDiem()+"", JLabel.CENTER);
+                    JL_InforCus[1] = new JLabel((kh == null) ? " " : kh.getDiem() + "", JLabel.CENTER);
                     line.add(JL_InforCus[1]);
 
                     break;
@@ -170,14 +179,18 @@ public class CartGUI extends JPanel implements MouseListener {
         checkBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(dsspAdd.size() != 0)
-                    afterChecked();
-                else{
+                if (dsspAdd.size() != 0) {
+                    if (kh.getDiem() == 0) {
+                        JOptionPane.showMessageDialog(null, "Không hợp lệ!\nKhách hàng không có điểm tích lũy", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        checkBox1.setSelected(false);
+                    } else {
+                        afterChecked();
+                    }
+                } else {
                     JOptionPane.showMessageDialog(null, "Không thể dùng điểm do chưa có sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     checkBox1.setSelected(false);
                 }
-                    
-                    
+
             }
         });
 
@@ -188,25 +201,25 @@ public class CartGUI extends JPanel implements MouseListener {
         wrapHeaderCart.add(checkBox1, BorderLayout.EAST);
 
     }
-    private void afterChecked(){
-        double discount = kh.getDiem() * 1000 ;
-                double subTotal = Double.parseDouble(JL_value[0].getText());
-                double total = Double.parseDouble(JL_value[2].getText());
-                if(checkBox1.isSelected()){
 
-                    if(discount > subTotal){
-                        sumTotal(subTotal);
-                        JL_InforCus[1].setText((int)(discount - subTotal)/1000+"");
-                    }else{
-                        JL_InforCus[1].setText(0+"");
-                        sumTotal(discount);
-                    }
-                }     
-                else{
-                    JL_InforCus[1].setText(kh.getDiem()+"");
-                    sumTotal(0);
-                }
-        
+    private void afterChecked() {
+        double discount = kh.getDiem() * 1000;
+        double subTotal = Double.parseDouble(JL_value[0].getText());
+        double total = Double.parseDouble(JL_value[2].getText());
+        if (checkBox1.isSelected()) {
+
+            if (discount > subTotal) {
+                sumTotal(subTotal);
+                JL_InforCus[1].setText((int) (discount - subTotal) / 1000 + "");
+            } else {
+                JL_InforCus[1].setText(0 + "");
+                sumTotal(discount);
+            }
+        } else {
+            JL_InforCus[1].setText(kh.getDiem() + "");
+            sumTotal(0);
+        }
+
     }
 
     private void centerCart() {
@@ -245,7 +258,7 @@ public class CartGUI extends JPanel implements MouseListener {
 
         JPanel wrapCenter = new JPanel(new GridLayout(3, 1, 0, 5));
 
-        JLabel price = new JLabel(sp.getPrice() + "", JLabel.CENTER);
+        JLabel price = new JLabel((int) sp.getPrice() + "", JLabel.CENTER);
         JLabel titleSize = new JLabel("Size", JLabel.CENTER);
 
         remove[index] = new JButton(new ImageIcon("./src/images/remove_icon.png"));
@@ -261,24 +274,18 @@ public class CartGUI extends JPanel implements MouseListener {
         name.setBackground(Color.white);
         name.setForeground(Color.decode("#0A3D62"));
 
-        name.setFont(new Font("Tahoma", Font.PLAIN, 17));
+        name.setFont(new Font("Tahoma", Font.PLAIN, 18));
         wrapName.add(name);
 
         JPanel wrapSize = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         wrapSize.add(titleSize);
         wrapSize.setBackground(Color.white);
-        titleSize.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        chitietsanpham_BUS ctsp_bus = null;
-        try {
-            ctsp_bus = new chitietsanpham_BUS();
-        } catch (SQLException ex) {
-            Logger.getLogger(CartGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ArrayList<String> listMASIZE = ctsp_bus.select_masize_by_MASP(sp);
-        String[] items = listMASIZE.toArray(new String[listMASIZE.size()]);
-        JComboBox<String> size = new JComboBox<>(items);
-        size.setSelectedItem(masizeluachon);
-        wrapSize.add(size);
+        titleSize.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        SizeBUS sizeBUS = new SizeBUS();
+        SizeDTO sizeDTO = sizeBUS.getSizeDTO(masizeluachon);
+        JLabel sizeSelected = new JLabel(sizeDTO.getTENSIZE(), JLabel.CENTER);
+        sizeSelected.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        wrapSize.add(sizeSelected);
 
         JPanel wrapPrice_Quantity = new JPanel(new BorderLayout());
         wrapPrice_Quantity.setBackground(Color.white);
@@ -295,6 +302,12 @@ public class CartGUI extends JPanel implements MouseListener {
         btnMinusQuantity[index].addMouseListener(this);
         btnMinusQuantity[index].setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        chitietsanpham_BUS ctsp_bus = null;
+        try {
+            ctsp_bus = new chitietsanpham_BUS();
+        } catch (SQLException ex) {
+            Logger.getLogger(CartGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         showQuantity[index] = new JLabel(quantity + "", JLabel.CENTER);
         showQuantity[index].setFont(new Font("Tahoma", Font.BOLD, 14));
         showQuantity[index].setOpaque(true);
@@ -394,7 +407,7 @@ public class CartGUI extends JPanel implements MouseListener {
                     }
                 }
             }
-            values = new String[]{sum + "", discount + "", sum - discount + ""};
+            values = new String[]{(int) sum + "", (int) discount + "", (int) (sum - discount) + ""};
         }
 
         for (int i = 0; i < values.length; i++) {
@@ -404,6 +417,17 @@ public class CartGUI extends JPanel implements MouseListener {
                 JL_value[i].setText(values[i]);
             }
         }
+    }
+
+    private void refeshCart() {
+        this.removeAll();
+        kh = null;
+        dsspAdd.clear();
+        dsctspAdd.clear();
+
+        init();
+        this.revalidate();
+        this.repaint();
     }
 
     public static void main(String[] args) {
@@ -418,14 +442,73 @@ public class CartGUI extends JPanel implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == pay) {
-            for (SanPhamDTO s : dsspAdd) {
-                System.out.println(s.getMaSP() + " " + s.getTenSP());
+            if (kh == null) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập khách hàng của hóa đơn này", "", JOptionPane.WARNING_MESSAGE);
+            } else {
+                try {
+                    chitietsanpham_BUS ctspBUS = new chitietsanpham_BUS();
+                    ChitietHD_BUS ctBUS = new ChitietHD_BUS();
+                    Hoadon_BUS hdBUS = new Hoadon_BUS();
+                    String maHD = hdBUS.createMAHD();
+                    String ngayHD = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                    String thoigian = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                    String maNV = StoreScreen.tkUSER.getMaNV();
+                    int giamgia = Integer.parseInt(JL_value[1].getText());
+                    int tongTien = Integer.parseInt(JL_value[2].getText());
+
+                    Hoadon_DTO hd = new Hoadon_DTO(maHD, ngayHD, thoigian, kh.getMakh(), maNV, giamgia, tongTien);
+                    hdBUS.addInSQL(hd);
+
+                    for (chitietsanpham_DTO c : dsctspAdd) {
+                        Double price = null;
+
+                        for (SanPhamDTO s : dsspAdd) {
+                            if (s.getMaSP().equals(c.getMASP())) {
+                                price = s.getPrice();
+                            }
+                        }
+                        ChitietHD_DTO cthd = new ChitietHD_DTO(maHD, c.getMASP(), c.getMASIZE(), c.getSoluong(), price);
+                        ctBUS.addInSQL(cthd);
+                        for (chitietsanpham_DTO ct : ctspBUS.getlist()) {
+                            if (c.getMASP().equals(ct.getMASP()) && c.getMASIZE().equals(ct.getMASIZE())) {
+                                chitietsanpham_DTO ctsp = new chitietsanpham_DTO(ct.getMASP(), ct.getMASIZE(), ct.getSoluong() - c.getSoluong());
+                                ctspBUS.updateAfterTT(ctsp);
+                            }
+                        }
+
+                    }
+
+                    if (checkBox1.isSelected()) {
+                        kh.setDiem(Integer.parseInt(JL_InforCus[1].getText()));
+                    } else {
+                        kh.setDiem((int) (kh.getDiem() + tongTien / 10000));
+                    }
+                    BUS_qlkh khBUS = new BUS_qlkh();
+                    khBUS.set(kh);
+
+                    refeshCart();
+                    JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    Object[] options = {"Có", "Không"};
+                    int r1 = JOptionPane.showOptionDialog(null, "Bạn có muốn in hóa đơn này", "In hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    if (r1 == JOptionPane.YES_OPTION) {
+                        try {
+                            inPDF in = new inPDF(maHD);
+                            JOptionPane.showMessageDialog(null,
+                                    "In thành công!");
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null,
+                                    "In thất bại!");
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null,
+                                    "In thất bại!");
+                        }
+
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Thêm hóa đơn thất bại! Vui lòng thử lại", "Lỗi", JOptionPane.WARNING_MESSAGE);
+                }
             }
-            for (chitietsanpham_DTO c : dsctspAdd) {
-                System.out.println(c.getMASP() + " " + c.getMASIZE() + " " + c.getSoluong());
-            }
-            pay.setOpaque(true);
-            pay.setBackground(Color.red);
+
             return;
         } else if (e.getSource() instanceof JLabel) {
             switch (((JLabel) e.getSource()).getText()) {
@@ -436,11 +519,13 @@ public class CartGUI extends JPanel implements MouseListener {
                             if (valueCurrent - 1 != 0) {
                                 showQuantity[i].setText((valueCurrent - 1) + "");
                                 dsctspAdd.get(i).setSoluong(valueCurrent - 1);
-                            }else break;
+                            } else {
+                                break;
+                            }
 
                         }
                     }
-                    
+
                     break;
                 case "+":
                     for (int i = 0; i < btnPlusQuantity.length; i++) {
@@ -449,7 +534,9 @@ public class CartGUI extends JPanel implements MouseListener {
                             if (valueCurrent + 1 <= Integer.parseInt(showQuantity[i].getName())) {
                                 showQuantity[i].setText((valueCurrent + 1) + "");
                                 dsctspAdd.get(i).setSoluong(valueCurrent + 1);
-                            }else break;
+                            } else {
+                                break;
+                            }
 
                         }
                     }
@@ -458,13 +545,13 @@ public class CartGUI extends JPanel implements MouseListener {
                 default:
                     break;
             }
-            if(kh != null ){
+            if (kh != null) {
                 JL_InforCus[0].setText(kh.getTen());
-                JL_InforCus[1].setText(kh.getDiem()+"");
+                JL_InforCus[1].setText(kh.getDiem() + "");
                 checkBox1.setSelected(false);
             }
             sumTotal(0);
-            
+
         } else {
             for (int i = 0; i < remove.length; i++) {
                 if (e.getSource() == remove[i]) {
@@ -483,7 +570,7 @@ public class CartGUI extends JPanel implements MouseListener {
                     if (!flag) {
                         dsspAdd.removeIf(s -> s.getMaSP().equals(MASPremove));
                     }
-                    
+
                     this.removeAll(); // Xóa tất cả các thành phần hiện tại
 
                     // Thêm lại các sản phẩm và các thành phần liên quan
@@ -492,8 +579,6 @@ public class CartGUI extends JPanel implements MouseListener {
 
                     this.revalidate(); // Cập nhật layout của wrapCenterCart
                     this.repaint(); // Vẽ lại wrapCenterCart
-
-                    
 
                     break;
                 }
