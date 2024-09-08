@@ -56,7 +56,6 @@ public class chucnangHoadon extends JPanel implements MouseListener {
     private void init(chucnangDTO cnDTO, String maquyen, String maNV) throws SQLException {
         chitietquyenBUS ctqBUS = new chitietquyenBUS();
         if (ctqBUS.search(new chitietquyenDTO(maquyen, "HD", "Thêm"))) {
-            System.out.println("CO HAY KHONGGG");
             listChucnangCon.add(new chucnangDTO("NULLHD", "NULLTEN"));
         }
 

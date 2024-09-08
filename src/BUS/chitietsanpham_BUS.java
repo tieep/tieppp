@@ -33,7 +33,7 @@ public class chitietsanpham_BUS {
 		return list_size;
 	}
 	public ArrayList<chitietsanpham_DTO> getlist(){
-		return this.ds;
+		return ds;
 	}
 	public void add( chitietsanpham_DTO d) throws SQLException {
 		DAO_chitietsanpham c = new DAO_chitietsanpham();

@@ -38,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -475,13 +476,14 @@ public class SearchInStore extends JPanel implements MouseListener {
                 spGUI.validate();
                 break;
             case "HD":
-                chucnangHoadon cnhd = (chucnangHoadon) components[0];
-                JPanel pnCont = cnhd.JP_contentCuaNameChucnangCon;
-                Component[] pn = pnCont.getComponents();
-                TrangLichsuHD lshd = (TrangLichsuHD) pn[0];
-                lshd.SearchHD(data_filter);
-                lshd.repaint();
-                lshd.validate();
+                JOptionPane.showMessageDialog(null, "Sắp có tính năng này!");
+//                chucnangHoadon cnhd = (chucnangHoadon) components[0];
+//                JPanel pnCont = cnhd.JP_contentCuaNameChucnangCon;
+//                Component[] pn = pnCont.getComponents();
+//                TrangLichsuHD lshd = (TrangLichsuHD) pn[0];
+//                lshd.SearchHD(data_filter);
+//                lshd.repaint();
+//                lshd.validate();
                 break;
             case "NV":
                 Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) components[0];

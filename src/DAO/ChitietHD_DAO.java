@@ -20,23 +20,21 @@ public class ChitietHD_DAO {
         ArrayList<ChitietHD_DTO> dscthd = new ArrayList<>();
         try {
            mySQL.connect();
-           String sql="select `chitiethoadon`.`MASP`, `sanpham`.`TENSP`, `size`.`TENSIZE`, `chitiethoadon`.`SOLUONG`, `chitiethoadon`.`DONGIA`, (`chitiethoadon`.`SOLUONG`*`chitiethoadon`.`DONGIA`)as THANHTIEN from `size`, `sanpham`,`chitiethoadon` where `chitiethoadon`.`SOHD`='" +maHD +"' and `chitiethoadon`.`MASP`=`sanpham`.`MASP` and `chitiethoadon`.`MASIZE` = `size`.`MASIZE`;";
+           String sql="SELECT * FROM chitiethoadon WHERE SOHD ='"+maHD+"';";
             try (ResultSet rs = mySQL.executeQuery(sql)) {
                 while (rs.next()) {
                     String masp = rs.getString("MASP");
                     System.out.println(masp);
-                    String tensp = rs.getString("TENSP");
-                    System.out.println(tensp);
-                    String size = rs.getString("TENSIZE"); // Corrected column name
+            
+                    String size = rs.getString("MASIZE"); // Corrected column name
                     System.out.println(size);
                     int sl = rs.getInt("SOLUONG");
                     System.out.println(sl);
                     double gia = rs.getDouble("DONGIA");
                     System.out.println(gia);
-                    double tt = rs.getDouble("THANHTIEN"); // Corrected column name
-                    System.out.println(tt);
+                    
                               
-                    ChitietHD_DTO cthd = new ChitietHD_DTO(masp, tensp, size, sl, gia, tt);
+                    ChitietHD_DTO cthd = new ChitietHD_DTO(maHD, masp, size, sl, gia);
                     dscthd.add(cthd);
                                 System.out.println("Lay danh sach chi tiet hoa don thanh cong");
 
@@ -83,20 +81,11 @@ public class ChitietHD_DAO {
     
      
     
-    public boolean delete(String m) throws SQLException {
-    boolean success = false;
+    public void delete(String sohd, String masp, String masize) throws SQLException {
     mySQL.connect();
-    String query= "DELETE FROM chitiethoadon WHERE SOHD = '" + m +"';";
+    String query = "DELETE FROM chitiethoadon WHERE SOHD = '" + sohd + "' AND MASP = '" + masp + "' AND MASIZE = '" + masize + "';";
     boolean result = mySQL.executeupdate(query);
-    if(result) {
-        // cập nhật lại số lượng sản phẩm 
-        System.out.println("Xoa san pham hoa don thanh cong!");
-        success = true;
-    } else {
-        System.out.println("Xoa san pham hoa don that bai!");
-    }
     mySQL.disconnect();
-    return success;
 }
 public void add(ChitietHD_DTO item) throws SQLException {
     mySQL.connect();
@@ -119,11 +108,11 @@ public void add(ChitietHD_DTO item) throws SQLException {
         return allSize;
     }
      
-    public static void main (String[] args) throws SQLException{
-        ChitietHD_DAO cthd = new ChitietHD_DAO();
-        ArrayList<ChitietHD_DTO> list = cthd.list("HD001");
-//        ArrayList<chitietsanpham_DTO> listup = cthd.listtorestore("HD002");
-        cthd.delete("HD1");
-
-    }
+//    public static void main (String[] args) throws SQLException{
+//        ChitietHD_DAO cthd = new ChitietHD_DAO();
+//        ArrayList<ChitietHD_DTO> list = cthd.list("HD001");
+////        ArrayList<chitietsanpham_DTO> listup = cthd.listtorestore("HD002");
+//        cthd.delete("HD1");
+//
+//    }
 }
