@@ -66,7 +66,7 @@ public class DAO_chitietsanpham {
 				chitietsanpham_DTO k = new chitietsanpham_DTO(masp, masize, solong);
 				ds.add(k);
 			}
-			mySQL.disconnect();
+//			mySQL.disconnect();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

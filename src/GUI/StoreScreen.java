@@ -29,7 +29,7 @@ public class StoreScreen extends JFrame {
     public MenuChucNangStore menu;
     protected CenterContentStore centerContent;
 
-    public TaiKhoanDTO tkUSER;
+    public static TaiKhoanDTO tkUSER;
     public quyenDTO quyenUser;
 
     public StoreScreen(TaiKhoanDTO tkUSER) {
