@@ -308,13 +308,15 @@ public class CenterContentStore extends JPanel {
                 LocalDate ngayHienTai = LocalDate.now();
 
                 // Định dạng ngày theo định dạng dd/MM/yyyy
-                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 String ngayDinhDang = ngayHienTai.format(dinhDang);
                 
                 ArrayList<String> currentday = new ArrayList<>();
                 currentday.add(ngayDinhDang);
                 currentday.add(ngayDinhDang);
-                
+                String tuNgay = currentday.get(0);
+                String denNgay = currentday.get(1);
+                System.out.println(tuNgay+" den "+ denNgay);
                 k.data(currentday);
                 ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, k, SS_main);
                 showThaotac(JP_thaotac);
