@@ -55,6 +55,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -63,6 +64,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 import org.jfree.ui.RefineryUtilities;
 
 public class ThaotacInStore extends JPanel implements MouseListener {
@@ -306,6 +308,16 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 Component[] jp_con = jp_content.getComponents();
                 TrangLichsuHD lshd = (TrangLichsuHD) jp_con[0];
                 String mahd = lshd.MAHDSelect;
+                BUS_qlkh khBUS = new BUS_qlkh();
+                Hoadon_BUS hdBUS = null;
+                ChitietHD_BUS cthdBUS = null;
+                chitietsanpham_BUS ctspBUS = null;
+                try {
+                                            hdBUS = new Hoadon_BUS();
+                                            cthdBUS = new ChitietHD_BUS(mahd);
+                                            ctspBUS = new chitietsanpham_BUS();
+                                        } catch (SQLException ex) {
+                                        }
                 switch (ctqDTO.getHANHDONG()) {
                     case "Xóa":
                         if (lshd.currentSelectedPanel == null) {
@@ -320,98 +332,157 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                                 //3. hoan diem tich luy
                                 //4. xoa trong hoa don
                                 //5. xoa trong chi tiet hoa don
-                                ChitietHD_BUS cthdBUS = null;
-                                Hoadon_BUS hdBUS = null;
-                                chitietsanpham_BUS ctspBUS = null;
-                                BUS_qlkh khBUS = new BUS_qlkh();
                                 try {
-                                    cthdBUS = new ChitietHD_BUS(mahd);
-                                    hdBUS = new Hoadon_BUS();
+                                    
                                     Hoadon_DTO hdSelect = hdBUS.searchHoadon_DTO(mahd);
                                     hdBUS.delete(mahd);
-                                    
+
                                     lshd.left.remove(lshd.currentSelectedPanel);
                                     lshd.right.removeAll();
-                                    
-//                                    lshd.init();
 
+//                                    lshd.init();
                                     lshd.revalidate();
                                     lshd.repaint();
                                     JOptionPane.showMessageDialog(null,
                                             "Xóa thành công!");
-                                    if(hdSelect != null){
-                                        for(model_qlkh kh : khBUS.getlist()){
-                                            if(kh.getMakh() == hdSelect.getMaKH()){
-                                                if(hdSelect.getGiamgia() == 0)
-                                                    kh.setDiem(kh.getDiem() - hdSelect.getTongTien()/10000);
-                                                else
-                                                    kh.setDiem(kh.getDiem() + hdSelect.getGiamgia()/1000);
+                                    if (hdSelect != null) {
+                                        for (model_qlkh kh : khBUS.getlist()) {
+                                            if (kh.getMakh() == hdSelect.getMaKH()) {
+                                                if (hdSelect.getGiamgia() == 0) {
+                                                    kh.setDiem(kh.getDiem() - hdSelect.getTongTien() / 10000);
+                                                } else {
+                                                    kh.setDiem(kh.getDiem() + hdSelect.getGiamgia() / 1000);
+                                                }
                                                 khBUS.set(kh);
                                                 break;
                                             }
                                         }
                                     }
-                                        
-                                    
-                                    ctspBUS = new chitietsanpham_BUS();
+
                                     
 
                                 } catch (SQLException ex) {
                                     java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                                 }
 
-                                
-                                for(ChitietHD_DTO ctDTO: cthdBUS.getList()){
-                                    System.out.println("so luong trong cthd "+ctDTO.getSl());
-                                        for(chitietsanpham_DTO ctspDTO : ctspBUS.getlist()){
-                                            System.out.println(ctspDTO +" so luong trong ctsp "+ctspDTO.getSoluong());
-                                            if(ctDTO.getMaSP().equals(ctspDTO.getMASP()) && ctDTO.getMaSize().equals(ctspDTO.getMASIZE())){
-                                                
-                                                
-                                                ctspDTO.setSoluong(ctspDTO.getSoluong() + ctDTO.getSl());
-                                                
-                                                try {
-                                                    System.out.println("so luong trong cthd khi update"+ctspDTO.getSoluong());
-                                                    ctspBUS.update(ctspDTO);
-                                                    cthdBUS.delete(mahd,ctDTO.getMaSP(),ctDTO.getMaSize());
-                                                    
-                                                } catch (SQLException ex) {
-                                                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                                                }
-                                                break;
+                                for (ChitietHD_DTO ctDTO : cthdBUS.getList()) {
+                                    for (chitietsanpham_DTO ctspDTO : ctspBUS.getlist()) {
+                                        if (ctDTO.getMaSP().equals(ctspDTO.getMASP()) && ctDTO.getMaSize().equals(ctspDTO.getMASIZE())) {
+
+                                            ctspDTO.setSoluong(ctspDTO.getSoluong() + ctDTO.getSl());
+
+                                            try {
+                                                ctspBUS.update(ctspDTO);
+                                                cthdBUS.delete(mahd, ctDTO.getMaSP(), ctDTO.getMaSize());
+
+                                            } catch (SQLException ex) {
+                                                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                                             }
-                                                
+                                            break;
                                         }
-                                    
+
+                                    }
+
                                 }
-                                
+
                             }
                         }
                         break;
 
                     case "Sửa":
-                        JOptionPane.showMessageDialog(null,
-                                           "Sắp có tính năng này!");
-//                        if (lshd.currentSelectedPanel == null) {
-//                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
-//                        } else {
-//                            Object[] options = {"Có", "Không"};
-//                            int r1 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn xóa?", "In hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-//                            if (r1 == JOptionPane.YES_OPTION) {
-//                                try {
-//                                    inPDF in = new inPDF(lshd.MAHDSelect);
-//                                    JOptionPane.showMessageDialog(null,
-//                                            "In thành công!");
-//                                } catch (SQLException ex) {
-//                                    JOptionPane.showMessageDialog(null,
-//                                            "In thất bại!");
-//                                } catch (IOException ex) {
-//                                    JOptionPane.showMessageDialog(null,
-//                                            "In thất bại!");
-//                                }
-//
-//                            }
-//                        }
+
+                        if (lshd.currentSelectedPanel == null) {
+                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
+                        } else {
+                            //JOptionPane.showMessageDialog(null, "Chỉ có thể thay đổi số lượng, size của sản phẩm trong mỗi chi tiết hóa đơn!");
+                            //JOptionPane.showMessageDialog(null, "Nhấn chuột 2 lần liên tiếp vào ô số lượng hoặc ô size của sản phẩm cần sửa!");
+                            JPanel rightLSHD = lshd.right;
+                            Component[] components = rightLSHD.getComponents();
+                            ChitietHD_GUI cthd = (ChitietHD_GUI) components[0];
+
+                            switch (itemClicked.title.getText()) {
+                                case "Sửa":
+                                    JOptionPane.showMessageDialog(null, "Bạn đang thực hiện chỉnh sửa hóa đơn!");
+                                    JOptionPane.showMessageDialog(null, "Chỉ có thể thay đổi size và số lượng sản phẩm trong chi tiết hóa đơn\nẤn Lưu/Thoát khi đã hoàn tất chỉnh sửa!");
+                                    cthd.table.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                                    itemClicked.title.setText("Lưu/Thoát");
+                                    itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+//                                  
+                                    cthd.isEditingEnabled = true;
+                                    cthd.doAfterThaotacUpdate(lshd.currentSelectedPanel);
+                                    break;
+                                case "Lưu/Thoát":
+                                    Object[] options = {"Có", "Không"};
+                                    int r1 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn lưu thay đổi?", "Sửa hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                    if (r1 == JOptionPane.YES_OPTION) {
+                                        
+                                        
+                                        
+
+                                        
+                                        System.out.println("Danh sach khach hang "+khBUS.getlist().size());
+                                        for (model_qlkh kh : khBUS.getlist()) {
+                                            System.out.println("khach hang == "+(kh.getMakh() == cthd.maKH));
+                                            if (kh.getMakh() == cthd.maKH) {
+                                                System.out.println("Diem moi "+cthd.diemNew);
+                                                kh.setDiem(cthd.diemNew);
+                                                khBUS.set(kh);
+                                                break;
+                                            }
+                                        }
+                                        System.out.println("bat dau luu hoa don");
+                                        for (Hoadon_DTO hd : hdBUS.dshoadon) {
+                                            if (hd.getMaHD().equals(mahd)) {
+                                                hd.setGiamgia(cthd.giamgia);
+                                                hd.setTongTien(cthd.tongtien);
+                                                hdBUS.update(hd);
+                                                break;
+                                            }
+                                        }
+                                        System.out.println("bat dau luu chi tiet hoa don");
+                                        for (ChitietHD_DTO ct : cthd.listCTHDCurrent) {
+                                            cthdBUS.update(ct);
+                                        }
+                                        ArrayList<chitietsanpham_DTO> listCTSP = ctspBUS.getlist();
+                                        for (int i = 0; i < cthd.listCTSPBefore.size(); i++) {
+                                            chitietsanpham_DTO s = cthd.listCTSPBefore.get(i);
+                                            for (ChitietHD_DTO ct : cthd.listCTHDCurrent) {
+                                                if (s.getMASP().equals(ct.getMaSP()) && s.getMASIZE().equals(ct.getMaSize())) {
+                                                    s.setSoluong(s.getSoluong() - ct.getSl());
+                                                }
+
+                                                break;
+                                            }
+                                            if (listCTSP.get(i).getMASP().equals(s.getMASP()) && listCTSP.get(i).getMASIZE().equals(s.getMASIZE()) && listCTSP.get(i).getSoluong() != s.getSoluong()) {
+                                                try {
+
+                                                    ctspBUS.update(s);
+
+                                                } catch (SQLException ex) {
+                                                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                                                }
+                                            }
+
+                                        }
+
+                                    }else{
+                                        Hoadon_DTO hd = hdBUS.searchHoadon_DTO(mahd);
+                                        Component[] JL_Child = cthd.HoadonSelected.getComponents();
+                                        ((JLabel)JL_Child[5]).setText(hd.getGiamgia()+"");
+                                        ((JLabel)JL_Child[6]).setText(hd.getTongTien()+"");
+                                        cthd.addDataInTable(cthdBUS.getList());
+                                        cthd.valueInPayment[0].setText(hd.getGiamgia()+hd.getTongTien()+"");
+                                        cthd.valueInPayment[1].setText(hd.getGiamgia()+"");
+                                        cthd.valueInPayment[2].setText(hd.getTongTien()+"");
+                                        
+                                    }
+                                    cthd.isEditingEnabled = false;
+                                        cthd.table.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+                                        itemClicked.title.setText("Sửa");
+                                        itemClicked.icon = new JLabel(new ImageIcon("./src/image/edit_icon.png"));
+
+                            }
+                        }
 
                         break;
 
@@ -441,6 +512,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         break;
                     }
                 }
+                break;
             }
             case "NULLThK": {
                 chucnangThongke hdGUI = (chucnangThongke) pageContent;
@@ -469,8 +541,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         data_filter.add(dateString);
                     }
                 }
-                System.out.println("So luon " + data_filter.size());
-                System.out.println(data_filter.get(0) + " " + data_filter.get(1) + " " + data_filter.get(2) + " ");
+
                 switch (hdGUI.thongkeloai) {
                     case 0: {
                         ThongKeGUI tkGUI = new ThongKeGUI(800, 600);

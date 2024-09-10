@@ -71,7 +71,18 @@ public class chitietsanpham_BUS {
 		}
 		return i;
 	}
-
+        public ArrayList<chitietsanpham_DTO> getlistByFilter(String MASP){
+            ArrayList<chitietsanpham_DTO> l = new ArrayList<>();
+            
+            for(chitietsanpham_DTO c : ds){
+                
+                if(c.getMASP().equals(MASP) && c.getSoluong() != 0 )
+                    l.add(c);
+                else if(l.size()!=0) break;
+            }
+           
+            return l;
+	}
 	// public static void main(String[] args) {
 	// 	SanPhamDTO m = new SanPhamDTO("SP8", null,null, 0, args, 0);
 	// 	chitietsanpham_BUS c = new chitietsanpham_BUS();

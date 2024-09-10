@@ -37,9 +37,9 @@ public class SizeBUS {
         return listSize;
     }
 
-    public SizeDTO getSizeDTO(String masize) {
+    public SizeDTO getSizeDTO(String tensizeormasize) {
         for (SizeDTO s : listSize) {
-            if (s.getMASIZE().equals(masize)) {
+            if (s.getMASIZE().equals(tensizeormasize) || s.getTENSIZE().equals(tensizeormasize)) {
                 return s;
             }
         }
