@@ -42,15 +42,28 @@ public class khachHangDAO {
         return ds;
     }
 
-    public void themKH(khachHangDTO kh) {
+//    public void themKH(khachHangDTO kh) {
+//        try {
+//            c.connect();
+//            String sql = "INSERT INTO KHACHHANG(TENKH,SDT,DIEMTICHLUY) "
+//                    + "VALUES('" + kh.getTenKH() + "','" + kh.getSoDienThoai() + "','" + kh.getDiem() + "')";
+//            c.executeUpdate(sql);
+//            c.disconnect();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    public boolean themKH(khachHangDTO kh) {
         try {
             c.connect();
-            String sql = "INSERT INTO KHACHHANG(TENKH,SDT,DIEMTICHLUY) "
+            String sql = "INSERT INTO KHACHHANG(TENKH, SDT, DIEMTICHLUY) "
                     + "VALUES('" + kh.getTenKH() + "','" + kh.getSoDienThoai() + "','" + kh.getDiem() + "')";
             c.executeUpdate(sql);
             c.disconnect();
+            return true; 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false; 
         }
     }
 
@@ -99,13 +112,13 @@ public class khachHangDAO {
 
         return ds;
     }
-    
+
     public ArrayList<khachHangDTO> sap_xep(String order) {
         ArrayList<khachHangDTO> ds = new ArrayList<>();
 
         try {
             c.connect();
-             String sql = "SELECT * FROM KHACHHANG ORDER BY DIEMTICHLUY " + order;
+            String sql = "SELECT * FROM KHACHHANG ORDER BY DIEMTICHLUY " + order;
             ResultSet rs = c.executeQuery(sql);
             while (rs.next()) {
                 khachHangDTO kh = new khachHangDTO(rs.getInt("MAKH"),
