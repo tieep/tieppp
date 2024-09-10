@@ -192,9 +192,10 @@ public class inPDF {
         }
         
         
-        System.out.println("dánhach chi tiet "+cthdDTO.size());
+        SanPhamBUS spBUS = new SanPhamBUS();
         for(ChitietHD_DTO c : cthdDTO){
-             Paragraph infor = new Paragraph(c.getTenSP());
+            
+             Paragraph infor = new Paragraph((spBUS.select_by_id(c.getMaSP()).getTenSP()));
                 infor.setFontSize(4);
                 infor.setFont(font);
             infor.setTextAlignment(TextAlignment.CENTER); 
@@ -210,13 +211,13 @@ public class inPDF {
             infor1.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor1);
             
-            Paragraph infor2 = new Paragraph(c.getGia()+"");
+            Paragraph infor2 = new Paragraph((int)c.getGia()+"");
                 infor2.setFontSize(4);
             infor2.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor2);
             
             
-              Paragraph infor3 = new Paragraph(c.getTt()+"");
+              Paragraph infor3 = new Paragraph((int)c.getTt()+"");
                 infor3.setFontSize(4);
             infor3.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor3);

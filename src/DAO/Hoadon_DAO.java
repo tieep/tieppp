@@ -54,20 +54,12 @@ public class Hoadon_DAO {
     
     
     // xóa hóa đơn
-    public boolean delete(String m) throws SQLException {
-    boolean success = false;
+    public void delete(String m) throws SQLException {
     mySQL.connect();
     String query= "DELETE FROM hoadon WHERE SOHD = '" + m +"';";
     boolean result = mySQL.executeupdate(query);
-    if(result) {
-        if (result)
-        System.out.println("Xoa hoa don thanh cong!");
-        success = true;
-    } else {
-        System.out.println("Xoa hoa don that bai!");
-    }
     mySQL.disconnect();
-    return success;
+    
 }
    
    public boolean add(Hoadon_DTO item) {
@@ -118,6 +110,28 @@ public class Hoadon_DAO {
             Logger.getLogger(Hoadon_DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    public Hoadon_DTO searchHoadon_DTO(String mahd) {
+        Hoadon_DTO hdDTO = null;
+        try {
+            mySQL.connect();
+            String sql = "SELECT * FROM hoadon WHERE SOHD='" + mahd + "';";
+            ResultSet rs = mySQL.executeQuery(sql);
+            while (rs.next()) {
+                String maHD = rs.getString("SOHD");
+                String ngayHD = rs.getDate("NGAYHD").toString();
+                String thoigian = rs.getTime("THOIGIAN").toString();
+                int maKH = rs.getInt("MAKH");
+                String maNV = rs.getString("MANV");
+                int giamgia = rs.getInt("TIENGIAMGIA");
+                int tongtien = rs.getInt("TONGTIEN");
+                
+                hdDTO = new Hoadon_DTO(maHD, ngayHD, thoigian, maKH, maNV, giamgia, tongtien);
+            }
+        }catch (SQLException ex) {
+        System.out.println("Tìm kiếm thất bại");
+        }
+        return hdDTO;
     }
     public ArrayList<Hoadon_DTO> search_for_ID(String id) {
     ArrayList<Hoadon_DTO> dshd = new ArrayList<>();
