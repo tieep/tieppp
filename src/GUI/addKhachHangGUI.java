@@ -165,8 +165,9 @@ public class addKhachHangGUI extends JFrame implements MouseListener {
                         }
                     }
                     if (success) {
-                        busKH.themkh(kh_moi);
-                        khGUI.them_mot_kh(kh_moi);
+                        if (busKH.themkh(kh_moi)) {
+                            khGUI.them_mot_kh(kh_moi);
+                        }
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Thêm khách hàng thất bại số điện thoại đã tồn tại!");
