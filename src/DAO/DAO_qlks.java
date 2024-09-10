@@ -72,7 +72,7 @@ public class DAO_qlks {
 			
 			
 //			jdbc_do_an.close_connec(conn);
-			c.disconnect();
+			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -121,7 +121,7 @@ public class DAO_qlks {
 				danhsach.add(k);
 			}
 
-			c.disconnect();
+			
 			
 			
 		} catch (SQLException e) {

@@ -1,5 +1,8 @@
 package GUI;
 
+import BUS.BUS_qlkh;
+import BUS.ChitietHD_BUS;
+import BUS.Hoadon_BUS;
 import BUS.Nhanvien_BUS;
 import BUS.SanPhamBUS;
 import BUS.SizeBUS;
@@ -25,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import java.util.ArrayList;
 import BUS.chitietquyenBUS;
+import BUS.chitietsanpham_BUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
@@ -33,10 +37,14 @@ import DAO.chitietquyenDAO;
 import DTO.chitietquyenDTO;
 import DTO.chucnangDTO;
 import DAO.chucnangDAO;
+import DTO.ChitietHD_DTO;
+import DTO.Hoadon_DTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
+import DTO.chitietsanpham_DTO;
 import DTO.khachHangDTO;
 import DTO.loaiSP;
+import DTO.model_qlkh;
 import DTO.nhacungcapDTO;
 import java.awt.Container;
 import java.io.IOException;
@@ -297,44 +305,136 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 JPanel jp_content = hdGUI.JP_contentCuaNameChucnangCon;
                 Component[] jp_con = jp_content.getComponents();
                 TrangLichsuHD lshd = (TrangLichsuHD) jp_con[0];
+                String mahd = lshd.MAHDSelect;
                 switch (ctqDTO.getHANHDONG()) {
                     case "Xóa":
-                        JOptionPane.showMessageDialog(null, "Click vào dòng cần xóa hóa đơn!");
-                         {
-                            try {
-                                lshd.reloadPagecontrol();
-                            } catch (SQLException ex) {
-                                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        if (lshd.currentSelectedPanel == null) {
+                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần xóa!");
+                        } else {
+                            Object[] options = {"Có", "Không"};
+                            int r1 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn xóa?", "Xóa hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                            if (r1 == JOptionPane.YES_OPTION) {
+                                //1. hoan so luong ve kho
+
+                                //2. render UI trangLSHD
+                                //3. hoan diem tich luy
+                                //4. xoa trong hoa don
+                                //5. xoa trong chi tiet hoa don
+                                ChitietHD_BUS cthdBUS = null;
+                                Hoadon_BUS hdBUS = null;
+                                chitietsanpham_BUS ctspBUS = null;
+                                BUS_qlkh khBUS = new BUS_qlkh();
+                                try {
+                                    cthdBUS = new ChitietHD_BUS(mahd);
+                                    hdBUS = new Hoadon_BUS();
+                                    Hoadon_DTO hdSelect = hdBUS.searchHoadon_DTO(mahd);
+                                    hdBUS.delete(mahd);
+                                    
+                                    lshd.left.remove(lshd.currentSelectedPanel);
+                                    lshd.right.removeAll();
+                                    
+//                                    lshd.init();
+
+                                    lshd.revalidate();
+                                    lshd.repaint();
+                                    JOptionPane.showMessageDialog(null,
+                                            "Xóa thành công!");
+                                    if(hdSelect != null){
+                                        for(model_qlkh kh : khBUS.getlist()){
+                                            if(kh.getMakh() == hdSelect.getMaKH()){
+                                                if(hdSelect.getGiamgia() == 0)
+                                                    kh.setDiem(kh.getDiem() - hdSelect.getTongTien()/10000);
+                                                else
+                                                    kh.setDiem(kh.getDiem() + hdSelect.getGiamgia()/1000);
+                                                khBUS.set(kh);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                        
+                                    
+                                    ctspBUS = new chitietsanpham_BUS();
+                                    
+
+                                } catch (SQLException ex) {
+                                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                                }
+
+                                
+                                for(ChitietHD_DTO ctDTO: cthdBUS.getList()){
+                                    System.out.println("so luong trong cthd "+ctDTO.getSl());
+                                        for(chitietsanpham_DTO ctspDTO : ctspBUS.getlist()){
+                                            System.out.println(ctspDTO +" so luong trong ctsp "+ctspDTO.getSoluong());
+                                            if(ctDTO.getMaSP().equals(ctspDTO.getMASP()) && ctDTO.getMaSize().equals(ctspDTO.getMASIZE())){
+                                                
+                                                
+                                                ctspDTO.setSoluong(ctspDTO.getSoluong() + ctDTO.getSl());
+                                                
+                                                try {
+                                                    System.out.println("so luong trong cthd khi update"+ctspDTO.getSoluong());
+                                                    ctspBUS.update(ctspDTO);
+                                                    cthdBUS.delete(mahd,ctDTO.getMaSP(),ctDTO.getMaSize());
+                                                    
+                                                } catch (SQLException ex) {
+                                                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                                                }
+                                                break;
+                                            }
+                                                
+                                        }
+                                    
+                                }
+                                
                             }
-                            break;
                         }
+                        break;
 
                     case "Sửa":
-                        JOptionPane.showMessageDialog(null, "Click vào dòng cần sửa hóa đơn!");
-                         {
-                            try {
-                                lshd.reloadPagecontrol();
-                            } catch (SQLException ex) {
-                                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                            }
-                            break;
-                        }
+                        JOptionPane.showMessageDialog(null,
+                                           "Sắp có tính năng này!");
+//                        if (lshd.currentSelectedPanel == null) {
+//                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
+//                        } else {
+//                            Object[] options = {"Có", "Không"};
+//                            int r1 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn xóa?", "In hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//                            if (r1 == JOptionPane.YES_OPTION) {
+//                                try {
+//                                    inPDF in = new inPDF(lshd.MAHDSelect);
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thành công!");
+//                                } catch (SQLException ex) {
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thất bại!");
+//                                } catch (IOException ex) {
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thất bại!");
+//                                }
+//
+//                            }
+//                        }
+
+                        break;
 
                     case "In PDF": {
 
-                        if (!lshd.inHD) {
-                            JOptionPane.showMessageDialog(null, "Click vào hóa đơn cần in!\nSau đó ấn In PDF");
-
+                        if (lshd.currentSelectedPanel == null) {
+                            JOptionPane.showMessageDialog(null, "Chọn vào hóa đơn cần in!\nSau đó ấn In PDF");
                         } else {
+                            Object[] options = {"Có", "Không"};
+                            int r1 = JOptionPane.showOptionDialog(null, "Bạn muốn in hóa đơn đang chọn?", "In hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                            if (r1 == JOptionPane.YES_OPTION) {
+                                try {
+                                    inPDF in = new inPDF(lshd.MAHDSelect);
+                                    JOptionPane.showMessageDialog(null,
+                                            "In thành công!");
+                                } catch (SQLException ex) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "In thất bại!");
+                                } catch (IOException ex) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "In thất bại!");
+                                }
 
-                            try {
-                                inPDF in = new inPDF(lshd.MAHDSelect);
-                                lshd.inHD = false;
-                                JOptionPane.showMessageDialog(null, "In hóa đơn thành công!");
-                            } catch (SQLException ex) {
-                                JOptionPane.showMessageDialog(null, "In hóa đơn thất bại!");
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(null, "In hóa đơn thất bại!");
                             }
 
                         }
@@ -896,7 +996,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
             case "Sửa": {
                 int id = KHGUI.lay_id_table();
                 khachHangDTO x = KHGUI.lay_mot_kh(id);
-                new updateKhachHang(x,KHGUI);
+                new updateKhachHang(x, KHGUI);
                 break;
             }
             case "Xóa": {

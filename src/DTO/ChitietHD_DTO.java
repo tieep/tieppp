@@ -28,7 +28,15 @@ public class ChitietHD_DTO {
         this.gia = price;
         this.tt = totalPrice;
     }
-
+    public ChitietHD_DTO(String maHD, String maSP, String maSize, int sl, double gia) {
+        this.maHD = maHD;
+        this.maSP = maSP;
+        this.maSize = maSize;
+        this.sl = sl;
+        this.gia = gia;
+        this.tt = sl * gia;
+    }
+    
     public String getMaHD() {
         return this.maHD;
     }
@@ -61,9 +69,7 @@ public class ChitietHD_DTO {
         this.tt = tt;
     }
 
-    public String getTenSP() {
-        return tenSP;
-    }
+    
 
     public String getMaSize() {
         return maSize;

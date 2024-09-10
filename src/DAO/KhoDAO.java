@@ -66,8 +66,8 @@ public class KhoDAO {
     public static void main(String[] args) {
         KhoDAO k = new KhoDAO();
         ArrayList<String> currentday = new ArrayList<>();
-        currentday.add("2024/09/05");
-        currentday.add("2024/09/05");
+        currentday.add("07/09/2024");
+        currentday.add("07/09/2024");
         System.out.println(k.list(currentday).size());
 //        System.out.println(k.list().get(0).getTonDK());
     }

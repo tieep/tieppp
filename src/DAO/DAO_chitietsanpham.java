@@ -66,7 +66,7 @@ public class DAO_chitietsanpham {
 				chitietsanpham_DTO k = new chitietsanpham_DTO(masp, masize, solong);
 				ds.add(k);
 			}
-			mySQL.disconnect();
+//			mySQL.disconnect();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class DAO_chitietsanpham {
 	
 	public void update(chitietsanpham_DTO d) throws SQLException {
             mySQL.connect(); // TODO Auto-generated catch block
-            String sql = "update chitietsanpham set SOLUONG = SOLUONG + " + d.getSoluong() +" where MASP = '" + d.getMASP()  + "' and MASIZE = '" + d.getMASIZE() +"'";
+            String sql = "update chitietsanpham set SOLUONG = " + d.getSoluong() +" where MASP = '" + d.getMASP()  + "' and MASIZE = '" + d.getMASIZE() +"'";
             mySQL.executeUpdate(sql);
             mySQL.disconnect();
 	}

@@ -22,7 +22,9 @@ public class model_qlkh {
 		this.sdt = sdt;
 		this.diem = diem;
 	}
-
+        public model_qlkh(){
+            
+        }
 	public int getMakh() {
 		return makh;
 	}
@@ -60,6 +62,12 @@ public class model_qlkh {
 		return "model_qlkh [makh=" + makh + ", ten=" + ten + ", sdt=" + sdt + ", diem=" + diem + "]";
 	}
 	
+        public void copyFrom(model_qlkh k){
+            this.makh = k.getMakh();
+            this.ten = k.getTen();
+            this.sdt = k.getSdt();
+            this.diem = k.getDiem();
+        }
 	public static void main(String[] args) {
 		model_qlkh k1 = new model_qlkh("long", "012");
 		System.out.println(k1.toString());
