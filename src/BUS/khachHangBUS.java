@@ -44,9 +44,19 @@ public class khachHangBUS {
         return sdiem.matches(regex);
     }
 
-    public void themkh(khachHangDTO kh) {
+    public int makh() {
+        int max = 0;
+        for (khachHangDTO h : ds_khachHang) {
+            if (max < h.getMaKH()) {
+                max = h.getMaKH();
+            }
+        }
+        return max + 1;
+    }
+
+    public boolean themkh(khachHangDTO kh) {
         if (kiemtra_Ten(kh.getTenKH()) && kiemtra_Sdt(kh.getSoDienThoai())) {
-            dao.themKH(kh);
+            kh.setMaKH(makh());
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
                     "Thêm khách hàng thành công",
@@ -56,6 +66,7 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return dao.themKH(kh);
         } else if (kiemtra_Ten(kh.getTenKH()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
@@ -66,6 +77,7 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return false;
         } else if (kiemtra_Sdt(kh.getSoDienThoai()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
@@ -76,7 +88,9 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return false;
         }
+        return false;
     }
 
     public void capnhatkh(khachHangDTO kh) {
@@ -187,7 +201,6 @@ public class khachHangBUS {
             }
         }
 
-
         return re;
     }
 
@@ -203,7 +216,7 @@ public class khachHangBUS {
 
         ArrayList<khachHangDTO> ds = bus.search(data_filter);
         for (khachHangDTO x : ds) {
-            System.out.println("array "+x.toString());
+            System.out.println("array " + x.toString());
         }
     }
 }

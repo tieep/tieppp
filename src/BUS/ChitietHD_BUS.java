@@ -61,9 +61,16 @@ public class ChitietHD_BUS {
         int sl = cpDAO.get_sl(id, s);
         return sl;
     }
-    public void update (String idhd, String idsp, String size, int sl) throws SQLException{
-        ChitietHD_DAO cdDAO = new ChitietHD_DAO();
-        cdDAO.update(idhd, idsp, size, sl);
+    public void update (ChitietHD_DTO ct) {
+        System.out.println("bat dau luu chi tiet hoa don xuomg DAO");
+        ChitietHD_DAO cdDAO;
+        try {
+            cdDAO = new ChitietHD_DAO();
+            cdDAO.update(ct.getMaHD(), ct.getMaSP(), ct.getMaSize(), ct.getSl());
+        } catch (SQLException ex) {
+            Logger.getLogger(ChitietHD_BUS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     public void restore(String id, int sl, String s) throws SQLException{
         DAO_chitietsanpham cpDAO = new DAO_chitietsanpham();
@@ -71,10 +78,6 @@ public class ChitietHD_BUS {
         cpDAO.Restore_pro(sl, id, ids);
     }
     
-       public void updatehd(String id,int tt) throws SQLException {
-            Hoadon_DAO hd = new Hoadon_DAO();
-            hd.updatehd(id, tt);
-      }
        
        public String Get_Masize(String tensize) throws SQLException{
             DAO_chitietsanpham cpDAO = new DAO_chitietsanpham();

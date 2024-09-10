@@ -191,7 +191,7 @@ public class inPDF {
             chitietsanpham.addCell(title);
         }
         
-        
+        SizeBUS sizeBUS = new SizeBUS();
         SanPhamBUS spBUS = new SanPhamBUS();
         for(ChitietHD_DTO c : cthdDTO){
             
@@ -201,7 +201,7 @@ public class inPDF {
             infor.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor);
             
-            Paragraph infor0=new Paragraph(c.getMaSize()) ;
+            Paragraph infor0=new Paragraph((sizeBUS.getSizeDTO(c.getMaSize()).getTENSIZE())) ;
             infor0.setFontSize(4);
             infor0.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor0);
