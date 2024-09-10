@@ -74,9 +74,9 @@ public class Hoadon_DAO {
         return false;
     } 
     
-   public void updatehd(String id,int tt) throws SQLException {
+   public void updatehd(Hoadon_DTO hd) throws SQLException {
             mySQL.connect(); // TODO Auto-generated catch block
-            String sql = "update hoadon set TONGTIEN = " + tt +" where SOHD = '" +id  + "';";
+            String sql = "update hoadon set TONGTIEN = " + hd.getTongTien() +", TIENGIAMGIA = " + hd.getGiamgia() + " where SOHD = '" +hd.getMaHD()  + "';";
             mySQL.executeUpdate(sql);
             mySQL.disconnect();
 	}
