@@ -19,7 +19,11 @@ public class chitietphieunhap_BUS {
 		ds = c.selectby_id(h);
 		
 	}
-	
+	public ArrayList<chitietphieunhap_DTO> select_by_id(phieunhap_DTO h ) {
+		DAO_chitietphieunhap c = new DAO_chitietphieunhap();
+		return c.selectby_id(h);
+		
+	}
 	public void add (chitietphieunhap_DTO h) {
 		ds.add(h);
 		DAO_chitietphieunhap c = new DAO_chitietphieunhap();
