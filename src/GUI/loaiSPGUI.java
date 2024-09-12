@@ -6,6 +6,7 @@ package GUI;
 
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+import DAO.loaiSPDAO;
 import DTO.loaiSP;
 import DTO.nhacungcapDTO;
 import java.awt.Dimension;
@@ -34,9 +35,9 @@ public class loaiSPGUI extends JPanel{
     private int ccao, crong;
     public JTable table;
     private Font font_data = new Font("Tahoma", Font.PLAIN, 14);
-    private DefaultTableModel tableModel;
+    public DefaultTableModel tableModel;
     public boolean isEditingEnabled = false;
-    
+    public ArrayList<loaiSP> listUpdate;
     
     public loaiSPGUI(int r,int d){
         this.crong = r;
@@ -55,9 +56,7 @@ public class loaiSPGUI extends JPanel{
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column == 0) {
-                    return false;
-                }
+                
                 return isEditingEnabled;
             }
 

@@ -340,12 +340,16 @@ public final class ChitietHD_GUI extends JPanel {
                                             System.out.println("subtotal "+subTotal);
                                         }
                                         int giamgiaNew = 0;
-                                        if(giamgia != 0){
+                                        if(giamgia != 0){//co dung giam gia
                                             if(diemBefore*1000 >= subTotal){
                                                 giamgiaNew = subTotal ;
-                                                diemNew = diemBefore - giamgiaNew/1000;
+                                                diemNew = diemBefore - giamgiaNew/1000 + (subTotal - giamgiaNew)/10000;
                                             }      
-                                            else giamgiaNew = diemBefore*1000;
+                                            else{
+                                                giamgiaNew = diemBefore*1000;
+                                                diemNew = (subTotal - giamgiaNew)/10000;
+                                            }
+                                            
                                         }else diemNew = diemBefore + (int)subTotal/10000;
                                           
                                         
@@ -469,11 +473,11 @@ public final class ChitietHD_GUI extends JPanel {
         //3. mảng ảo chi tiết hóa đơn listCTHDCurrent
                     BUS_qlkh khBUS = new BUS_qlkh();
                     int diemCurrent = khBUS.selecby_id(maKH).getDiem();
-                    
+                   
                     if (giamgia == 0) {
                         diemBefore = diemCurrent - tongtien / 10000;
                     } else {
-                        diemBefore = diemCurrent + giamgia / 1000;
+                        diemBefore = diemCurrent + giamgia / 1000 - tongtien / 10000;
                     }
                     chitietsanpham_BUS ctspBUS = null;
                     ChitietHD_BUS cthdBUS = null;

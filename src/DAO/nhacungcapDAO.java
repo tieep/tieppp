@@ -57,7 +57,7 @@ public class nhacungcapDAO {
                 
             }
 
-            c.disconnect();
+           
         } catch (SQLException e) {
         }
 

@@ -5,16 +5,19 @@ import BUS.ChitietHD_BUS;
 import BUS.Hoadon_BUS;
 import BUS.SizeBUS;
 import BUS.chitietsanpham_BUS;
+import BUS.khachHangBUS;
 import DAO.DAO_chitietsanpham;
 import DTO.ChitietHD_DTO;
 import DTO.Hoadon_DTO;
 import DTO.SanPhamDTO;
 import DTO.SizeDTO;
 import DTO.chitietsanpham_DTO;
+import DTO.khachHangDTO;
 import DTO.model_qlkh;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,6 +25,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -93,55 +97,33 @@ public class CartGUI extends JPanel implements MouseListener {
         int hHeader = height / 11;
         wrapHeaderCart.setPreferredSize(new Dimension(width, hHeader));
 
-        JPanel wrapSearchMAKH = new JPanel(new FlowLayout(3, 10, 0));
-
-        JPanel searchMAKH = new JPanel(new GridLayout(2, 1));
-
-        searchMAKH.setPreferredSize(new Dimension(width / 6, hHeader));
-        JLabel MAKH = new JLabel("Tìm theo MAKH", JLabel.CENTER);
-        JTextField inputMAKH = new JTextField((kh == null) ? "" : (kh.getMakh() + ""));
-
-        searchMAKH.add(MAKH);
-        searchMAKH.add(inputMAKH);
-
-        JButton iconSearch = new JButton(new ImageIcon("./src/images/search_icon.png"));
-        iconSearch.setFocusPainted(false);
-        iconSearch.setBackground(Color.decode("#D9D9D9"));
-
-        iconSearch.addActionListener(new ActionListener() {
+        
+        
+       
+        JLabel searchKH = new JLabel("Chọn khách hàng");
+         searchKH.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        searchKH.setFont(new Font("Tahoma",Font.PLAIN,18));
+        searchKH.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+        searchKH.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String MAKH = inputMAKH.getText();
-                String regexMAKH = "^[0-9]+$";
-                if (!MAKH.equals("")) {
-                    if (MAKH.matches(regexMAKH)) {
-                        BUS_qlkh khBUS = new BUS_qlkh();
-                        for (model_qlkh k : khBUS.getlist()) {
-                            if (k.getMakh() == Integer.parseInt(MAKH)) {
-                                kh = k;
-                            }
-                        }
-                        if (kh == null) {
-                            JOptionPane.showMessageDialog(null, "Khách hàng không tồn tại", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JL_InforCus[0].setText(kh.getTen());
-                            JL_InforCus[1].setText(kh.getDiem() + "");
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "MAKH chỉ chứa số", "Sai định dạng", JOptionPane.WARNING_MESSAGE);
-                        inputMAKH.requestFocus();
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Mời nhập MAKH.", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                    JL_InforCus[0].setText(" ");
-                    JL_InforCus[1].setText("");
-                    inputMAKH.requestFocus();
-                }
+            public void mouseClicked(MouseEvent e){
+                showCustomerGUI(width, height);
             }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+searchKH.setForeground(Color.gray);
+       
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        searchKH.setForeground(Color.black);
+       }
         });
-        wrapSearchMAKH.add(searchMAKH);
-        wrapSearchMAKH.add(iconSearch);
+        
+        
+        
+  searchKH.setBackground(Cacthuoctinh_phuongthuc_chung.sky_blue);
 
         JPanel wrapInforKH = new JPanel(new GridLayout(2, 1));
 
@@ -196,7 +178,7 @@ public class CartGUI extends JPanel implements MouseListener {
 
         setPreferredSize(new Dimension(width, height));
 
-        wrapHeaderCart.add(wrapSearchMAKH, BorderLayout.WEST);
+        wrapHeaderCart.add(searchKH, BorderLayout.WEST);
         wrapHeaderCart.add(wrapInforKH, BorderLayout.CENTER);
         wrapHeaderCart.add(checkBox1, BorderLayout.EAST);
 
@@ -431,20 +413,115 @@ public class CartGUI extends JPanel implements MouseListener {
     }
 
     public static void main(String[] args) {
-        JFrame f = new JFrame("Cart GUI");
+        CartGUI c = new CartGUI(800, 600);
+        c.showCustomerGUI(1000,500);
+        
+    }
+    
+    private void showCustomerGUI(int width, int height) {
+    int rong = width /2;
+    int cao = height /2;
+    JFrame f = new JFrame("Tìm kiếm khách hàng");
 
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(new CartGUI(800, 600));
-        f.pack(); // Adjust size to fit components
-        f.setVisible(true);
+    f.setLayout(new FlowLayout(1,0,0));
+    JPanel wrap = new JPanel(new BorderLayout(0,10));
+    
+    khachHangGUI p = new khachHangGUI(rong, cao);
+    p.setPreferredSize(new Dimension(rong, cao));
+    JLabel title = new JLabel("Nhập tên hoặc số điện thoại của khách hàng",JLabel.CENTER);
+    title.setPreferredSize(new Dimension(rong, (int)title.getPreferredSize().getHeight()));
+    JPanel wrapInput = new JPanel(new FlowLayout(1,10,10));
+    JTextField input = new JTextField();
+    JButton search = new JButton("Tìm");
+    search.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e){
+            if(!input.getText().equals("")){
+                khachHangBUS khBUS = new khachHangBUS();
+            ArrayList<String> data_filter = new ArrayList<>();
+            data_filter.add(input.getText());
+            data_filter.add("");
+            ArrayList<khachHangDTO> listKH = khBUS.search(data_filter);
+            p.reloadData(listKH);
+            }else{
+                JOptionPane.showMessageDialog(null, "Mời nhập dữ liệu tìm.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    input.setText(" ");
+                    input.requestFocus();
+            }
+            
+            
+            
+            
+        }
+    });
+    p.table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e){
+            int option = JOptionPane.showConfirmDialog(null, "Bạn chọn khách hàng này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+if (option == JOptionPane.YES_OPTION) {
+    int row = p.table.getSelectedRow();
+    int maKH=(int)p.table.getValueAt(row, 0);
+    String tenKH = (String)p.table.getValueAt(row, 1);
+    String soDienThoai = (String)p.table.getValueAt(row, 2);
+    int diem = (int)p.table.getValueAt(row, 3);
+    
+    kh = new model_qlkh(maKH, tenKH, soDienThoai, diem);
+    JL_InforCus[0].setText(tenKH);
+    JL_InforCus[1].setText(diem+"");
+    Component[] components = wrapHeaderCart.getComponents();
+    ((JLabel)components[0]).setText("Đổi khách hàng");
+    f.dispose();
+    
+} 
+        }
+    });
+    
+    input.setPreferredSize(new Dimension(rong - (int)search.getPreferredSize().getWidth()-20, (int)search.getPreferredSize().getHeight()));
+    
+    wrapInput.add(title);
+    wrapInput.add(input);
+    wrapInput.add(search);
+    wrapInput.setPreferredSize(new Dimension(rong, (int)search.getPreferredSize().getHeight()*2+(int)title.getPreferredSize().getHeight()));
+    
+    wrap.add(wrapInput,BorderLayout.NORTH);
+    wrap.add(p, BorderLayout.CENTER);
+    f.add(wrap);
+   
+    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    f.setLocation(0,0 );
+    
+    f.pack();
+
+   
+    f.setVisible(true);
+    
+}
+
+    
+    public void addDataInCustomerGUI(ArrayList<model_qlkh> list, JTable table, DefaultTableModel tableModel){
+        System.out.println("Danh sách khách hàng: " + list.size());
+        Vector data;
+        tableModel.setRowCount(0);
+        for (model_qlkh n : list) {
+            data = new Vector();
+            data.add(n.getTen());
+            data.add(n.getSdt());
+            tableModel.addRow(data);
+        }
+        table.setModel(tableModel);
+        tableModel.fireTableDataChanged();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == pay) {
-            if (kh == null) {
+            System.out.println("so luong trong gio hang "+dsspAdd.size());
+            if (dsspAdd.size() == 0) {
+                JOptionPane.showMessageDialog(null, "Không có sản phẩm để thanh toán", "", JOptionPane.WARNING_MESSAGE);
+            }else if(kh == null){
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập khách hàng của hóa đơn này", "", JOptionPane.WARNING_MESSAGE);
-            } else {
+            }
+            else {
                 try {
                     chitietsanpham_BUS ctspBUS = new chitietsanpham_BUS();
                     ChitietHD_BUS ctBUS = new ChitietHD_BUS();
@@ -479,7 +556,7 @@ public class CartGUI extends JPanel implements MouseListener {
                     }
 
                     if (checkBox1.isSelected()) {
-                        kh.setDiem(Integer.parseInt(JL_InforCus[1].getText()));
+                        kh.setDiem(Integer.parseInt(JL_InforCus[1].getText()) + tongTien / 10000);
                     } else {
                         kh.setDiem((int) (kh.getDiem() + tongTien / 10000));
                     }
@@ -586,6 +663,7 @@ public class CartGUI extends JPanel implements MouseListener {
         }
 
     }
+    
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -617,4 +695,5 @@ public class CartGUI extends JPanel implements MouseListener {
         }
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
 }

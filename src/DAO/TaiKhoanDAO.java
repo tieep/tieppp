@@ -41,7 +41,7 @@ public class TaiKhoanDAO {
                 dstk.add(tk);
             }
             rs.close();
-            mySQL.disconnect();
+            
 
         } catch (SQLException ex) {
             Logger.getLogger(TaiKhoanDTO.class.getName()).log(Level.SEVERE, null, ex);
