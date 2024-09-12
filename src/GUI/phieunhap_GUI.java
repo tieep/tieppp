@@ -36,11 +36,20 @@ import DTO.TaiKhoanDTO;
 import DTO.chitietphieunhap_DTO;
 import DTO.nhacungcapDTO;
 import DTO.phieunhap_DTO;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class phieunhap_GUI extends JPanel implements MouseListener{
 	private JPanel[] jp,jp1,jp3;
@@ -57,7 +66,7 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
 	private chitietphieunhap_GUI chitietphieunhap_GUI;
 	private phieunhap_BUS phieunhap_BUS;
 	private chitietphieunhap_BUS chitietphieunhap_BUS;
-	private frame_them_phieunhap frame_them_phieunhap;
+	frame_them_phieunhap frame_them_phieunhap;
         private frame_thong_bao_phieunhap frame_thong_bao_phieunhap;
 	private panel_them_phieunhap panel_them_phieunhap;
 	private nhacungcapBUS nhacungcapBUS;
@@ -66,7 +75,137 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
         private String MAPN,MANV,mancc,ngaydau,ngaysau;
         private double giabe,gialon;
         private Nhanvien_BUS nhanvien_BUS;
-	
+        
+//	@Override
+//    public void refreshPhieuNhap() {
+//        // Logic to refresh the data in new_phieu_nhap_GUI
+//    }
+    private  int chieurong;
+    private  int chieucao;
+    private final Font f = new Font("Tahoma", Font.BOLD, 14);
+    public JTable table;
+    private phieunhap_BUS dspn;
+    private DefaultTableModel tableModel;
+    public boolean isEditingEnabled = false;
+    public thong_bao_phieunhap tbPN;
+    frame_sua_pn frame_sua_phieunhap;
+
+    public phieunhap_GUI(int chieurong, int chieucao) throws SQLException  {
+        this.chieurong = chieurong;
+        this.chieucao = chieucao;
+        //this.thong
+        init();
+    }
+    private void init() {
+        String[] columnNames = {"MAPN", "MANV", "Ngày nhập", "Tổng tiền", "MANCC", "CTPN"};
+        tableModel = new DefaultTableModel();
+        tableModel.setColumnIdentifiers(columnNames);
+
+        table = new JTable(tableModel) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return isEditingEnabled && column != 0;
+            }
+        };
+
+        phieunhap_BUS pnBUS = new phieunhap_BUS();
+        addDataInTable(pnBUS.dsPN());
+
+        cssHeaderTable(table.getTableHeader());
+        cssDataTable();
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(chieurong, chieucao));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        add(scrollPane);
+
+        // Add mouse listener to handle click events on the "CTPN" column
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
+
+                if (col == 5) { // CTPN column
+                    String mapn = (String) table.getValueAt(row, 0);
+                    System.out.println("MAPN clicked: " + mapn); // Log the clicked MAPN
+                    showDetailWindow(mapn);
+                }
+            }
+        });
+    }
+
+    private void showDetailWindow(String mapn) {
+    
+    JFrame detailFrame = new JFrame("Chi Tiết Phiếu Nhập - " + mapn);
+    detailFrame.setSize(800,600);  
+    detailFrame.setLocationRelativeTo(null);
+    
+    try {
+        
+          phieunhap_DTO phieuNhap = new phieunhap_BUS().select_by_id(mapn); 
+        detailFrame.add(new chitietphieunhap_GUI(800, 600, phieuNhap, this));  
+    } catch (SQLException ex) {
+       
+        JOptionPane.showMessageDialog(null, "Error loading details: " + ex.getMessage());
+    }
+
+    detailFrame.setBackground(Color.yellow);
+    detailFrame.setVisible(true);
+}
+
+public ArrayList<String> getSelectedListPN() {
+        ArrayList<String> MANPNselected = new ArrayList<>();
+        int[] quantity_rowSelected = table.getSelectedRows();
+        for (int row : quantity_rowSelected) {
+            MANPNselected.add((String) table.getValueAt(row, 0));
+        }
+        return MANPNselected;
+    }
+    public void addDataInTable(ArrayList<phieunhap_DTO> list) {
+        
+        Vector data;
+        DecimalFormat df = new DecimalFormat("#,###.00");
+        tableModel.setRowCount(0);
+        for (phieunhap_DTO n : list) {
+            data = new Vector();
+            data.add(n.getMAPN());
+            data.add(n.getMANV());
+            data.add(n.getNgay());
+            String formattedTongtien = df.format(n.getTongtien());
+            data.add(formattedTongtien);
+            data.add(n.getMANCC());
+            data.add("XEM");
+            tableModel.addRow(data);
+        }
+        table.setModel(tableModel);
+        tableModel.fireTableDataChanged();
+    }
+    public void addLineDataInTable(phieunhap_DTO pn) {
+        Vector data = new Vector();
+        data.add(pn.getMAPN());
+        data.add(pn.getMANV());
+        data.add(pn.getNgay());
+        data.add(pn.getTongtien());
+        data.add(pn.getMANCC());
+        tableModel.addRow(data);
+        tableModel.fireTableDataChanged();
+
+    }
+    private void cssHeaderTable(JTableHeader header) {
+        header.setBackground(Cacthuoctinh_phuongthuc_chung.darkness_blue);
+        header.setForeground(Cacthuoctinh_phuongthuc_chung.sky_blue);
+        header.setFont(Cacthuoctinh_phuongthuc_chung.font_header);
+        header.setPreferredSize(new Dimension(header.getWidth(), 40));
+    }
+
+    private void cssDataTable() {
+        table.setRowHeight(35);
+        table.setFont(f);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+    }
 	public phieunhap_GUI(int w,int h,TaiKhoanDTO d) throws SQLException {
 		jp1 = new JPanel[7];
 		jp = new JPanel[7];
@@ -84,7 +223,8 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
 		 this.clickedchinhsua =false;
 		 this.clickedxoa = false;
 		 this.taiKhoanDTO = d;
-		 this.frame_them_phieunhap = null;
+//		 this.frame_them_phieunhap = new frame_them_phieunhap(w, h, this, taiKhoanDTO);
+                 this.frame_them_phieunhap=null;
                  this.frame_thong_bao_phieunhap = null;
                  MAPN= MANV=mancc= "";
                  ngaydau="0000-00-00";
@@ -650,8 +790,7 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
 			this.chitietphieunhap_GUI.update_ctpn_sau_chinh_sua();
 	}
 	
-	
-	public void update_ctsp_sau_chinh_sua() throws SQLException {
+		public void update_ctsp_sau_chinh_sua() throws SQLException {
 		this.chitietphieunhap_GUI.update_ctsp_sau_chinh_sua();
 	}
 	
@@ -964,6 +1103,7 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+               
 		
 	}
 
@@ -971,6 +1111,7 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+                
 		
 	}
 
@@ -1010,6 +1151,7 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
                 if (e.getSource() == refresh){
                     refresh.setBackground(Color.decode("#60A3BC"));refresh.setOpaque(true);
                 }
+                
 	}
 
 
@@ -1045,5 +1187,19 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
                 if (e.getSource() == refresh){
                     refresh.setBackground(Color.decode("#0A3D62"));refresh.setOpaque(true);
                 }
+               
 	}
+        public static void main(String[] args) throws SQLException {
+    JFrame f = new JFrame();
+    f.setLocationRelativeTo(null);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    TaiKhoanDTO tk=new TaiKhoanDTO("AD1","AD1","SangHard!","2023-02-13","QQLHT",1);
+    f.add(new phieunhap_GUI(800, 600));
+            
+    f.setVisible(true);
 }
+
+    
+
+}
+
