@@ -35,7 +35,7 @@ public class khachHangDAO {
                         rs.getInt("DIEMTICHLUY"));
                 ds.add(kh);
             }
-            c.disconnect();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }

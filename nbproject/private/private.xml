@@ -3,16 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/ThongTinTaiKhoan.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/ChucNangSanPhamGUI.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/SanPhamGUI.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/LoginUI.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/BarChart_DoanhThu.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/DAO/DAO_chitietphieunhap.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/BUS/ThongKeBus.java</file>
             <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/BUS/SanPhamBUS.java</file>
             <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/DAO/ChitietHD_DAO.java</file>
             <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/DAO/ConnectDataBase.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/StoreScreen.java</file>
             <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/BUS/ChitietHD_BUS.java</file>
-            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/ChucNangSanPhamGUI.java</file>
-            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/BUS/chitietphieunhap_BUS.java</file>
-            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/SanPhamGUI.java</file>
-            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/BarChart_DoanhThu.java</file>
-            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/DAO/DAO_chitietphieunhap.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/GUI/ThaotacInStore.java</file>
             <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/DAO/SanPhamDAO.java</file>
+            <file>file:/D:/thanh%20phuong/KTPM/DOAN_JAVA/src/BUS/TaiKhoanBUS.java</file>
         </group>
     </open-files>
 </project-private>

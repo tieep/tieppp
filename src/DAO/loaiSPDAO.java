@@ -78,14 +78,21 @@ public class loaiSPDAO {
      
       public void update(loaiSP item) {
         try {
+            System.out.println("bat dau update");
             c.connect();
 
             String query = " UPDATE loai SET TENLOAI='" + item.getTENLOAI()+ "', TINHTRANG=" + item.getTINHTRANG()+ " WHERE MALOAI='" + item.getMALOAI()+ "'";
             c.executeUpdate(query);
+            System.out.println("ket thuc update");
             c.disconnect();
         } catch (SQLException e) {
+           
         }
     }
+      public static void main(String []args){
+          loaiSPDAO l = new loaiSPDAO();
+          l.update(new loaiSP("LOAI8", "aaaaa", 0));
+      }
        public void delete(String m) {
         try {
             c.connect();

@@ -85,6 +85,11 @@ public class nhacungcapBUS {
         }
     }
     
+    public void updateInSQL(nhacungcapDTO ncc){
+        nhacungcapDAO nccDAO = new  nhacungcapDAO();
+        nccDAO.update(ncc);
+    }
+    
     public void delete(String MANCC){
         for(int i=0;i<listNhacungcap.size();i++){
             if(listNhacungcap.get(i).getMANCC().equals(MANCC))
