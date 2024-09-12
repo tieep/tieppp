@@ -119,7 +119,7 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 		
 		title.setPreferredSize(new Dimension(w,30));
 		title.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-		title.setBackground(Color.decode("#60A3BC"));title.setOpaque(true);
+		title.setForeground(Color.decode("#0A3D62"));title.setOpaque(true);
 		
 		
 		////////////////// khoảng cách từ title center/////////////////////////
@@ -351,7 +351,7 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 		jl[6].setPreferredSize(new Dimension(80,30));
 		jl[6].setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		jl[6].setForeground(Color.white);
-		jl[6].setBackground(Color.decode("#60A3BC")); jl[6].setOpaque(true);
+		jl[6].setBackground(Color.decode("#0A3D62")); jl[6].setOpaque(true);
 		jl[6].setFont(f);
 		jl[6].addMouseListener(this);
 		
@@ -361,7 +361,7 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 		jl[7].setPreferredSize(new Dimension(50,30));
 		jl[7].setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		jl[7].setForeground(Color.white);
-		jl[7].setBackground(Color.decode("#60A3BC")); jl[7].setOpaque(true);
+		jl[7].setBackground(Color.decode("#0A3D62")); jl[7].setOpaque(true);
 		jl[7].setFont(f);
                 
                 jl[7].addMouseListener(this);
@@ -615,10 +615,10 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 			jl[4].setOpaque(true);
 		}
 		if (e.getSource() == jl[6]) {
-			jl[6].setBackground(Color.decode("#60A3BC"));
+			jl[6].setBackground(Color.decode("#0A3D62"));
 		}
 		if (e.getSource() == jl[7]) {
-			jl[7].setBackground(Color.decode("#60A3BC"));
+			jl[7].setBackground(Color.decode("#0A3D62"));
 		}
 		
 	}

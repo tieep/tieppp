@@ -7,7 +7,6 @@ import DTO.chitietphieunhap_DTO;
 import DTO.phieunhap_DTO;
 
 public class chitietphieunhap_BUS {
-
     private phieunhap_DTO h;
     private ArrayList<chitietphieunhap_DTO> ds;
 
@@ -25,6 +24,12 @@ public class chitietphieunhap_BUS {
     public void newlist() {
         DAO_chitietphieunhap c = new DAO_chitietphieunhap();
         ds = c.selectby_id(h);
+
+    }
+
+    public ArrayList<chitietphieunhap_DTO> select_by_id(phieunhap_DTO h) {
+        DAO_chitietphieunhap c = new DAO_chitietphieunhap();
+        return c.selectby_id(h);
 
     }
 

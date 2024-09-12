@@ -76,6 +76,20 @@ public class DAO_phieunhap {
 		
 		
 	}
+        public void delete(String m) {
+        try {
+            c = new ConnectDataBase();
+            c.connect();
+            //lay ra cac danh phieu nhap, kiem tra neu MANCC da duoc su dung thi thay doi trang thai, neu chua su dung thi xoa trong database luon
+            
+               String query = "DELETE FROM phieunhap WHERE MAPN = '"+m+"'";
+               String query_ctpn="DELETE FROM chitietphieunhap WHERE MAPN = '"+m+"'";
+            c.executeUpdate(query);
+            c.executeUpdate(query_ctpn);
+            c.disconnect();
+        } catch (SQLException e) {
+        }
+    }
 	public void update (phieunhap_DTO h ) {
 		try {
 			c = new ConnectDataBase();

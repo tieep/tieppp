@@ -18,6 +18,7 @@ public class chitietphieunhap_DTO {
 	public String getMapn() {
 		return mapn;
 	}
+        
 	public void setMapn(String mapn) {
 		this.mapn = mapn;
 	}

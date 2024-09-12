@@ -49,7 +49,7 @@ public class ConnectDataBase {
          Class.forName(driver);
          conn = DriverManager.getConnection(url + dbName + "?sslMode=DISABLED", userName, password);
       } catch (ClassNotFoundException e) {
-//         throw new SQLException("Driver not found");
+         throw new SQLException("Driver not found");
       }
       
    }
