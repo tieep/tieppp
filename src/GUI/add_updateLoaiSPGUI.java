@@ -13,20 +13,24 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.table.TableColumn;
 
 /**
  *
  * @author hp
  */
-public class addLoaiSPGUI extends JFrame implements MouseListener{
+public class add_updateLoaiSPGUI extends JFrame implements MouseListener{
 
-    private class addLoaiSP extends JPanel {
+    private class add_updateLoaiSP extends JPanel {
 
         public JLabel error;
         public JTextField getData;
@@ -34,11 +38,14 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
         private Font font_data = new Font("Tahoma", Font.PLAIN, 14);
         protected JPanel btn_exit;
         protected JPanel btn_submit;
+        protected JComboBox<String> comboBox ;
+        private String type ;
         
-        public addLoaiSP(int chieurong, int chieucao) {
+        public add_updateLoaiSP(int chieurong, int chieucao,String type) {
             
             getData = new JTextField();
             error = new JLabel();
+            this.type = type;
             init(chieurong, chieucao);
         }
 
@@ -48,7 +55,16 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
             setPreferredSize(new Dimension(chieurong+20, chieucao));
             JPanel titleGUI_wrap = new JPanel(new BorderLayout());
             titleGUI_wrap.setPreferredSize(new Dimension(chieurong, 40));
-            JLabel titleGUI = new JLabel("Thêm loại sản phẩm".toUpperCase(), JLabel.CENTER);
+            JLabel titleGUI = null;
+            switch(type){
+                case "update":
+                    titleGUI = new JLabel("Sửa loại sản phẩm".toUpperCase(), JLabel.CENTER);
+                    break;
+                case "add":
+                    titleGUI = new JLabel("Thêm loại sản phẩm".toUpperCase(), JLabel.CENTER);
+                    break;
+            }
+            
             titleGUI.setFont(Cacthuoctinh_phuongthuc_chung.font_header);
             titleGUI_wrap.add(titleGUI, BorderLayout.CENTER);
             add(titleGUI_wrap);
@@ -73,8 +89,21 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
                 error.setForeground(Cacthuoctinh_phuongthuc_chung.error);
                 item.add(error);
 
-                add(item);
-            
+                
+             if(type.equals("update")){
+                int row = loaiGUI.table.getSelectedRow();
+                String status = (String) loaiGUI.table.getValueAt(row, 2);
+                loaiSPBUS lBUS = new loaiSPBUS();
+        ArrayList<loaiSP> list = lBUS.getList();
+        
+            comboBox = new JComboBox<>();
+            comboBox.addItem("Đang bán");
+            comboBox.addItem("Ngừng bán");
+            comboBox.setSelectedItem(status);
+                item.add(comboBox);
+                item.setPreferredSize(new Dimension(chieurong, 120));
+             }
+            add(item);
 
             JPanel btn_wrap = new JPanel(new FlowLayout(1));
 
@@ -101,13 +130,16 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
         }
     }
     private int chieurong, chieucao;
-    private addLoaiSP addLoai;
+    private add_updateLoaiSP addLoai;
     private boolean flag_ten;
     private loaiSPGUI loaiGUI;
-    public addLoaiSPGUI(loaiSPGUI loaiGUI) {
+    private String type;
+    public add_updateLoaiSPGUI(loaiSPGUI loaiGUI, String type) {
         this.loaiGUI=loaiGUI;
-        chieurong = chieucao = 300;
+        chieurong = 300;
+        chieucao = 250;
         flag_ten  = false;
+        this.type = type;
         init();
     }
 
@@ -117,7 +149,7 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
         setLayout(new BorderLayout());
         setSize(chieurong, chieucao);
         setBackground(Color.WHITE);
-        addLoai = new addLoaiSP(getWidth(), getHeight());
+        addLoai = new add_updateLoaiSP(getWidth(), getHeight(),type);
         addLoai.btn_exit.addMouseListener(this);
         addLoai.btn_submit.addMouseListener(this);
         add(addLoai, BorderLayout.CENTER);
@@ -144,37 +176,93 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
                     break;
                 case "btn_submit":
                     String ten = addLoai.getData.getText();
+                    
                     loaiSPBUS loaiBUS = new loaiSPBUS();
-                    if (ten.equals("")) {
+                    
+                    switch (type) {
+                        case "update": {
+                            if (!ten.equals("")) {
+                                if (!loaiBUS.checkTENLOAI(ten)) {
+                                    flag_ten = false;
+                                    addLoai.error.setText("Tên không chứa kí tự đặc biệt");
+                                } else {
+                                    flag_ten = true;
+                                    addLoai.error.setText("");
+                                }
+                            }else{
+                                addLoai.error.setText("");
+                                flag_ten = true;
+                            }
+                            
+                            break;
+                        }
+                        case "add": {
+                            if (ten.equals("")) {
                         addLoai.error.setText("Không được để trống");
                     } else if (!loaiBUS.checkTENLOAI(ten)) {
-                        addLoai.error.setText("Tên chỉ chứa chữ cái");
+                        addLoai.error.setText("Tên không chứa kí tự đặc biệt");
                     } else {
                         flag_ten = true;
                         addLoai.error.setText("");
                     }
+                            break;
+                        }
+                    }
+                    
+                    
                    
 
                     if (flag_ten) {
+                        
+                        for(loaiSP s: loaiBUS.getList()){
+                                if(s.getTENLOAI().equals(ten)){
+                                    addLoai.error.setText("Tên đã tồn tại");
+                                    flag_ten = false;
+                                    return;
+                                }
+                            }
+                        
                         Object[] options1 = {"Có", "Không"};
-                        int r2 = JOptionPane.showOptionDialog(null, "Bạn đã chắc chắn với thông tin nhập vào?", "Thêm loại sản phẩm ", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options1,options1[0]);
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn đã chắc chắn với thông tin nhập vào?", "Xác nhận", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options1,options1[0]);
                         if (r2 == JOptionPane.YES_OPTION) {
-                            loaiSP loaiDTO = new loaiSP(ten);
-                            boolean flag = true;
-                            for(loaiSP s: loaiBUS.getList()){
-                                if(s.getTENLOAI().equals(loaiDTO.getTENLOAI())){
-                                    flag = false;
+                            switch (type) {
+                                case "update": {
+                                    String status = (String)addLoai.comboBox.getSelectedItem();
+                                    int row = loaiGUI.table.getSelectedRow();
+                                    String MAold = (String) loaiGUI.table.getValueAt(row, 0);
+                                    String TENold = (String) loaiGUI.table.getValueAt(row, 1);
+                                    String STATUSold = (String) loaiGUI.table.getValueAt(row, 2);
+                                    loaiSP loaiDTO = new loaiSP(MAold,TENold,(STATUSold.equals("Đang bán"))?1:0);
+                                    
+                                    if(!ten.equals("")){
+                                         loaiGUI.tableModel.setValueAt(ten, row, 1);
+                                         loaiDTO.setTENLOAI(ten);
+                                    }
+                                    if(!status.equals(STATUSold)){
+                                        loaiGUI.tableModel.setValueAt(status, row, 2);
+                                         loaiDTO.setTINHTRANG((status.equals("Đang bán"))?1:0);
+                                    }
+                                    
+                                    loaiGUI.tableModel.fireTableDataChanged();
+                                    JOptionPane.showMessageDialog(null, "Sửa loại thành công!");
+
+                                    
+                                    dispose();
+                                    loaiGUI.listUpdate.add(loaiDTO);
+                                     System.out.println("ma "+loaiDTO.getMALOAI()+" ten "+loaiDTO.getTENLOAI()+" TRANG THAI "+loaiDTO.getTINHTRANG());
+                                    break;
+                                }
+                                case "add": {
+                                    JOptionPane.showMessageDialog(null, "Thêm loại sản phẩm mới thành công!");
+                                    loaiSP loaiDTO = new loaiSP(ten);
+                                    loaiBUS.add(loaiDTO);
+                                    loaiGUI.addLineDataInTable(loaiDTO); 
+                                    dispose();
                                     break;
                                 }
                             }
-                             if(flag){
-                               loaiBUS.add(loaiDTO);
-                           loaiGUI.addLineDataInTable(loaiDTO);
-                            JOptionPane.showMessageDialog(null, "Thêm loại sản phẩm mới thành công!");
-                            dispose();
-                            }else
-                                JOptionPane.showMessageDialog(null, "Thêm loại sản phẩm mới thất bại do tên bị trùng với tên đã có!");
                             
+                               
                           
                            
                             
@@ -195,12 +283,12 @@ public class addLoaiSPGUI extends JFrame implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      //  throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
