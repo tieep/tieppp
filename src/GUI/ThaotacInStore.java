@@ -6,67 +6,57 @@ import BUS.Hoadon_BUS;
 import BUS.Nhanvien_BUS;
 import BUS.SanPhamBUS;
 import BUS.SizeBUS;
-import BUS.TaiKhoanBUS;
-import java.awt.Font;
+import BUS.chitietphieunhap_BUS;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Cursor;
 import java.awt.Component;
 
-import javax.swing.SwingConstants;
+import javax.net.ssl.SSLContext;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import java.util.ArrayList;
 import BUS.chitietquyenBUS;
 import BUS.chitietsanpham_BUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+import BUS.phieunhap_BUS;
 import BUS.quyenBUS;
 import DAO.chitietquyenDAO;
 import DTO.chitietquyenDTO;
-import DTO.chucnangDTO;
-import DAO.chucnangDAO;
 import DTO.ChitietHD_DTO;
 import DTO.Hoadon_DTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
+import DTO.chitietphieunhap_DTO;
 import DTO.chitietsanpham_DTO;
 import DTO.khachHangDTO;
 import DTO.loaiSP;
 import DTO.model_qlkh;
+
 import DTO.nhacungcapDTO;
 import java.awt.Container;
 import java.awt.event.MouseAdapter;
+
+import DTO.phieunhap_DTO;
+
 import java.io.IOException;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
-import org.jfree.ui.RefineryUtilities;
 
 public class ThaotacInStore extends JPanel implements MouseListener {
 
@@ -298,7 +288,14 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 }
                 break;
             }
-
+            case "PN": {
+            try {
+                thaotacPN(ctqDTO.getHANHDONG(), itemClicked);
+            } catch (SQLException ex) {
+                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+                break;
+            }
             case "SP": {
                 thaotacSP(ctqDTO.getHANHDONG(), itemClicked);
                 break;
@@ -509,6 +506,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 }
                 break;
             }
+            
             case "NULLThK": {
                 chucnangThongke hdGUI = (chucnangThongke) pageContent;
                 JPanel search = s.centerContent.search;
@@ -644,7 +642,107 @@ public class ThaotacInStore extends JPanel implements MouseListener {
 
         }
     }
+public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
+        phieunhap_GUI pnGUI = (phieunhap_GUI) pageContent;
+      
+        TaiKhoanDTO tk=s.tkGUI;
+        
+        phieunhap_BUS pnBUS = new phieunhap_BUS();
+        switch (hanhdong) {
+        case "Thêm": {
+                pnGUI.frame_them_phieunhap = new frame_them_phieunhap(800, 500, pnGUI, tk);
+                
+                // Hiển thị frame_them_phieunhap mới
+//                JFrame addFrame = new JFrame("Thêm Phiếu Nhập");
+//                addFrame.setSize(800, 600);
+//                addFrame.setLocationRelativeTo(null);
+//                addFrame.add(pnGUI.frame_them_phieunhap.getContentPane()); // Thêm nội dung panel vào frame
+//                addFrame.setVisible(true);
+            
+            break;
+        }
+        case "Sửa": {
+            ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
+            if (!selectedListPN.isEmpty()) {
+                String selectedMAPN = selectedListPN.get(0); 
+                if (selectedMAPN != null) {
+                    
+                    phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
+                    chitietphieunhap_BUS ctpnBUS=new chitietphieunhap_BUS(selectedPhieuNhap);
+                    ArrayList<chitietphieunhap_DTO> ctpn=ctpnBUS.select_by_id(selectedPhieuNhap);
+                    frame_sua_pn fr=new frame_sua_pn(400,600,selectedPhieuNhap, pnGUI,ctpn);
+                    
+                }
+ /*NOte: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "GUI.chitietphieunhap_GUI.set_tongtien()" because "this.chitietphieunhap_GUI" is null
+         hình như ở đây do tui tạo 1 cái JFrame mới nên lúc ấn xác nhận cái gui truyền vô nó k đúng
+                */       
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
+            }
+            break;
+        }
+//        case "Sửa": {
+//    ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
+//    if (!selectedListPN.isEmpty()) {
+//        String selectedMAPN = selectedListPN.get(0);
+//        System.err.println("Đây là mapn:" + selectedMAPN); // Assuming single selection
+//        if (selectedMAPN != null) {
+//            // Lấy thông tin phieunhap_DTO từ MAPN
+//            phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
+//            System.out.println("đây là phiếu nhập dto " + selectedPhieuNhap);
+//            
+//            // Khởi tạo chitietphieunhap_GUI với dữ liệu phiếu nhập được chọn
+//            chitietphieunhap_GUI ctpn_GUI = new chitietphieunhap_GUI(800, 600, selectedPhieuNhap, pnGUI);
+//            System.out.println("trang chitietpn" + ctpn_GUI);
+//            
+//            // Thiết lập GUI
+//            ctpn_GUI.revalidate(); // Làm mới giao diện sau khi thêm thành phần
+//            ctpn_GUI.repaint();    // Vẽ lại giao diện
+//            
+//            // Sử dụng pack() để điều chỉnh kích thước khung cửa sổ
+//            
+//            
+//            // Chuyển chế độ GUI sang chế độ sửa
+//            ctpn_GUI.che_do_sua();
+//            
+//            // Hiển thị GUI
+//            ctpn_GUI.setVisible(true);
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Không tìm thấy mã phiếu nhập.");
+//        }
+//    } else {
+//        JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
+//    }
+//    break;
+//}
 
+            case "Xóa": {
+                switch (itemClicked.title.getText()) {
+                    case "Xóa":
+                        JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
+                        itemClicked.title.setText("Lưu/Thoát");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+                        break;
+                    case "Lưu/Thoát":
+                        Object[] options = {"Có", "Không"};
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa nhà cung cấp ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (r2 == JOptionPane.YES_OPTION) {
+                            ArrayList<String> listDelete = pnGUI.getSelectedListPN();
+                            for (String i : listDelete) {
+                                pnBUS.delete(i);
+                                pnBUS.deleteInSQL(i);
+                            }
+                            pnGUI.addDataInTable(pnBUS.dsPN());
+                            JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        }
+                        itemClicked.title.setText("Xóa");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                        break;
+                }
+            }
+
+        }
+    }
     public void thaotacPQ(String hanhdong, hanhdongGUI itemClicked) {
         phanquyen pq = (phanquyen) pageContent;
         quyenBUS qBUS = new quyenBUS();
