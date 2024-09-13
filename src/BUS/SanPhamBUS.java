@@ -41,12 +41,12 @@ public class SanPhamBUS {
         }
     }
     
-    public void delete(String maSP){
+    public void delete(String maSP, Boolean ktraHD){
         for(int i =0; i<dsSP.size(); i++){
             if(dsSP.get(i).getMaSP().equalsIgnoreCase(maSP)){
                 dsSP.remove(i);
                 SanPhamDAO spDAO = new SanPhamDAO();
-                spDAO.delete(maSP);
+                spDAO.delete(maSP, ktraHD);
                 return;
             }
         }

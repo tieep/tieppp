@@ -354,6 +354,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         lblGiaSP.setFont(font);
         lblGiaSP.setPreferredSize(new Dimension(100, height_row)); // Kích thước cố định
         txtDonGia = new JTextField();
+        txtDonGia.setEnabled(false);
         txtDonGia.setMinimumSize(new Dimension(200, height_row));
         txtDonGia.setPreferredSize(new Dimension(200, height_row));
         txtDonGia.setMaximumSize(new Dimension(200, height_row)); // Kích thước cố định

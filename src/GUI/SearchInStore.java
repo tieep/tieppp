@@ -1,10 +1,15 @@
 package GUI;
 
+import BUS.Hoadon_BUS;
 import BUS.SanPhamBUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+//<<<<<<< HEAD
 import BUS.nhanVienBUS;
+//=======
+import BUS.phieunhap_BUS;
+//>>>>>>> aebc2a941076f717b6dbbfb6d78272c7c380bf04
 import BUS.quyenBUS;
 import DTO.SanPhamDTO;
 import DTO.loaiSP;
@@ -120,7 +125,7 @@ public class SearchInStore extends JPanel implements MouseListener {
             case "Theo mã nhân viên, theo tên đăng nhập, theo mã quyền":
             case "Theo tên hoặc Sdt":
             case "Theo tên nhân viên, theo MANV, theo SĐT":
-            case "Theo MAPN":
+            case "Theo MAPN,MANV,MANCC":
             case "Theo MAHD, theo MAKH, theo MANV":
             case "Theo tên loại hoặc MALOAI":
                 name = new JTextField();
@@ -332,7 +337,7 @@ public class SearchInStore extends JPanel implements MouseListener {
                 break;
             }
             case "PN": {
-                String[] list = {"Theo MAPN", "Theo ngày nhập"};
+                String[] list = {"Theo MAPN,MANV,MANCC"};
                 listTitle.addAll(Arrays.asList(list));
                 break;
             }
@@ -432,10 +437,20 @@ public class SearchInStore extends JPanel implements MouseListener {
 
                 break;
             }
+             case "PN": {
+                phieunhap_BUS pnBUS = new phieunhap_BUS();
+                phieunhap_GUI pnGUI = (phieunhap_GUI) components[0];
+                if(pnBUS.search(data_filter)==null) System.err.println("fail");
+                else System.out.println(pnBUS.search(data_filter));
+                pnGUI.addDataInTable(pnBUS.search(data_filter));
+                pnGUI.repaint();
+                pnGUI.validate();
+
+                break;
+            }
             case "LOAI": {
                 loaiSPBUS loaiBUS = new loaiSPBUS();
                 loaiSPGUI loaiGUI = (loaiSPGUI) components[0];
-                System.out.println("Du lieu tim kiem" + data_filter.toString());
 
                 loaiGUI.addDataInTable(loaiBUS.search(data_filter));
                 loaiGUI.repaint();
@@ -480,12 +495,14 @@ public class SearchInStore extends JPanel implements MouseListener {
                 spGUI.validate();
                 break;
             case "HD":
-                JOptionPane.showMessageDialog(null, "Sắp có tính năng này!");
-//                chucnangHoadon cnhd = (chucnangHoadon) components[0];
-//                JPanel pnCont = cnhd.JP_contentCuaNameChucnangCon;
-//                Component[] pn = pnCont.getComponents();
-//                TrangLichsuHD lshd = (TrangLichsuHD) pn[0];
-//                lshd.SearchHD(data_filter);
+                
+                chucnangHoadon cnhd = (chucnangHoadon) components[0];
+                JPanel pnCont = cnhd.JP_contentCuaNameChucnangCon;
+                Component[] pn = pnCont.getComponents();
+                TrangLichsuHD lshd = (TrangLichsuHD) pn[0];
+                Hoadon_BUS hdBUS = new Hoadon_BUS();
+               
+                lshd.renderLeft(hdBUS.search(data_filter));
 //                lshd.repaint();
 //                lshd.validate();
                 break;
@@ -519,8 +536,18 @@ public class SearchInStore extends JPanel implements MouseListener {
 
     public void resetOfChucnang() throws SQLException, ParseException {
         ArrayList<String> data_filter = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        
+        // Định dạng ngày theo định dạng yyyy/MM/dd
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         switch (MACHUCNANG) {
             case "NCC": {
+
+                data_filter.add("");
+
+                break;
+            }
+            case "PN": {
 
                 data_filter.add("");
 
@@ -532,13 +559,9 @@ public class SearchInStore extends JPanel implements MouseListener {
                 break;
             }
             case "NULLThK": {
-                LocalDate ngayHienTai = LocalDate.now();
-
-                // Định dạng ngày theo định dạng dd/MM/yyyy
-                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                String ngayDinhDang = ngayHienTai.format(dinhDang);
-                data_filter.add(ngayDinhDang);
-                data_filter.add(ngayDinhDang);
+                
+                data_filter.add(today.format(formatter));
+                data_filter.add(today.format(formatter));
                 switch (thongkeloai) {
                     case 0:
                         data_filter.add("Tất cả");
@@ -561,22 +584,19 @@ public class SearchInStore extends JPanel implements MouseListener {
                 break;
             case "HD": {
                 data_filter.add("");
-                data_filter.add("Tất cả");
+                data_filter.add(today.format(formatter));
+                data_filter.add(today.format(formatter));
+                
                 break;
             }
             case "NV": {
                 data_filter.add("");
-                data_filter.add("Tất cả");
+                 data_filter.add("Tất cả");
                 break;
             }
             case "QLK": {
-                LocalDate ngayHienTai = LocalDate.now();
-
-                // Định dạng ngày theo định dạng dd/MM/yyyy
-                DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                String ngayDinhDang = ngayHienTai.format(dinhDang);
-                data_filter.add(ngayDinhDang);
-                data_filter.add(ngayDinhDang);
+                data_filter.add(today.format(formatter));
+                data_filter.add(today.format(formatter));
                 break;
             }
             case "KH": {

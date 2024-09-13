@@ -60,7 +60,7 @@ public class chitietquyenDAO {
                 }
                 result.close();
             }
-            c.disconnect();
+            
         }catch(SQLException E){}
         return list;
     }
@@ -101,7 +101,7 @@ public class chitietquyenDAO {
                   while(result.next()){
                       list.add(new chitietquyenDTO(result.getString("MAQUYEN"), result.getString("MACHUCNANG"), result.getString("HANHDONG")));
                   }
-                  c.disconnect();
+                  
                 result.close();
                 
             }

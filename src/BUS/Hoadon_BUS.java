@@ -5,6 +5,8 @@ import DAO.Hoadon_DAO;
 import DTO.chitietsanpham_DTO;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,23 +66,42 @@ public final class Hoadon_BUS {
         ArrayList<Hoadon_DTO> dshd = hdDAO.search_for_IDDate(id, begin, end);
         return dshd;
     }
-
+    private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return (date.isEqual(startDate) || date.isAfter(startDate)) &&
+               (date.isEqual(endDate) || date.isBefore(endDate));
+    }
     public ArrayList<Hoadon_DTO> search(ArrayList<String> data_filter) {
+        
+        String value1 = data_filter.get(0);
+        String start = data_filter.get(1).replace("/", "-");
+        String end = data_filter.get(2).replace("/", "-");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date1 = LocalDate.parse(start, formatter);
+        LocalDate date2 = LocalDate.parse(end, formatter);
         ArrayList<Hoadon_DTO> re = new ArrayList<>();
-        for (String i : data_filter) {
-            for (Hoadon_DTO j : dshoadon) {
-                String idHD = j.getMaHD();
-                if (idHD.equalsIgnoreCase(i)) {
-                    re.add(j);
-                }
-                int idKH = j.getMaKH();
-                if (idKH == Integer.parseInt(i)) {
-                    re.add(j);
-                }
-                String idNV = j.getMaNV();
-                if (idNV.equalsIgnoreCase(i)) {
-                    re.add(j);
-                }
+        System.out.println("bang nhau? "+start.equals(end));
+        System.out.println("so luong "+dshoadon.size());
+        for(Hoadon_DTO hd : dshoadon){
+            System.out.println("value1 = null "+(value1 == ""));
+            if(value1.equals("")){
+                System.out.println("dang duyet ? "+hd.getNgayHD());
+                System.out.println("search ? "+start);
+                if(start.equals(end)){
+                        if(hd.getNgayHD().equals(start)) re.add(hd);
+                    }else{
+                        LocalDate date3 = LocalDate.parse(hd.getNgayHD(), formatter);
+                        if (isDateInRange(date3,date1,date2)) re.add(hd);
+                    }  
+            }else{
+                if(hd.getMaHD().equalsIgnoreCase(value1) || hd.getMaNV().equalsIgnoreCase(value1) || String.valueOf(hd.getMaKH()).equals(value1))
+                {
+                    if(start.equals(end)){
+                        if(hd.getNgayHD().equals(start)) re.add(hd);
+                    }else{
+                        LocalDate date3 = LocalDate.parse(hd.getNgayHD(), formatter);
+                        if (isDateInRange(date3,date1,date2)) re.add(hd);
+                    }    
+                }   
             }
         }
         return re;
@@ -110,7 +131,15 @@ public final class Hoadon_BUS {
         return "HD" + max;
 
     }
+    public void update(Hoadon_DTO item) {
+        try {
+            Hoadon_DAO hdDAO = new Hoadon_DAO();
+            hdDAO.updatehd(item);
 
+        } catch (SQLException ex) {
+            Logger.getLogger(Hoadon_BUS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public boolean addInSQL(Hoadon_DTO item) {
         try {
             Hoadon_DAO hdDAO = new Hoadon_DAO();

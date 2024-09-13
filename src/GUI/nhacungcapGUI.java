@@ -46,8 +46,9 @@ public class nhacungcapGUI extends JPanel {
     private int ccao, crong;
     public JTable table;
     private Font font_data = new Font("Tahoma", Font.PLAIN, 14);
-    private DefaultTableModel tableModel;
+    public DefaultTableModel tableModel;
     public boolean isEditingEnabled = false;
+    public ArrayList<nhacungcapDTO> listUpdate;
 
     public nhacungcapGUI(int crong, int ccao) {
         this.ccao = ccao;
@@ -68,13 +69,12 @@ public class nhacungcapGUI extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column == 0) {
-                    return false;
-                }
+                
                 return isEditingEnabled;
             }
 
         };
+        
 
         nhacungcapBUS nccBUS = new nhacungcapBUS();
         addDataInTable(nccBUS.getList());
@@ -99,7 +99,7 @@ public class nhacungcapGUI extends JPanel {
             data = new Vector();
             data.add(n.getMANCC());
             data.add(n.getTENNCC());
-            data.add(n.getSDT());
+            data.add("0"+n.getSDT());
             tableModel.addRow(data);
         }
         table.setModel(tableModel);
