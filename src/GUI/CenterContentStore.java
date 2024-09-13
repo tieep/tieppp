@@ -23,10 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-/**
- *
- * @author hp
- */
 public class CenterContentStore extends JPanel {
 
     StoreScreen SS_main;
@@ -207,15 +203,20 @@ public class CenterContentStore extends JPanel {
                 break;
             }
             case "NV": {
-                try {
-                    Trangnhanvien_GUI nvGUI = new Trangnhanvien_GUI(widthPageContent, heightPageContent);
-                    ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, nvGUI);
-                    showThaotac(JP_thaotac);
-                    showPageContent(nvGUI);
-                    break;
-                } catch (SQLException ex) {
-                    Logger.getLogger(CenterContentStore.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    Trangnhanvien_GUI nvGUI = new Trangnhanvien_GUI(widthPageContent, heightPageContent);
+//                    ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, nvGUI);
+//                    showThaotac(JP_thaotac);
+//                    showPageContent(nvGUI);
+//                    break;
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(CenterContentStore.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+                  nhanVienGUI guiNV = new nhanVienGUI(widthPageContent, heightPageContent);
+                  ThaotacInStore JP_thaotac = new ThaotacInStore(cnDTO.getMACHUCNANG(), maquyen, guiNV);
+                  showThaotac(JP_thaotac);
+                  showPageContent(guiNV);
+                  break;
             }
 
             case "SP": {

@@ -28,7 +28,11 @@ import BUS.chitietsanpham_BUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+//<<<<<<< HEAD
+import BUS.nhanVienBUS;
+//=======
 import BUS.phieunhap_BUS;
+//>>>>>>> aebc2a941076f717b6dbbfb6d78272c7c380bf04
 import BUS.quyenBUS;
 import DAO.chitietquyenDAO;
 import DTO.chitietquyenDTO;
@@ -43,6 +47,7 @@ import DTO.loaiSP;
 import DTO.model_qlkh;
 
 import DTO.nhacungcapDTO;
+import DTO.nhanVienDTO;
 import java.awt.Container;
 import java.awt.event.MouseAdapter;
 
@@ -281,19 +286,15 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 break;
             }
             case "NV": {
-                try {
-                    thaotacNV(ctqDTO.getHANHDONG(), itemClicked);
-                } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                }
+                thaotacNV(ctqDTO.getHANHDONG(), itemClicked);
                 break;
             }
             case "PN": {
-            try {
-                thaotacPN(ctqDTO.getHANHDONG(), itemClicked);
-            } catch (SQLException ex) {
-                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
+                try {
+                    thaotacPN(ctqDTO.getHANHDONG(), itemClicked);
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
                 break;
             }
             case "SP": {
@@ -386,6 +387,30 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         break;
 
                     case "Sửa":
+//<<<<<<< HEAD
+                        JOptionPane.showMessageDialog(null,
+                                "Sắp có tính năng này!");
+//                        if (lshd.currentSelectedPanel == null) {
+//                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
+//                        } else {
+//                            Object[] options = {"Có", "Không"};
+//                            int r1 = JOptionPane.showOptionDialog(null, "Bạn chắc chắn muốn xóa?", "In hóa đơn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//                            if (r1 == JOptionPane.YES_OPTION) {
+//                                try {
+//                                    inPDF in = new inPDF(lshd.MAHDSelect);
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thành công!");
+//                                } catch (SQLException ex) {
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thất bại!");
+//                                } catch (IOException ex) {
+//                                    JOptionPane.showMessageDialog(null,
+//                                            "In thất bại!");
+//                                }
+//
+//                            }
+//                        }
+//=======
 
                         if (lshd.currentSelectedPanel == null) {
                             JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
@@ -475,6 +500,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
 
                             }
                         }
+//>>>>>>> aebc2a941076f717b6dbbfb6d78272c7c380bf04
 
                         break;
 
@@ -506,7 +532,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 }
                 break;
             }
-            
+
             case "NULLThK": {
                 chucnangThongke hdGUI = (chucnangThongke) pageContent;
                 JPanel search = s.centerContent.search;
@@ -642,45 +668,45 @@ public class ThaotacInStore extends JPanel implements MouseListener {
 
         }
     }
-public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
+
+    public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
         phieunhap_GUI pnGUI = (phieunhap_GUI) pageContent;
-      
-        TaiKhoanDTO tk=s.tkUSER;
-        
+
+        TaiKhoanDTO tk = s.tkUSER;
+
         phieunhap_BUS pnBUS = new phieunhap_BUS();
         switch (hanhdong) {
-        case "Thêm": {
+            case "Thêm": {
                 pnGUI.frame_them_phieunhap = new frame_them_phieunhap(800, 500, pnGUI, tk);
-                
+
                 // Hiển thị frame_them_phieunhap mới
 //                JFrame addFrame = new JFrame("Thêm Phiếu Nhập");
 //                addFrame.setSize(800, 600);
 //                addFrame.setLocationRelativeTo(null);
 //                addFrame.add(pnGUI.frame_them_phieunhap.getContentPane()); // Thêm nội dung panel vào frame
 //                addFrame.setVisible(true);
-            
-            break;
-        }
-        case "Sửa": {
-            ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
-            if (!selectedListPN.isEmpty()) {
-                String selectedMAPN = selectedListPN.get(0); 
-                if (selectedMAPN != null) {
-                    
-                    phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
-                    chitietphieunhap_BUS ctpnBUS=new chitietphieunhap_BUS(selectedPhieuNhap);
-                    ArrayList<chitietphieunhap_DTO> ctpn=ctpnBUS.select_by_id(selectedPhieuNhap);
-                    frame_sua_pn fr=new frame_sua_pn(400,600,selectedPhieuNhap, pnGUI,ctpn);
-                    
-                }
- /*NOte: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "GUI.chitietphieunhap_GUI.set_tongtien()" because "this.chitietphieunhap_GUI" is null
-         hình như ở đây do tui tạo 1 cái JFrame mới nên lúc ấn xác nhận cái gui truyền vô nó k đúng
-                */       
-            } else {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
+                break;
             }
-            break;
-        }
+            case "Sửa": {
+                ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
+                if (!selectedListPN.isEmpty()) {
+                    String selectedMAPN = selectedListPN.get(0);
+                    if (selectedMAPN != null) {
+
+                        phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
+                        chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(selectedPhieuNhap);
+                        ArrayList<chitietphieunhap_DTO> ctpn = ctpnBUS.select_by_id(selectedPhieuNhap);
+                        frame_sua_pn fr = new frame_sua_pn(400, 600, selectedPhieuNhap, pnGUI, ctpn);
+
+                    }
+                    /*NOte: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "GUI.chitietphieunhap_GUI.set_tongtien()" because "this.chitietphieunhap_GUI" is null
+         hình như ở đây do tui tạo 1 cái JFrame mới nên lúc ấn xác nhận cái gui truyền vô nó k đúng
+                     */
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
+                }
+                break;
+            }
 //        case "Sửa": {
 //    ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
 //    if (!selectedListPN.isEmpty()) {
@@ -743,6 +769,7 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
 
         }
     }
+
     public void thaotacPQ(String hanhdong, hanhdongGUI itemClicked) {
         phanquyen pq = (phanquyen) pageContent;
         quyenBUS qBUS = new quyenBUS();
@@ -960,7 +987,7 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
         switch (hanhdong) {
             case "Thêm": {
 
-                add_updateLoaiSPGUI addNCC = new add_updateLoaiSPGUI(loaiGUI,"add");
+                add_updateLoaiSPGUI addNCC = new add_updateLoaiSPGUI(loaiGUI, "add");
 
                 break;
             }
@@ -996,7 +1023,7 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
                         Object[] options = {"Có", "Không"};
                         int r1 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn lưu?", "Sửa loại sản phẩm ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                         if (r1 == JOptionPane.YES_OPTION) {
-                            
+
                             for (loaiSP l : loaiGUI.listUpdate) {
                                 System.out.println(l.getMALOAI());
                                 loaiBUS.updateInSQL(l);
@@ -1006,15 +1033,12 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
                         } else {
                             JOptionPane.showMessageDialog(null, "Thông tin không thay đổi");
                             loaiGUI.addDataInTable(loaiBUS.getList());
-                        } 
+                        }
                         itemClicked.title.setText("Sửa");
                         itemClicked.icon = new JLabel(new ImageIcon("./src/images/edit_icon.png"));
                         loaiGUI.isEditingEnabled = false;
                         loaiGUI.table.removeMouseListener(click);
                         loaiGUI.listUpdate.clear();
-
-
-                       
 
                 }
 
@@ -1057,27 +1081,26 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
         }
     }
 
-    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
-        Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) pageContent;
-        Nhanvien_BUS loaiBUS = new Nhanvien_BUS();
-        switch (hanhdong) {
-            case "Thêm": {
-                addNhanvienGUI addnv = new addNhanvienGUI(nvGUI);
-                break;
-            }
-            case "Sửa": {
-                JOptionPane.showMessageDialog(null, "Click vào dòng cần sửa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
-                nvGUI.reloadPagecontrol();
-                break;
-            }
-            case "Xóa": {
-                JOptionPane.showMessageDialog(null, "Click vào dòng cần xóa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
-                nvGUI.reloadPagecontrol();
-                break;
-            }
-        }
-    }
-
+//    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
+//        Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) pageContent;
+//        Nhanvien_BUS loaiBUS = new Nhanvien_BUS();
+//        switch (hanhdong) {
+//            case "Thêm": {
+//                addNhanvienGUI addnv = new addNhanvienGUI(nvGUI);
+//                break;
+//            }
+//            case "Sửa": {
+//                JOptionPane.showMessageDialog(null, "Click vào dòng cần sửa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
+//                nvGUI.reloadPagecontrol();
+//                break;
+//            }
+//            case "Xóa": {
+//                JOptionPane.showMessageDialog(null, "Click vào dòng cần xóa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
+//                nvGUI.reloadPagecontrol();
+//                break;
+//            }
+//        }
+//    }
     public void thaotacSIZE(String hanhdong, hanhdongGUI itemClicked) {
 
         SizeGUI sizeGUI = (SizeGUI) pageContent;
@@ -1175,6 +1198,7 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
         khachHangBUS KHBUS = new khachHangBUS();
         switch (hanhdong) {
             case "Thêm": {
+                System.out.println("vao them kh");
                 addKhachHangGUI addNCC = new addKhachHangGUI(KHGUI);
                 break;
             }
@@ -1205,6 +1229,53 @@ public void thaotacPN(String hanhdong, hanhdongGUI itemClicked) throws SQLExcept
                         }
                         itemClicked.title.setText("Xóa");
                         itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                    default:
+                        throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
+                }
+                break;
+            }
+        }
+    }
+
+    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) {
+        nhanVienGUI GUINV = (nhanVienGUI) pageContent;
+        nhanVienBUS BUSNV = new nhanVienBUS();
+
+        switch (hanhdong) {
+            case "Thêm": {
+                addNhanVienGUI addNV = new addNhanVienGUI(GUINV);
+                break;
+            }
+            case "Sửa": {
+                String id = GUINV.lay_id_table();
+                nhanVienDTO x = GUINV.lay_mot_nv(id);
+                new updateNhanVien(x, GUINV);
+                break;
+            }
+            case "Xóa": {
+                switch (itemClicked.title.getText()) {
+                    case "Xóa":
+                        JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
+                        itemClicked.title.setText("Lưu/Thoát");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+                        break;
+                    case "Lưu/Thoát":
+                        Object[] options = {"Có", "Không"};
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa Nhân viên ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (r2 == JOptionPane.YES_OPTION) {
+                            ArrayList<String> listDelete = GUINV.lay_sd_chon();
+
+                            for (String i : listDelete) {
+                                BUSNV.xoaInSQL(i);
+                                BUSNV.xoaInBUS(i);
+                                System.err.println(i);
+                            }
+                            GUINV.reloadData(BUSNV.getds_nhanVien());
+                            JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        }
+                        itemClicked.title.setText("Xóa");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                        break;
                     default:
                         throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
                 }
