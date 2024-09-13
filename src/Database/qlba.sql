@@ -226,18 +226,18 @@ CREATE TABLE `chucnang` (
 --
 
 INSERT INTO `chucnang` (`MACHUCNANG`, `TENCHUCNANG`) VALUES
+('SP', 'Sản phẩm'),
 ('HD', 'Hoá đơn'),
-('KH', 'Khách hàng'),
-('LOAI', 'Loại'),
-('NCC', 'Nhà cung cấp'),
-('NULLThK', 'Thống kê'),
+('TK', 'Tài khoản'),
 ('NV', 'Nhân viên'),
+('KH', 'Khách hàng'),
 ('PN', 'Phiếu nhập'),
+('NCC', 'Nhà cung cấp'),
+('LOAI', 'Loại'),
+('SIZE', 'Size'),
 ('PQ', 'Phân quyền'),
 ('QLK', 'Kho'),
-('SIZE', 'Size'),
-('SP', 'Sản phẩm'),
-('TK', 'Tài khoản');
+('NULLThK', 'Thống kê');
 
 -- --------------------------------------------------------
 

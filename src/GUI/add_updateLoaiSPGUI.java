@@ -234,6 +234,13 @@ public class add_updateLoaiSPGUI extends JFrame implements MouseListener{
                                     String STATUSold = (String) loaiGUI.table.getValueAt(row, 2);
                                     loaiSP loaiDTO = new loaiSP(MAold,TENold,(STATUSold.equals("Đang bán"))?1:0);
                                     
+                                    System.out.println(ten.equals("") && status.equals(STATUSold));
+                                    if(ten.equals("") && status.equals(STATUSold)){
+                                        JOptionPane.showMessageDialog(null, "Không có dữ liệu nhập mới!\nThông tin không thay đổi");
+                                        dispose();
+                                        return;
+                                    }
+                                    
                                     if(!ten.equals("")){
                                          loaiGUI.tableModel.setValueAt(ten, row, 1);
                                          loaiDTO.setTENLOAI(ten);
@@ -244,7 +251,7 @@ public class add_updateLoaiSPGUI extends JFrame implements MouseListener{
                                     }
                                     
                                     loaiGUI.tableModel.fireTableDataChanged();
-                                    JOptionPane.showMessageDialog(null, "Sửa loại thành công!");
+                                    JOptionPane.showMessageDialog(null, "Sửa loại thành công!\nLưu ý: thay đổi này vẫn chưa được lưu, hãy bấm Lưu/thoát để lưu thay đổi");
 
                                     
                                     dispose();

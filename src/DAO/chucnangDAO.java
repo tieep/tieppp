@@ -28,11 +28,12 @@ public class chucnangDAO {
         ArrayList<chucnangDTO> list = new ArrayList<>();
         try{
             c.connect();
-            String query="SELECT * FROM chucnang";
+            String query="SELECT * FROM chucnang ORDER BY created_at";
             try (ResultSet result = c.executeQuery(query)) {
                 while(result.next()){
                     chucnangDTO item = new chucnangDTO(result.getString("MACHUCNANG"),result.getString("TENCHUCNANG"));
                     list.add(item);
+                    
                 }
             }
             System.out.println("Lay danh sach chuc nang thanh cong");
