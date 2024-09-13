@@ -32,6 +32,7 @@ import BUS.chitietsanpham_BUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+import BUS.nhanVienBUS;
 import BUS.quyenBUS;
 import DAO.chitietquyenDAO;
 import DTO.chitietquyenDTO;
@@ -46,6 +47,7 @@ import DTO.khachHangDTO;
 import DTO.loaiSP;
 import DTO.model_qlkh;
 import DTO.nhacungcapDTO;
+import DTO.nhanVienDTO;
 import java.awt.Container;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -288,11 +290,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 break;
             }
             case "NV": {
-                try {
-                    thaotacNV(ctqDTO.getHANHDONG(), itemClicked);
-                } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                }
+                thaotacNV(ctqDTO.getHANHDONG(), itemClicked);
                 break;
             }
 
@@ -329,69 +327,65 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                                     hdBUS = new Hoadon_BUS();
                                     Hoadon_DTO hdSelect = hdBUS.searchHoadon_DTO(mahd);
                                     hdBUS.delete(mahd);
-                                    
+
                                     lshd.left.remove(lshd.currentSelectedPanel);
                                     lshd.right.removeAll();
-                                    
-//                                    lshd.init();
 
+//                                    lshd.init();
                                     lshd.revalidate();
                                     lshd.repaint();
                                     JOptionPane.showMessageDialog(null,
                                             "Xóa thành công!");
-                                    if(hdSelect != null){
-                                        for(model_qlkh kh : khBUS.getlist()){
-                                            if(kh.getMakh() == hdSelect.getMaKH()){
-                                                if(hdSelect.getGiamgia() == 0)
-                                                    kh.setDiem(kh.getDiem() - hdSelect.getTongTien()/10000);
-                                                else
-                                                    kh.setDiem(kh.getDiem() + hdSelect.getGiamgia()/1000);
+                                    if (hdSelect != null) {
+                                        for (model_qlkh kh : khBUS.getlist()) {
+                                            if (kh.getMakh() == hdSelect.getMaKH()) {
+                                                if (hdSelect.getGiamgia() == 0) {
+                                                    kh.setDiem(kh.getDiem() - hdSelect.getTongTien() / 10000);
+                                                } else {
+                                                    kh.setDiem(kh.getDiem() + hdSelect.getGiamgia() / 1000);
+                                                }
                                                 khBUS.set(kh);
                                                 break;
                                             }
                                         }
                                     }
-                                        
-                                    
+
                                     ctspBUS = new chitietsanpham_BUS();
-                                    
 
                                 } catch (SQLException ex) {
                                     java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                                 }
 
-                                
-                                for(ChitietHD_DTO ctDTO: cthdBUS.getList()){
-                                    System.out.println("so luong trong cthd "+ctDTO.getSl());
-                                        for(chitietsanpham_DTO ctspDTO : ctspBUS.getlist()){
-                                            System.out.println(ctspDTO +" so luong trong ctsp "+ctspDTO.getSoluong());
-                                            if(ctDTO.getMaSP().equals(ctspDTO.getMASP()) && ctDTO.getMaSize().equals(ctspDTO.getMASIZE())){
-                                                
-                                                
-                                                ctspDTO.setSoluong(ctspDTO.getSoluong() + ctDTO.getSl());
-                                                
-                                                try {
-                                                    System.out.println("so luong trong cthd khi update"+ctspDTO.getSoluong());
-                                                    ctspBUS.update(ctspDTO);
-                                                    cthdBUS.delete(mahd,ctDTO.getMaSP(),ctDTO.getMaSize());
-                                                    
-                                                } catch (SQLException ex) {
-                                                    java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                                                }
-                                                break;
+                                for (ChitietHD_DTO ctDTO : cthdBUS.getList()) {
+                                    System.out.println("so luong trong cthd " + ctDTO.getSl());
+                                    for (chitietsanpham_DTO ctspDTO : ctspBUS.getlist()) {
+                                        System.out.println(ctspDTO + " so luong trong ctsp " + ctspDTO.getSoluong());
+                                        if (ctDTO.getMaSP().equals(ctspDTO.getMASP()) && ctDTO.getMaSize().equals(ctspDTO.getMASIZE())) {
+
+                                            ctspDTO.setSoluong(ctspDTO.getSoluong() + ctDTO.getSl());
+
+                                            try {
+                                                System.out.println("so luong trong cthd khi update" + ctspDTO.getSoluong());
+                                                ctspBUS.update(ctspDTO);
+                                                cthdBUS.delete(mahd, ctDTO.getMaSP(), ctDTO.getMaSize());
+
+                                            } catch (SQLException ex) {
+                                                java.util.logging.Logger.getLogger(ThaotacInStore.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                                             }
-                                                
+                                            break;
                                         }
-                                    
+
+                                    }
+
                                 }
-                                
+
                             }
                         }
                         break;
 
                     case "Sửa":
                         JOptionPane.showMessageDialog(null,
-                                           "Sắp có tính năng này!");
+                                "Sắp có tính năng này!");
 //                        if (lshd.currentSelectedPanel == null) {
 //                            JOptionPane.showMessageDialog(null, "Chọn hóa đơn cần sửa!");
 //                        } else {
@@ -872,27 +866,26 @@ public class ThaotacInStore extends JPanel implements MouseListener {
         }
     }
 
-    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
-        Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) pageContent;
-        Nhanvien_BUS loaiBUS = new Nhanvien_BUS();
-        switch (hanhdong) {
-            case "Thêm": {
-                addNhanvienGUI addnv = new addNhanvienGUI(nvGUI);
-                break;
-            }
-            case "Sửa": {
-                JOptionPane.showMessageDialog(null, "Click vào dòng cần sửa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
-                nvGUI.reloadPagecontrol();
-                break;
-            }
-            case "Xóa": {
-                JOptionPane.showMessageDialog(null, "Click vào dòng cần xóa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
-                nvGUI.reloadPagecontrol();
-                break;
-            }
-        }
-    }
-
+//    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) throws SQLException {
+//        Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) pageContent;
+//        Nhanvien_BUS loaiBUS = new Nhanvien_BUS();
+//        switch (hanhdong) {
+//            case "Thêm": {
+//                addNhanvienGUI addnv = new addNhanvienGUI(nvGUI);
+//                break;
+//            }
+//            case "Sửa": {
+//                JOptionPane.showMessageDialog(null, "Click vào dòng cần sửa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
+//                nvGUI.reloadPagecontrol();
+//                break;
+//            }
+//            case "Xóa": {
+//                JOptionPane.showMessageDialog(null, "Click vào dòng cần xóa thông tin nhân viên\n và bấm \"Hoàn tất\" khi hoàn thành thao tác!");
+//                nvGUI.reloadPagecontrol();
+//                break;
+//            }
+//        }
+//    }
     public void thaotacSIZE(String hanhdong, hanhdongGUI itemClicked) {
 
         SizeGUI sizeGUI = (SizeGUI) pageContent;
@@ -990,6 +983,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
         khachHangBUS KHBUS = new khachHangBUS();
         switch (hanhdong) {
             case "Thêm": {
+                System.out.println("vao them kh");
                 addKhachHangGUI addNCC = new addKhachHangGUI(KHGUI);
                 break;
             }
@@ -1020,6 +1014,53 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         }
                         itemClicked.title.setText("Xóa");
                         itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                    default:
+                        throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
+                }
+                break;
+            }
+        }
+    }
+
+    public void thaotacNV(String hanhdong, hanhdongGUI itemClicked) {
+        nhanVienGUI GUINV = (nhanVienGUI) pageContent;
+        nhanVienBUS BUSNV = new nhanVienBUS();
+
+        switch (hanhdong) {
+            case "Thêm": {
+                addNhanVienGUI addNV = new addNhanVienGUI(GUINV);
+                break;
+            }
+            case "Sửa": {
+                String id = GUINV.lay_id_table();
+                nhanVienDTO x = GUINV.lay_mot_nv(id);
+                new updateNhanVien(x, GUINV);
+                break;
+            }
+            case "Xóa": {
+                switch (itemClicked.title.getText()) {
+                    case "Xóa":
+                        JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
+                        itemClicked.title.setText("Lưu/Thoát");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+                        break;
+                    case "Lưu/Thoát":
+                        Object[] options = {"Có", "Không"};
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa Nhân viên ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (r2 == JOptionPane.YES_OPTION) {
+                            ArrayList<String> listDelete = GUINV.lay_sd_chon();
+
+                            for (String i : listDelete) {
+                                BUSNV.xoaInSQL(i);
+                                BUSNV.xoaInBUS(i);
+                                System.err.println(i);
+                            }
+                            GUINV.reloadData(BUSNV.getds_nhanVien());
+                            JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        }
+                        itemClicked.title.setText("Xóa");
+                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+                        break;
                     default:
                         throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
                 }

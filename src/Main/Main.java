@@ -4,11 +4,6 @@
  */
 package Main;
 
-/**
- *
- * @author hp
- */
-
 import GUI.LoginUI;
 import javax.swing.SwingUtilities;
 
@@ -19,3 +14,5 @@ public class Main {
        
     }
 }
+
+//SangHard!

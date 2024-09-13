@@ -4,8 +4,8 @@
  */
 package GUI;
 
-import BUS.khachHangBUS;
-import DTO.khachHangDTO;
+import BUS.nhanVienBUS;
+import DTO.nhanVienDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,46 +14,48 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class updateKhachHang extends JFrame implements MouseListener {
+public class updateNhanVien extends JFrame implements MouseListener {
 
     private Font font_text = new Font("Tahoma", Font.BOLD, 15);
-    private JTextField tfTen, tfSdt;
+    private JTextField tfTen, tfSdt, tfDiaChi, tfEmail, tfChucVu;
     private JPanel btnXacNhan, btnHuy;
     private int chieu_rong, chieu_cao, id;
-    private khachHangGUI khGUI;
-    private khachHangDTO khDTO;
-    private String sdtStart;
+    private nhanVienGUI nvGUI;
+    private nhanVienDTO nvDTO;
 
-    public updateKhachHang(khachHangDTO kh, khachHangGUI khGUI) {
-        tfTen = new JTextField(kh.getTenKH());
+    public updateNhanVien(nhanVienDTO nvDTO, nhanVienGUI nvGUI) {
+        tfTen = new JTextField(nvDTO.getTENNV());
         tfTen.setFont(font_text);
-        tfSdt = new JTextField(kh.getSoDienThoai());
+        tfSdt = new JTextField(nvDTO.getSDT());
         tfSdt.setFont(font_text);
-        sdtStart = kh.getSoDienThoai();
-        this.khDTO = kh;
-        this.khGUI = khGUI;
+        tfDiaChi = new JTextField(nvDTO.getDIACHI());
+        tfDiaChi.setFont(font_text);
+        tfEmail = new JTextField(nvDTO.getEMAIL());
+        tfEmail.setFont(font_text);
+        tfChucVu = new JTextField(nvDTO.getCHUCVU());
+        tfChucVu.setFont(font_text);
+        this.nvDTO = nvDTO;
+        this.nvGUI = nvGUI;
         init();
     }
 
     public void init() {
         setLayout(new BorderLayout());
-        setSize(380, 350);
-        setPreferredSize(new Dimension(380, 350));
+        setSize(380, 500);
+        setPreferredSize(new Dimension(380, 500));
+        setUndecorated(true);
 
         JPanel titleGUI_wrap = new JPanel(new BorderLayout());
         titleGUI_wrap.setPreferredSize(new Dimension(chieu_rong, 40));
-        JLabel titleGUI = new JLabel("Sửa Khách Hàng", JLabel.CENTER);
+        JLabel titleGUI = new JLabel("Sửa Nhân Viên", JLabel.CENTER);
         titleGUI.setFont(Cacthuoctinh_phuongthuc_chung.font_header);
         titleGUI_wrap.add(titleGUI, BorderLayout.CENTER);
         add(titleGUI_wrap, BorderLayout.NORTH);
@@ -88,6 +90,37 @@ public class updateKhachHang extends JFrame implements MouseListener {
         gbc.gridy = 3;
         inputPn.add(tfSdt, gbc);
 
+        JLabel lbDC = new JLabel("Địa chỉ:");
+        lbDC.setFont(font_text);
+        lbDC.setForeground(Cacthuoctinh_phuongthuc_chung.sky_blue);
+        gbc.gridy = 4;
+        inputPn.add(lbDC, gbc);
+
+        tfDiaChi.setPreferredSize(new Dimension(300, 30));
+        gbc.gridy = 5;
+        inputPn.add(tfDiaChi, gbc);
+
+        JLabel lbEmail = new JLabel("Email:");
+        lbEmail.setFont(font_text);
+        lbEmail.setForeground(Cacthuoctinh_phuongthuc_chung.sky_blue);
+        gbc.gridy = 6;
+        inputPn.add(lbEmail, gbc);
+
+        tfEmail.setPreferredSize(new Dimension(300, 30));
+        gbc.gridy = 7;
+        inputPn.add(tfEmail, gbc);
+
+        JLabel lbChucVu = new JLabel("Chức vụ:");
+        lbChucVu.setFont(font_text);
+        lbChucVu.setForeground(Cacthuoctinh_phuongthuc_chung.sky_blue);
+        gbc.gridy = 8;
+        inputPn.add(lbChucVu, gbc);
+
+      
+        tfChucVu.setPreferredSize(new Dimension(300, 30));
+        gbc.gridy = 9;
+        inputPn.add(tfChucVu, gbc);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         buttonPanel.setPreferredSize(new Dimension(chieu_rong, 40));
 
@@ -104,7 +137,7 @@ public class updateKhachHang extends JFrame implements MouseListener {
         btnXacNhan.setName("btnXacNhan");
         btnHuy.setName("btnHuy");
 
-        gbc.gridy = 4;
+        gbc.gridy = 10;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
@@ -116,6 +149,16 @@ public class updateKhachHang extends JFrame implements MouseListener {
         btnXacNhan.addMouseListener(this);
         btnHuy.addMouseListener(this);
 
+    }
+
+    private void cssBtn(JPanel b, String text, String name) {
+        JLabel t = new JLabel(text, JLabel.CENTER);
+        t.setForeground(Color.WHITE);
+        b.setName(name);
+        b.add(t);
+        b.setBackground(Cacthuoctinh_phuongthuc_chung.darkness_blue);
+        b.setPreferredSize(new Dimension(100, (int) b.getPreferredSize().getHeight()));
+        b.setOpaque(true);
     }
 
     @Override
@@ -131,26 +174,22 @@ public class updateKhachHang extends JFrame implements MouseListener {
                     }
                     break;
                 case "btnXacNhan":
-                    String ten = tfTen.getText();
+                    String tenNV = tfTen.getText();
                     String sdt = tfSdt.getText();
-                    khDTO.setTenKH(ten);
-                    khDTO.setSoDienThoai(sdt);
-                    khachHangBUS busKH = new khachHangBUS();
-                    boolean success = true;
-                    for (khachHangDTO kh : busKH.getDs_khachHang()) {
-                        if (kh.getSoDienThoai().equals(khDTO.getSoDienThoai()) && !khDTO.getSoDienThoai().equals(sdtStart)) {
-                            success = false;
-                            break;
-                        }
-                    }
-                    if (success) {
-                        if (busKH.capnhatkh(khDTO)) {       //error
-                            khGUI.suaMotKhachHang(khDTO);
-                            dispose();
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Sửa khách hàng thất bại số điện thoại đã tồn tại!");
-                    }
+                    String email = tfEmail.getText();
+                    String diaChi = tfDiaChi.getText();
+                    String chucVu = tfChucVu.getText();
+                    
+                    nhanVienBUS busNV = new nhanVienBUS();
+                    nvDTO.setTENNV(tenNV);
+                    nvDTO.setCHUCVU(chucVu);
+                    nvDTO.setSDT(sdt);
+                    nvDTO.setEMAIL(email);
+                    nvDTO.setDIACHI(diaChi);
+                    
+                    busNV.capnhatNV(nvDTO);
+                    nvGUI.suaKH(nvDTO);
+                    dispose();
                     break;
             }
         } catch (Exception ex) {
@@ -189,17 +228,6 @@ public class updateKhachHang extends JFrame implements MouseListener {
         }
     }
 
-    private void cssBtn(JPanel b, String text, String name) {
-        JLabel t = new JLabel(text, JLabel.CENTER);
-        t.setForeground(Color.WHITE);
-        b.setName(name);
-        b.add(t);
-        b.setBackground(Cacthuoctinh_phuongthuc_chung.darkness_blue);
-        b.setPreferredSize(new Dimension(100, (int) b.getPreferredSize().getHeight()));
-        b.setOpaque(true);
-    }
-
     public static void main(String[] args) {
-//        new updateKhachHang("hope","09123");
     }
 }

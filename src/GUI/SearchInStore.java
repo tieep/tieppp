@@ -4,6 +4,7 @@ import BUS.SanPhamBUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
+import BUS.nhanVienBUS;
 import BUS.quyenBUS;
 import DTO.SanPhamDTO;
 import DTO.loaiSP;
@@ -146,6 +147,9 @@ public class SearchInStore extends JPanel implements MouseListener {
                     case "LOAI":
                         typeTrangthai = new JComboBox<>(new String[]{"Tất cả", "Đang bán", "Ngừng bán"});
                         break;
+                    case "NV":
+                        typeTrangthai = new JComboBox<>(new String[]{ "Tất cả", "Đang làm việc", "Đã nghỉ việc"});
+                        break;
                 }
                 listComponentTimkiem.add(typeTrangthai);
                 wrap.add(typeTrangthai);
@@ -171,7 +175,7 @@ public class SearchInStore extends JPanel implements MouseListener {
             }
 
             case "Điểm tích lũy":
-                sortPoint = new JComboBox<>(new String[]{"Ngẫu nhiên", "Thấp đến cao", "Cao đến thấp"});
+                sortPoint = new JComboBox<>(new String[]{"Tất cả", "Thấp đến cao", "Cao đến thấp"});
                 listComponentTimkiem.add(sortPoint);
                 wrap.add(sortPoint);
                 wrap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -323,7 +327,7 @@ public class SearchInStore extends JPanel implements MouseListener {
 //                break;
 //            }
             case "NV": {
-                String[] list = {"Theo tên nhân viên, theo MANV, theo SĐT"};
+                String[] list = {"Theo tên nhân viên, theo MANV, theo SĐT", "Tình trạng"};
                 listTitle.addAll(Arrays.asList(list));
                 break;
             }
@@ -486,8 +490,9 @@ public class SearchInStore extends JPanel implements MouseListener {
 //                lshd.validate();
                 break;
             case "NV":
-                Trangnhanvien_GUI nvGUI = (Trangnhanvien_GUI) components[0];
-                nvGUI.SearchHD(data_filter);
+                nhanVienBUS nvBUS = new nhanVienBUS();
+                nhanVienGUI nvGUI = (nhanVienGUI) components[0];
+                nvGUI.reloadData(nvBUS.search(data_filter));
                 nvGUI.repaint();
                 nvGUI.validate();
                 break;
@@ -511,7 +516,6 @@ public class SearchInStore extends JPanel implements MouseListener {
 //>>>>>>> e21f13e080e87a8f6b4836c080defab66dad1c9b
         }
     }
-
 
     public void resetOfChucnang() throws SQLException, ParseException {
         ArrayList<String> data_filter = new ArrayList<>();
@@ -573,6 +577,11 @@ public class SearchInStore extends JPanel implements MouseListener {
                 String ngayDinhDang = ngayHienTai.format(dinhDang);
                 data_filter.add(ngayDinhDang);
                 data_filter.add(ngayDinhDang);
+                break;
+            }
+            case "KH": {
+                data_filter.add("");
+                data_filter.add("Tất cả");
                 break;
             }
         }
