@@ -6,13 +6,12 @@ package BUS;
 
 import DAO.khachHangDAO;
 import DTO.khachHangDTO;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import static com.itextpdf.kernel.pdf.PdfName.Pattern;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 
 public class khachHangBUS {
 
@@ -81,7 +80,7 @@ public class khachHangBUS {
         } else if (kiemtra_Sdt(kh.getSoDienThoai()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
-                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa số",
+                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa 11 số ",
                     "Thông báo",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
@@ -93,9 +92,8 @@ public class khachHangBUS {
         return false;
     }
 
-    public void capnhatkh(khachHangDTO kh) {
-        if (kiemtra_Diem(kh.getDiem()) && kiemtra_Ten(kh.getTenKH()) && kiemtra_Sdt(kh.getSoDienThoai())) {
-            dao.capnhatKH(kh);
+    public boolean capnhatkh(khachHangDTO kh) {
+        if (kiemtra_Diem(kh.getDiem()) && kiemtra_Ten(kh.getTenKH()) && kiemtra_Sdt(kh.getSoDienThoai())) {        
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
                     "Cập nhật khách hàng thành công" + kh.getTenKH(),
@@ -105,6 +103,7 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return dao.capnhatKH(kh);
         } else if (kiemtra_Ten(kh.getTenKH()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
@@ -115,16 +114,18 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return false;
         } else if (kiemtra_Sdt(kh.getSoDienThoai()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
-                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa số",
+                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa 11 số",
                     "Thông báo",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
                     options,
                     options[0]);
+            return false;
         } else if (kiemtra_Diem(kh.getDiem()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
@@ -135,7 +136,9 @@ public class khachHangBUS {
                     null,
                     options,
                     options[0]);
+            return false;
         }
+        return false;
     }
 
     public void xoakhSql(int id) {
@@ -176,7 +179,6 @@ public class khachHangBUS {
         ArrayList<khachHangDTO> re = new ArrayList<>();
 
         for (khachHangDTO kh : ds_khachHang) {
-            // Kiểm tra tìm kiếm theo tên hoặc số điện thoại
             boolean checkTenKh = kh.getTenKH().toLowerCase().contains(data_filter.get(0).toLowerCase());
             boolean checkSdt = kh.getSoDienThoai().toLowerCase().equals(data_filter.get(0).toLowerCase());
             boolean isCheck = false;
@@ -211,7 +213,7 @@ public class khachHangBUS {
     public static void main(String[] args) {
         khachHangBUS bus = new khachHangBUS();
         ArrayList<String> data_filter = new ArrayList<>();
-        data_filter.add("Monkey");
+        data_filter.add("h");
         data_filter.add("");
 
         ArrayList<khachHangDTO> ds = bus.search(data_filter);

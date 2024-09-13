@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class addNhanvienGUI extends JFrame implements MouseListener {
+public class themNhanvienGUI extends JFrame implements MouseListener {
 
     private class addNhanvien extends JPanel {
 
@@ -115,7 +115,7 @@ public class addNhanvienGUI extends JFrame implements MouseListener {
     private String manv = "";
     private boolean flag_ten, flag_sdt, flag_dc, flag_email, flag_cv;
     private Trangnhanvien_GUI nvGUI;
-    public addNhanvienGUI(Trangnhanvien_GUI nvGUI) {
+    public themNhanvienGUI(Trangnhanvien_GUI nvGUI) {
         this.nvGUI= nvGUI;
         chieurong  = 400;
         chieucao  = 600;
@@ -264,7 +264,7 @@ public class addNhanvienGUI extends JFrame implements MouseListener {
 
     public static void main(String[] args) throws SQLException {
         Trangnhanvien_GUI nvGUI = new Trangnhanvien_GUI(1200,700);
-        addNhanvienGUI k = new addNhanvienGUI(nvGUI);
+        themNhanvienGUI k = new themNhanvienGUI(nvGUI);
     }
 }
 

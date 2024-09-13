@@ -5,22 +5,34 @@
 package DTO;
 
 public class khachHangDTO {
+
     private int maKH;
     private String tenKH;
     private String soDienThoai;
     private int diem;
+    private int trangThai;
 
-    public khachHangDTO(int maKH, String tenKH, String soDienThoai, int diem) {
+    public khachHangDTO(int maKH, String tenKH, String soDienThoai, int diem, int trangThai) {
         this.maKH = maKH;
         this.tenKH = tenKH;
         this.soDienThoai = soDienThoai;
         this.diem = diem;
+        this.trangThai = trangThai;
     }
 
     public khachHangDTO(String tenKH, String soDienThoai) {
         this.tenKH = tenKH;
         this.soDienThoai = soDienThoai;
         this.diem = 0;
+        this.trangThai = 1;
+    }
+
+    public int getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
     }
 
     public int getMaKH() {
@@ -54,9 +66,9 @@ public class khachHangDTO {
     public void setDiem(int diem) {
         this.diem = diem;
     }
-    
+
     @Override
     public String toString() {
-        return maKH + " "+ tenKH + " " + soDienThoai + " " + diem;
+        return maKH + " " + tenKH + " " + soDienThoai + " " + diem;
     }
 }
