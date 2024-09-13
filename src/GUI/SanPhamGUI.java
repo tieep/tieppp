@@ -1,6 +1,8 @@
 package GUI;
 
+import BUS.ChitietHD_BUS;
 import BUS.SanPhamBUS;
+import BUS.chitietphieunhap_BUS;
 import BUS.loaiSPBUS;
 import DTO.SanPhamDTO;
 import java.awt.*;
@@ -179,7 +181,34 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     }
 
     public void DeleteSP() {
-        spBUS.delete(selectedSP.getMaSP());
+        ChitietHD_BUS cthd = new ChitietHD_BUS();
+        chitietphieunhap_BUS ctpn = new chitietphieunhap_BUS();
+
+        if (selectedSP == null || selectedSP.getMaSP() == null) {
+            System.out.println("Mã sản phẩm không hợp lệ");
+            return;
+        }
+
+        // Kiểm tra danh sách phiếu nhập
+        for (int i = 0; i < ctpn.getList().size(); i++) {
+            if (selectedSP.getMaSP().equals(ctpn.getList().get(i).getMasp())) {
+                spBUS.delete(selectedSP.getMaSP(), true);
+                return; // Đã tìm thấy và xóa, thoát khỏi phương thức
+            }
+        }
+
+        // Kiểm tra danh sách hóa đơn chi tiết
+        for (int i = 0; i < cthd.getList().size(); i++) {
+            if (selectedSP.getMaSP().equals(cthd.list.get(i).getMaSP())) {
+                spBUS.delete(selectedSP.getMaSP(), true);
+                return; // Đã tìm thấy và xóa, thoát khỏi phương thức
+            }
+        }
+
+        // Xóa nếu không có trong các danh sách trên
+        spBUS.delete(selectedSP.getMaSP(), false);
+
+        // Làm mới đối tượng và cập nhật giao diện
         selectedSP = new SanPhamDTO();
         refresh();
     }
@@ -256,14 +285,18 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+    }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    }
 
     @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+    }
 }

@@ -51,7 +51,7 @@ public class SanPhamDAO {
                 dssp.add(sanPham);
             }
             rs.close();
-     
+
         } catch (SQLException ex) {
             Logger.getLogger(SanPhamDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,14 +112,23 @@ public class SanPhamDAO {
         }
     }
 
-    public void delete(String maSP) {
+    public void delete(String maSP, Boolean ktraHD) {
         try {
             mySQL.connect();
-            String query = "UPDATE sanpham SET "
-                    + "TRANGTHAI='0' "
-                    + "WHERE MASP='" + maSP + "'";
-            System.out.println(query);
-            mySQL.executeUpdate(query);
+            String query;
+            if (ktraHD) {
+                query = "UPDATE sanpham SET "
+                        + "TRANGTHAI='0' "
+                        + "WHERE MASP='" + maSP + "'";
+                mySQL.executeUpdate(query);
+            } else {
+                String query1 = "DELETE FROM hinh WHERE MASP='" + maSP + "'";
+                String query2 = "DELETE FROM sanpham WHERE MASP='" + maSP + "'";
+
+                mySQL.executeUpdate(query1);
+                mySQL.executeUpdate(query2);
+            }
+           
             mySQL.disconnect();
         } catch (SQLException ex) {
             Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);

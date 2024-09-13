@@ -14,9 +14,13 @@ import javax.swing.JPanel;
 import BUS.SanPhamBUS;
 import DAO.DAO_chitietphieunhap;
 import DTO.SanPhamDTO;
+import DTO.TaiKhoanDTO;
 import DTO.chitietphieunhap_DTO;
 import DTO.chitietsanpham_DTO;
 import DTO.phieunhap_DTO;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import javax.swing.JFrame;
 
 public class panel_center_chitietphieunhap extends JPanel  implements MouseListener{
 	private phieunhap_DTO phieunhap_DTO;
@@ -159,7 +163,17 @@ public class panel_center_chitietphieunhap extends JPanel  implements MouseListe
 		
 	}
 
-	
+	   public static void main(String[] args) throws SQLException {
+        JFrame f = new JFrame();
+    f.setLocationRelativeTo(null);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    TaiKhoanDTO tk=new TaiKhoanDTO("AD1","AD1","SangHard!","2023-02-13","QQLHT",1);
+    phieunhap_DTO phieunhapDTO=new phieunhap_DTO("AD1","AD1",LocalDate.parse("2023-02-13"),10000.0,"2023-02-13");
+    phieunhap_GUI phieunhap_GUI=new phieunhap_GUI(600, 800,tk);
+    f.add(new panel_center_chitietphieunhap(600, phieunhapDTO, phieunhap_GUI));
+            
+    f.setVisible(true);
+    }
  
 	
 

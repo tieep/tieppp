@@ -18,7 +18,13 @@ public class ChitietHD_BUS {
         list(maHD); 
     }
   public ChitietHD_BUS(){
-        
+        try {
+            ChitietHD_DAO cthd = new ChitietHD_DAO();
+            list = new ArrayList<>();
+            list = cthd.list();
+        } catch (SQLException ex) {
+            Logger.getLogger(ChitietHD_BUS.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     public void list(String maHD) throws SQLException {
         ChitietHD_DAO listsphd = new ChitietHD_DAO();

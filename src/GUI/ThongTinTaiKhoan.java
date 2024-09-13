@@ -24,6 +24,7 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
     private int choiceTT = 0;
     private Nhanvien_DTO thongTinNV = new Nhanvien_DTO();
     private TaiKhoanDTO thongTinTK = new TaiKhoanDTO();
+    private TaiKhoanBUS tkBUS = new TaiKhoanBUS();;
 
     private Color normal = Color.decode("#0A3D62");
     Font font = new Font("Segoe UI", Font.BOLD, 16);
@@ -53,7 +54,6 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
 
     //Lấy dữ liệu từ tài khoản đăng nhập
     public void setDuLieu() throws SQLException {
-        TaiKhoanBUS tkBUS = new TaiKhoanBUS();
         for (int i = 0; i < tkBUS.getDsTK().size(); i++) {
             if (tkBUS.getDsTK().get(i).getUsername().equals(username)) {
                 thongTinTK = tkBUS.getDsTK().get(i);
@@ -169,14 +169,14 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
             n++;
         }
         txtPassword[2].setText(duLieuNV[10]);
-        txtPassword[2].setEditable(false);
+        txtPassword[2].setEnabled(false);
         pnPassword[2].setVisible(true);
 
         //---------- Nút thay đổi mật khẩu, username
         pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new GridLayout(1, 1, 20, 10));
-        pnThaoTac.setPreferredSize(new Dimension(250, height_row + 5));
-        pnThaoTac.setMaximumSize(new Dimension(350, height_row + 5));
+        pnThaoTac.setPreferredSize(new Dimension(80, height_row + 5));
+        pnThaoTac.setMaximumSize(new Dimension(200, height_row + 5));
 
         pnContentRight.add(pnUsername);
         for (int i = 0; i < 2; i++) {
@@ -208,17 +208,17 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
         lblMK.addMouseListener(this);
         lblMK.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        lblUser = new JLabel("Sửa tên đăng nhập", JLabel.CENTER);
-        lblUser.setPreferredSize(new Dimension(150, 35));
-        lblUser.setForeground(Color.white);
-        lblUser.setFont(font);
-        lblUser.setBackground(normal);
-        lblUser.setOpaque(true);
-        lblUser.addMouseListener(this);
-        lblUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        lblUser = new JLabel("Sửa tên đăng nhập", JLabel.CENTER);
+//        lblUser.setPreferredSize(new Dimension(150, 35));
+//        lblUser.setForeground(Color.white);
+//        lblUser.setFont(font);
+//        lblUser.setBackground(normal);
+//        lblUser.setOpaque(true);
+//        lblUser.addMouseListener(this);
+//        lblUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         pnThaoTac.add(lblMK);
-        pnThaoTac.add(lblUser);
+//        pnThaoTac.add(lblUser);
     }
 
     public void initSua() {
@@ -261,16 +261,15 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
     }
 
     public boolean check_NewPassword(String pass) {
-        if (pass.length() < 8) {
+        if (!tkBUS.checkPASSWORD(pass)) {
             JOptionPane.showMessageDialog(null,
-                    "Mật khẩu mới phải từ 8 kí tự, vui lòng nhập lại !", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                    "<html>Chỉ được chứa kí tự số, chữ hoa<br>Chữ thường, kí tự đặc biệt: !, @</html>", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         return true;
     }
 
     public boolean check_Usename(String username) {
-        TaiKhoanBUS tkBUS = new TaiKhoanBUS();
         if (username.equals(thongTinTK.getUsername())) {
             return true;
         }
@@ -329,16 +328,15 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
             this.revalidate();
             this.repaint();
         }
-        if (lbl == lblUser) {
-            choiceTT = 2;
-            pnThaoTac.removeAll();
-            initSua();
-            txtUsername.setEnabled(true);
-            this.revalidate();
-            this.repaint();
-        }
+//        if (lbl == lblUser) {
+//            choiceTT = 2;
+//            pnThaoTac.removeAll();
+//            initSua();
+//            txtUsername.setEnabled(true);
+//            this.revalidate();
+//            this.repaint();
+//        }
         if (lbl == lblLuu) {
-            TaiKhoanBUS tkBUS = new TaiKhoanBUS();
             if (choiceTT == 1) {
                 String oldPassword = new String(txtPassword[0].getPassword());// Lấy dữ liệu đã nhập từ JPasswordField
                 String newPassword = new String(txtPassword[1].getPassword());
@@ -359,19 +357,19 @@ public class ThongTinTaiKhoan extends JPanel implements MouseListener {
                     }
                 }
             }
-            if (choiceTT == 2) {
-                if (check_Usename(txtUsername.getText())) {
-                    thongTinTK.setUsername(txtUsername.getText());
-                    tkBUS.set(thongTinTK);
-                    JOptionPane.showMessageDialog(null,
-                            "Bạn đã thay đổi tên đăng nhập thành công !", "Thông báo", JOptionPane.DEFAULT_OPTION);
-                    txtUsername.setEnabled(false);
-                    pnThaoTac.removeAll();
-                    initThaoTac_macdinh();
-                    this.revalidate();
-                    this.repaint();
-                }
-            }
+//            if (choiceTT == 2) {
+//                if (check_Usename(txtUsername.getText())) {
+//                    thongTinTK.setUsername(txtUsername.getText());
+//                    tkBUS.set(thongTinTK);
+//                    JOptionPane.showMessageDialog(null,
+//                            "Bạn đã thay đổi tên đăng nhập thành công !", "Thông báo", JOptionPane.DEFAULT_OPTION);
+//                    txtUsername.setEnabled(false);
+//                    pnThaoTac.removeAll();
+//                    initThaoTac_macdinh();
+//                    this.revalidate();
+//                    this.repaint();
+//                }
+//            }
         }
     }
 

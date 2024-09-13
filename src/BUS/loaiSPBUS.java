@@ -38,8 +38,8 @@ public class loaiSPBUS {
     }
 
     public boolean checkTENLOAI(String t) {
-        //tên nhà cung cấp không chứa số và các kí tự đặc biệt
-        String regex = "^[\\p{L} ]+$";
+        //tên không chứa kí tự đặc biệt
+        String regex = "^[\\p{L}0-9 ]+$";
         return t.matches(regex);
     }
 
@@ -68,6 +68,12 @@ public class loaiSPBUS {
         n.add(loaiDTO);
     }
 
+    public void updateInSQL(loaiSP l) {
+        loaiSPDAO dao = new loaiSPDAO();
+          dao.update(l);
+          System.out.println("do "+l.getMALOAI());
+      
+    }
     public void updateInSQL() {
         loaiSPDAO loaiDAO = new loaiSPDAO();
         for (loaiSP ncc : list) {

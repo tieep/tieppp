@@ -1,5 +1,6 @@
 package GUI;
 
+import DTO.TaiKhoanDTO;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -18,7 +19,7 @@ public class panel_north_chitietphieunhap extends JPanel{
 		
 		for (int i = 0; i<5;i++) {
 			jl[i] = new JLabel(t[i],JLabel.CENTER);
-			jl[i].setForeground(Color.decode("#60A3BC"));
+			jl[i].setForeground(Color.decode("#0A3D62"));
 			this.add(jl[i]);
 			
 		}
@@ -29,4 +30,13 @@ public class panel_north_chitietphieunhap extends JPanel{
 		
 		this.setLayout(new GridLayout(1,5));
 	}
+//        public static void main(String[] args) {
+//        JFrame f = new JFrame();
+//    f.setLocationRelativeTo(null);
+//    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    TaiKhoanDTO tk=new TaiKhoanDTO("AD1","AD1","SangHard!","2023-02-13","QQLHT",1);
+//    f.add(new panel_north_chitietphieunhap(900));
+//            
+//    f.setVisible(true);
+//    }
 }

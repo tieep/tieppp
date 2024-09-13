@@ -45,11 +45,11 @@ public class ConnectDataBase {
 
    public void connect() throws SQLException {
       try {
-          System.out.println("tai sao");
+         
          Class.forName(driver);
          conn = DriverManager.getConnection(url + dbName + "?sslMode=DISABLED", userName, password);
       } catch (ClassNotFoundException e) {
-//         throw new SQLException("Driver not found");
+         throw new SQLException("Driver not found");
       }
       
    }
@@ -79,12 +79,13 @@ public void disconnect() {
        return rs;
    }
    
-   public void executeUpdate(String sql) throws SQLException {//executeUpdate() trong JDBC được sử dụng để thực thi các câu lệnh SQL như INSERT, UPDATE, DELETE hoặc các câu lệnh khác như CREATE TABLE, ALTER TABLE và DROP TABLE
+   public void executeUpdate(String sql)  {//executeUpdate() trong JDBC được sử dụng để thực thi các câu lệnh SQL như INSERT, UPDATE, DELETE hoặc các câu lệnh khác như CREATE TABLE, ALTER TABLE và DROP TABLE
       //connect();
+       System.out.println("bat dau execute");
       try {
             Statement statement = conn.createStatement();
             statement.executeUpdate(sql);
-            
+            System.out.println("ket thuc execute");
         } catch (SQLException ex) {
             System.out.println("Thực hiện thất bại" + ex.getMessage());
         }

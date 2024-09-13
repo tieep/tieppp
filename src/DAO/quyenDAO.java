@@ -33,7 +33,7 @@ public class quyenDAO {
                     list.add(item);
                 }
             }
-            c.disconnect();
+            
         }catch(SQLException e){}
         return list;
     }

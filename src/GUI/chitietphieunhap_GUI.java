@@ -45,6 +45,7 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 	private JTextField[] jtsua;
 	private phieunhap_GUI phieunhap_GUI;
 	private panel_bang_chitietphieunhap panel_bang_chitietphieunhap;
+        
 	private boolean clicked_chinhsua;
 	private chitietphieunhap_BUS chitietphieunhap_BUS;
 	private chitietsanpham_BUS chitietsanpham_BUS;
@@ -63,17 +64,17 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		 this.w = w;
 		 this.h = h;
 		this.phieunhap_GUI = phieunhap_GUI;
-		Color mau = Color.decode("#60A3BC");
+		Color mau = Color.decode("#0A3D62");
 		
 		this.chitietphieunhap_BUS = new chitietphieunhap_BUS(this.phieunhap_DTO);
 		this.chitietsanpham_BUS = new chitietsanpham_BUS();
 		this.phieunhap_BUS = new phieunhap_BUS();
-		this.setBorder(BorderFactory.createLineBorder(Color.decode("#60A3BC"),2));
-		
+		this.setBorder(BorderFactory.createLineBorder(Color.decode("#0A3D62"),2));
+		this.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Color.decode("#0A3D62")));
 		JPanel panel_north = new JPanel();
 		panel_north.setLayout(new FlowLayout(0,0,0));
 		panel_north.setPreferredSize(new Dimension(w,80));
-	
+                panel_north.setForeground(mau);
 		
 		jp = new JPanel[4] ;
 		jl = new JLabel[3];
@@ -132,9 +133,9 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		jp[0].add(jlsua[5]);
 		
 		
-//		for (int i =0; i< 6; i++) {
-//			jlsua[i].setForeground(mau);
-//		}
+		for (int i =0; i< 6; i++) {
+			jlsua[i].setForeground(mau);
+		}
 		panel_north.add(jp[0]);
 
 		
@@ -143,8 +144,11 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		jl[1] = new JLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 		jl[1].setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		panel_north.add(jl[1]);
-		this.add(panel_north,BorderLayout.NORTH);
-
+		
+//                jl[2]=new JLabel("fuckuppppppppppppppppp");
+//                jl[2].setBorder(BorderFactory.createMatteBorder(1000, 100, 1000, 100, Color.decode("#FF0000")));
+//                panel_north.add(jl[2]);
+//                this.add(panel_north,BorderLayout.NORTH);
 		
 		////////////////////// danh sác sản phẩm nhập /////////////////////
 		
@@ -169,9 +173,9 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		
 		panel_center_chitietphieunhap = new panel_center_chitietphieunhap(w, phieunhap_DTO, phieunhap_GUI);
 		String t = d.format(this.panel_center_chitietphieunhap.tongtien());
-		jl[2] = new JLabel("Tổng tiền :" + t+"đ");
-		
-		
+		jl[2] = new JLabel("Tổng tiền :" + t+" Đ");
+		Font font_text = new Font("Tahoma", Font.BOLD, 15);
+		jl[2].setFont(font_text);
 		jp[3] = new JPanel();
 		jp[3].setLayout(new BorderLayout());
 		
@@ -195,12 +199,12 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		Font f = new Font(TOOL_TIP_TEXT_KEY, 1, 20);
 		 d = new DecimalFormat("#,###.00") ;
 		this.phieunhap_GUI = phieunhap_GUI;
-		Color mau = Color.decode("#60A3BC");
+		Color mau = Color.decode("#0A3D62");
 		
 		this.chitietphieunhap_BUS = new chitietphieunhap_BUS(this.phieunhap_DTO);
 		this.chitietsanpham_BUS = new chitietsanpham_BUS();
 		this.phieunhap_BUS = new phieunhap_BUS();
-		this.setBorder(BorderFactory.createLineBorder(Color.decode("#60A3BC"),2));
+		this.setBorder(BorderFactory.createLineBorder(Color.decode("#0A3D62"),2));
 		
 		JPanel panel_north = new JPanel();
 		panel_north.setLayout(new FlowLayout(0,0,0));
@@ -301,7 +305,7 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		
 		panel_center_chitietphieunhap = new panel_center_chitietphieunhap(w, phieunhap_DTO, phieunhap_GUI);
 		String t = d.format(this.panel_center_chitietphieunhap.tongtien());
-		jl[2] = new JLabel("Tổng tiền :" + t+"đ");
+		jl[2] = new JLabel("Tổng tiền :" + t+" Đ");
 		
 		
 		jp[3] = new JPanel();
@@ -420,7 +424,7 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 		
 	public void set_tongtien() {
 		String t = d.format(this.panel_bang_chitietphieunhap.gettongtien());
-		this.jl[2].setText("Tổng tiền : " + t + "đ");
+		this.jl[2].setText("Tổng tiền : " + t + " Đ");
 	}
 	
 	public phieunhap_DTO phieunhapmoi() {
@@ -497,12 +501,12 @@ public class chitietphieunhap_GUI extends JPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource() == jltt[0]){
-                    jltt[0].setBackground(Color.decode("#60A3BC"));
+                    jltt[0].setBackground(Color.decode("#0A3D62"));
                     jltt[0].setOpaque(true);
                 }
                 
                     if (e.getSource() == jltt[1]){
-                    jltt[1].setBackground(Color.decode("#60A3BC"));
+                    jltt[1].setBackground(Color.decode("#0A3D62"));
                     jltt[1].setOpaque(true);
                 }
                 
