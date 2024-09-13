@@ -264,7 +264,7 @@ public class add_updateNhacungcapGUI extends JFrame implements MouseListener {
                                     }
                                         
                                     nccGUI.tableModel.fireTableDataChanged();
-                                    JOptionPane.showMessageDialog(null, "Sua nhà cung cấp thành công!");
+                                    JOptionPane.showMessageDialog(null, "Sửa nhà cung cấp thành công!\nLưu ý: thay đổi này vẫn chưa được lưu, hãy bấm Lưu/thoát để lưu thay đổi");
 
                                     
                                     dispose();

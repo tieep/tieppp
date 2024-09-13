@@ -57,7 +57,7 @@ public class loaiSPGUI extends JPanel{
             @Override
             public boolean isCellEditable(int row, int column) {
                 
-                return isEditingEnabled;
+                return false;
             }
 
         };
@@ -107,13 +107,16 @@ public class loaiSPGUI extends JPanel{
 
     }
      
-     public ArrayList<String> getSelectedListLoai() {
-        ArrayList<String> MALOAIselected = new ArrayList<>();
+     public ArrayList<loaiSP> getSelectedListLoai() {
+        ArrayList<loaiSP> selected = new ArrayList<>();
         int[] quantity_rowSelected = table.getSelectedRows();
         for (int row : quantity_rowSelected) {
-            MALOAIselected.add((String) table.getValueAt(row, 0));
+            String MA = (String) table.getValueAt(row, 0);
+            String TEN = (String) table.getValueAt(row, 1);
+            int status = ((String)table.getValueAt(row, 2)).equals("Đang bán")?1:0;
+            selected.add(new loaiSP(MA, TEN, status));
         }
-        return MALOAIselected;
+        return selected;
     }
 
     

@@ -70,7 +70,7 @@ public class nhacungcapGUI extends JPanel {
             @Override
             public boolean isCellEditable(int row, int column) {
                 
-                return isEditingEnabled;
+                return false;
             }
 
         };
@@ -134,13 +134,16 @@ public class nhacungcapGUI extends JPanel {
         table.setDefaultRenderer(Object.class, centerRenderer);
     }
 
-    public ArrayList<String> getSelectedListNCC() {
-        ArrayList<String> MANCCselected = new ArrayList<>();
+    public ArrayList<nhacungcapDTO> getSelectedListNCC() {
+        ArrayList<nhacungcapDTO> selected = new ArrayList<>();
         int[] quantity_rowSelected = table.getSelectedRows();
         for (int row : quantity_rowSelected) {
-            MANCCselected.add((String) table.getValueAt(row, 0));
+            String MANCC = (String) table.getValueAt(row, 0);
+            String TEN = (String) table.getValueAt(row, 1);
+            int SDT = Integer.parseInt((String)table.getValueAt(row, 2));
+            selected.add(new nhacungcapDTO(MANCC, TEN, SDT));
         }
-        return MANCCselected;
+        return selected;
     }
 
     public ArrayList<nhacungcapDTO> getListNCC() {

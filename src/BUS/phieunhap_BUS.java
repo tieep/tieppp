@@ -11,7 +11,9 @@ public class phieunhap_BUS {
 	public phieunhap_BUS() {
 		newlist();
 	}
-	
+	public ArrayList<phieunhap_DTO> getList(){
+            return dspn;
+        }
 	public void newlist() {
 		DAO_phieunhap c = new DAO_phieunhap();
 		this.dspn = c.select_all();

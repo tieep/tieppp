@@ -12,6 +12,7 @@ public class nhacungcapDTO {
     private String MANCC;
     private String TENNCC;
     private int SDT;
+    private int TRANGTHAI = 1;
     
     public nhacungcapDTO(String ma, String ten, int s){
         MANCC = ma;
@@ -23,7 +24,12 @@ public class nhacungcapDTO {
         TENNCC = ten;
         SDT = Integer.parseInt(sdt);
     }
-    
+    public void setTRANGTHAI(int n){
+        TRANGTHAI = n;
+    }
+    public int getTRANGTHAI(){
+        return TRANGTHAI ;
+    }
     public void setMANCC(String s){
         MANCC=s;
     }
