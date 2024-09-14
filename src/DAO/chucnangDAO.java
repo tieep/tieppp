@@ -33,6 +33,7 @@ public class chucnangDAO {
                 while(result.next()){
                     chucnangDTO item = new chucnangDTO(result.getString("MACHUCNANG"),result.getString("TENCHUCNANG"));
                     list.add(item);
+                    
                 }
             }
             System.out.println("Lay danh sach chuc nang thanh cong");

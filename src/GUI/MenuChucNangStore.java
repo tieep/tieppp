@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.awt.Cursor;
 
 import javax.swing.JScrollPane;
@@ -36,14 +37,11 @@ import DTO.chucnangDTO;
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 public class MenuChucNangStore extends JPanel implements MouseListener {
 
     private StoreScreen SS_main;
     private JLabel JL_nameStaff;
     private ArrayList<chucnangDTO> cnDTO_listByMAQUYEN;
-    private ArrayList<String> String_listNameChucnang;
     private Font font_chucnang;
     private JPanel JP_inforNhanvien;
     public JPanel JP_includeChucnangMenu;
@@ -109,7 +107,8 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
     }
 
     private void repaintMenu() {
-        cnDTO_listByMAQUYEN = lístChucnang(this.MAQUYEN);
+        ArrayList<chucnangDTO> listChucnangDTO = listChucnang(this.MAQUYEN);
+        cnDTO_listByMAQUYEN = sortChucnang( listChucnangDTO);
         if (cnDTO_listByMAQUYEN.size() < 9) {
 
             JP_includeChucnangMenu = new JPanel(new FlowLayout());
@@ -171,6 +170,7 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
                     break;
             }
             JPanel chucnang;
+
             if (cnDTO_listByMAQUYEN.size() < 9) {
 
                 JP_includeChucnangMenu.setPreferredSize(new Dimension(chieurong, 40));
@@ -192,8 +192,42 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
         add(scrollPane, BorderLayout.CENTER);
 
     }
+    public ArrayList<chucnangDTO> sortChucnang(ArrayList<chucnangDTO> list){
+        //Mảng String thứ tự theo ý muốn
+        //Mảng chức năng ngẫu nhiên
+        //Duyệt mảng chức năng(i), mỗi i kiểm tra xem mảng String có chứa i.getTENCHUCNANG không?
+        //Nếu có thêm vào mảng re.add(index của String, i)
+        //Duyệt lại mảng chức năng để loại bỏ các index null
+        String[] tenchucnang = {
+            "Sản phẩm",
+"Hoá đơn",
+"Tài khoản",
+"Nhân viên",
+"Khách hàng",
+"Phiếu nhập",
+"Nhà cung cấp",
+"Loại",
+"Size",
+"Phân quyền",
+"Kho",
+"Thống kê"};
+ArrayList<chucnangDTO> re = new ArrayList<>();
+for (String cn : tenchucnang) {
+    Iterator<chucnangDTO> iterator = list.iterator();
+    while (iterator.hasNext()) {
+        chucnangDTO c = iterator.next();
+        if (c.getTENCHUCNANG().equals(cn)) {
+            re.add(c);
+            iterator.remove();  // Sử dụng iterator để xóa phần tử
+            break;
+        }
+    }
+}
+re.add(new chucnangDTO("NULLDX", "Đăng xuất"));
+        return re;
+    }
 
-    public ArrayList<chucnangDTO> lístChucnang(String MAQUYEN) {
+    public ArrayList<chucnangDTO> listChucnang(String MAQUYEN) {
         String sql = "SELECT * FROM chitietquyen WHERE MAQUYEN='" + MAQUYEN + "' AND HANHDONG='Xem'";
         chitietquyenDAO ctqDAO = new chitietquyenDAO();
         ArrayList<chitietquyenDTO> listChitietQuyen = ctqDAO.executeQuery(sql);
@@ -213,7 +247,7 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
                 listChucnang.add(k);
             }
         }
-        listChucnang.add(new chucnangDTO("NULLDX", "Đăng xuất"));
+        
         return listChucnang;
     }
 
@@ -280,8 +314,13 @@ public class MenuChucNangStore extends JPanel implements MouseListener {
             changeColorJPanelChild(JP_selected, Cacthuoctinh_phuongthuc_chung.darkness_blue, Cacthuoctinh_phuongthuc_chung.sky_blue);
             JP_selected.addMouseListener(this);
         }
-
-        JPanel itemChucnang = (JPanel) e.getSource();
+        JPanel itemChucnang = null;
+        if(e == null){
+            Component[] list_chucnangGUI = this.getComponents();
+            itemChucnang = (JPanel) list_chucnangGUI[0];
+        }
+            
+        itemChucnang = (JPanel) e.getSource();
         changeColorJPanelChild(itemChucnang, Cacthuoctinh_phuongthuc_chung.sky_blue, Cacthuoctinh_phuongthuc_chung.darkness_blue);
         JP_selected = itemChucnang;
 

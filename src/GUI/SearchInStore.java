@@ -5,11 +5,8 @@ import BUS.SanPhamBUS;
 import BUS.khachHangBUS;
 import BUS.loaiSPBUS;
 import BUS.nhacungcapBUS;
-//<<<<<<< HEAD
 import BUS.nhanVienBUS;
-//=======
 import BUS.phieunhap_BUS;
-//>>>>>>> aebc2a941076f717b6dbbfb6d78272c7c380bf04
 import BUS.quyenBUS;
 import DTO.SanPhamDTO;
 import DTO.loaiSP;
