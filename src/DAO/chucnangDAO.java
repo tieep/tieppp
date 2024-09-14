@@ -28,7 +28,7 @@ public class chucnangDAO {
         ArrayList<chucnangDTO> list = new ArrayList<>();
         try{
             c.connect();
-            String query="SELECT * FROM chucnang ORDER BY created_at";
+            String query="SELECT * FROM chucnang";
             try (ResultSet result = c.executeQuery(query)) {
                 while(result.next()){
                     chucnangDTO item = new chucnangDTO(result.getString("MACHUCNANG"),result.getString("TENCHUCNANG"));

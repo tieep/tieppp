@@ -28,6 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -163,7 +164,7 @@ public final class ChitietHD_GUI extends JPanel {
         JPanel pDetails = new JPanel();
         pDetails.setBackground(Color.white);
 
-        String[] columnNames = {"MASP", "Tên SP", "Size", "SL", "Đơn giá", "Tổng"};
+        String[] columnNames = {"MASP", "Tên SP", "Size", "SL", "Đơn giá (đ)", "Tổng"};
         tableModel = new DefaultTableModel();
         tableModel.setColumnIdentifiers(columnNames);
 
@@ -227,15 +228,15 @@ public final class ChitietHD_GUI extends JPanel {
           
             switch (i) {
                 case 0: {
-                    valueInPayment[i] = new JLabel(giamgia + tongtien + "", JLabel.CENTER);
+                    valueInPayment[i] = new JLabel(formatPrice(giamgia + tongtien + "")+" đ", JLabel.CENTER);
                     break;
                 }
                 case 1: {
-                    valueInPayment[i] = new JLabel(giamgia + "", JLabel.CENTER);
+                    valueInPayment[i] = new JLabel(formatPrice(giamgia + "")+" đ", JLabel.CENTER);
                     break;
                 }
                 case 2: {
-                    valueInPayment[i] = new JLabel(tongtien + "", JLabel.CENTER);
+                    valueInPayment[i] = new JLabel(formatPrice(tongtien + "")+" đ", JLabel.CENTER);
                     break;
                 }
             }
@@ -262,8 +263,8 @@ public final class ChitietHD_GUI extends JPanel {
             data.add(spBUS.select_by_id(n.getMaSP()).getTenSP());
             data.add((sizeBUS.getSizeDTO(n.getMaSize()).getTENSIZE()));
             data.add(n.getSl());
-            data.add((int) n.getGia());
-            data.add(n.getSl() * (int) n.getGia());
+            data.add(formatPrice(String.valueOf((int) n.getGia())));
+            data.add(formatPrice(String.valueOf(n.getSl() * (int) n.getGia())));
             tableModel.addRow(data);
         }
         table.setModel(tableModel);
@@ -319,11 +320,11 @@ public final class ChitietHD_GUI extends JPanel {
                                         String sizeOld = (String)table.getValueAt(row, 2);
                                         int quantityNew = (int)comboBoxQuantity.getSelectedItem();
                                         
-                                        int dongia = (int)table.getValueAt(row, 4);
+                                        int dongia = Integer.parseInt(getPriceInFormatPrice((String)table.getValueAt(row, 4)));
                                         String MASP = (String)table.getValueAt(row, 0);
                                         tableModel.setValueAt(sizeNew, row, 2);
                                         tableModel.setValueAt(quantityNew, row, 3);
-                                        tableModel.setValueAt(quantityNew * dongia, row, 5);
+                                        tableModel.setValueAt(formatPrice(quantityNew * dongia +""), row, 5);
                                         tableModel.fireTableDataChanged();
                                         //lưu thay đổi xuống mảng ảo chi tiết hóa đơn và tính tổng chi tiết hóa đơn
                                         SizeBUS sizeBUS = new SizeBUS();
@@ -353,12 +354,12 @@ public final class ChitietHD_GUI extends JPanel {
                                         }else diemNew = diemBefore + (int)subTotal/10000;
                                           
                                         
-                                        valueInPayment[0].setText(subTotal+"");
-                                        valueInPayment[1].setText(giamgiaNew+"");
-                                        valueInPayment[2].setText(subTotal-giamgiaNew+"");
+                                        valueInPayment[0].setText(formatPrice(subTotal+"")+" đ");
+                                        valueInPayment[1].setText(formatPrice(giamgiaNew+"")+" đ");
+                                        valueInPayment[2].setText(formatPrice(subTotal-giamgiaNew+"")+" đ");
                                         Component[] JL_Child = HoadonSelected.getComponents();
-                                        ((JLabel)JL_Child[5]).setText(giamgiaNew+"");
-                                        ((JLabel)JL_Child[6]).setText(subTotal-giamgiaNew+"");
+                                        ((JLabel)JL_Child[5]).setText(formatPrice(giamgiaNew+""));
+                                        ((JLabel)JL_Child[6]).setText(formatPrice(subTotal-giamgiaNew+""));
                                         
                                         tongtien = subTotal-giamgiaNew;
                                         giamgia = giamgiaNew;
@@ -495,11 +496,16 @@ public final class ChitietHD_GUI extends JPanel {
                         listCTSPBefore = new ArrayList<>();
                     for (chitietsanpham_DTO sp : ctspBUS.getlist()) {
                         for (ChitietHD_DTO c : listCTHDCurrent) {
+                            
                             if (c.getMaSP().equals(sp.getMASP()) && c.getMaSize().equals(sp.getMASIZE())) {
+                                System.out.println("before "+sp.getMASP()+" ,"+sp.getMASIZE()+" ,"+sp.getSoluong());
+                                System.out.println("before cthd"+c.getMaSP()+" ,"+c.getMaSize()+" ,"+c.getSl());
                                 sp.setSoluong(sp.getSoluong() + c.getSl());
+                                 System.out.println("after "+sp.getMASP()+" ,"+sp.getMASIZE()+" ,"+sp.getSoluong());
                                 break;
                             }
                         }
+                        
                         listCTSPBefore.add(sp);
                         }
                     
@@ -524,13 +530,23 @@ public final class ChitietHD_GUI extends JPanel {
         table.setFont(new Font("Tahoma", Font.PLAIN, 14));//font cho dât trong table
         table.getColumnModel().getColumn(5).setPreferredWidth((int) chieurong / 6);
         table.getColumnModel().getColumn(1).setPreferredWidth((int) chieurong * 2 / 5);
-        table.getColumnModel().getColumn(2).setPreferredWidth((int) chieurong / 10);
-        table.getColumnModel().getColumn(3).setPreferredWidth((int) chieurong / 10);
-        table.getColumnModel().getColumn(4).setPreferredWidth((int) chieurong / 7);
-        table.getColumnModel().getColumn(0).setPreferredWidth(chieurong - (int) chieurong * 2 / 5 - (int) chieurong * 2 / 10 - (int) chieurong / 7 - (int) chieurong / 6);
+        table.getColumnModel().getColumn(2).setPreferredWidth((int) chieurong / 10 - 10);
+        table.getColumnModel().getColumn(3).setPreferredWidth((int) chieurong / 10 - 10);
+        table.getColumnModel().getColumn(4).setPreferredWidth((int) chieurong / 7 + 10);
+        table.getColumnModel().getColumn(0).setPreferredWidth(chieurong - (int) chieurong * 2 / 5 - (int) chieurong * 2 / 10 + 10 - (int) chieurong / 7 - (int) chieurong / 6 );
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER); // Căn giữa dữ liệu trong các ô
         table.setDefaultRenderer(Object.class, centerRenderer);
     }
-
+    private String formatPrice(String price){// đổi từ giá 100000 -> 100,000 đ
+        if(!price.equals("")){
+            DecimalFormat FormatInt = new DecimalFormat("#,###");
+            return FormatInt.format(Integer.parseInt(price));
+        }
+        return price;
+        
+    }
+    private String getPriceInFormatPrice(String formatprice){ // đổi từ 100.000 đ -> 100000(String)
+        return formatprice.replaceAll("[^0-9]", "");
+    }
 }

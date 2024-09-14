@@ -5,9 +5,13 @@ import DAO.Hoadon_DAO;
 import DTO.chitietsanpham_DTO;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,6 +120,31 @@ public final class Hoadon_BUS {
             Logger.getLogger(Hoadon_BUS.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    public boolean checkInDatetimeValid(Hoadon_DTO hdSelected){
+        boolean flag = true;
+        String ngay = hdSelected.getNgayHD();
+        String time = hdSelected.getThoigian();
+        
+        // Chuỗi ngày và giờ cần kiểm tra
+        String ngayCurrent = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String thoigianCurrent = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        
+        // Định dạng cho ngày và giờ
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Chuyển đổi các chuỗi thành LocalDateTime
+        LocalDateTime dateTime1 = LocalDateTime.parse(ngay + " " + time, formatter);
+        LocalDateTime dateTime2 = LocalDateTime.parse(ngayCurrent + " " + thoigianCurrent, formatter);
+
+        // Tính khoảng cách giữa 2 thời điểm
+        Duration duration = Duration.between(dateTime1, dateTime2);
+
+        // Kiểm tra nếu khoảng cách <= 24 giờ (24*60*60 giây)
+        if (Math.abs(duration.toSeconds()) > 24 * 60 * 60) 
+            flag = false;
+        return flag;
+    
     }
 
     public String createMAHD() {
