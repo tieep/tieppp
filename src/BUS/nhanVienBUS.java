@@ -14,41 +14,41 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 public class nhanVienBUS {
-    
+
     private ArrayList<nhanVienDTO> ds_nhanVien;
     private nhanVienDAO dao = new nhanVienDAO();
-    
+
     public nhanVienBUS() {
         ds_nhanVien = new ArrayList<>();
         ds_nhanVien = dao.ds_nhanVien();
     }
-    
+
     public ArrayList<nhanVienDTO> getds_nhanVien() {
         return ds_nhanVien;
     }
-    
+
     public boolean checkTENNV(String t) {
         //tên nhân viên không chứa số và các kí tự đặc biệt
         String regex = "^[\\p{L} ]+$";
         return t.matches(regex);
     }
-    
+
     public boolean checkDCHI(String address) {
-        return address.length() <= 250;
+        return address != null && !address.trim().isEmpty() && address.length() <= 250;
     }
-    
+
     public boolean checkEMAIL(String email) {
         String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-    
+
     private boolean checkSDT(String sdt) {
         String regex = "^0\\d{9}$";
         return sdt.matches(regex);
     }
-    
+
     private int Maxid(String prefix) {
         int maxNumber = 0;
         for (int i = 0; i < ds_nhanVien.size(); i++) {
@@ -63,14 +63,14 @@ public class nhanVienBUS {
             }
         }
         return maxNumber;
-        
+
     }
-    
+
     private String createidNV() {
         int stt = Maxid("NV") + 1;
         return "NV" + stt;
     }
-    
+
     public boolean themNV(nhanVienDTO nv) {
         if (checkTENNV(nv.getTENNV()) && checkEMAIL(nv.getEMAIL()) && checkDCHI(nv.getDIACHI()) && checkSDT(nv.getSDT())) {
             nv.setMANV(createidNV());
@@ -111,7 +111,7 @@ public class nhanVienBUS {
         } else if (checkSDT(nv.getSDT()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
-                    "Bắt đầu bằng số 0 và chỉ chứa 11 số",
+                    "Bắt đầu bằng số 0 và chỉ chứa 10 số",
                     "Thông báo",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
@@ -122,7 +122,7 @@ public class nhanVienBUS {
         }
         return false;
     }
-    
+
     public boolean capnhatNV(nhanVienDTO nv) {
         if (checkTENNV(nv.getTENNV()) && checkEMAIL(nv.getEMAIL()) && checkDCHI(nv.getDIACHI())) {
             Object[] options = {"Đồng ý"};
@@ -172,20 +172,11 @@ public class nhanVienBUS {
         return false;
     }
 
-    public void xoaInSQL(String id) {
+    public int xoaInSQL(String id) {
         nhanVienDAO dao = new nhanVienDAO();
-        dao.xoaNV(id);
+        return dao.xoaNV(id);
     }
 
-    public void xoaInBUS(String id) {
-        for (nhanVienDTO n : ds_nhanVien) {
-            if (n.getMANV().equals(id)) {
-                ds_nhanVien.remove(n);
-            }
-        }
-        
-    }
-    
     public ArrayList<nhanVienDTO> search(ArrayList<String> data_filter) {
         ArrayList<nhanVienDTO> re = new ArrayList<>();
         for (nhanVienDTO nv : ds_nhanVien) {
@@ -193,7 +184,7 @@ public class nhanVienBUS {
             boolean tenNV = nv.getTENNV().contains(data_filter.get(0));
             boolean sdt = nv.getSDT().equals(data_filter.get(0));
             boolean isCheck = false;
-            
+
             if (data_filter.get(0).equals("") && data_filter.get(1).equals("Tất cả")) {
                 isCheck = true;
             } else if (data_filter.get(1).equals("Đang làm việc")) {
@@ -207,15 +198,15 @@ public class nhanVienBUS {
             } else {
                 isCheck = maNV || tenNV || sdt;
             }
-            
+
             if (isCheck) {
                 re.add(nv);
             }
-            
+
         }
         return re;
-    }    
-    
+    }
+
     public static void main(String[] args) throws SQLException {
         nhanVienBUS bus = new nhanVienBUS();
 //        ArrayList<String> data_filter1 = new ArrayList<>();

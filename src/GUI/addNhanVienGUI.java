@@ -197,13 +197,25 @@ public class addNhanVienGUI extends JFrame implements MouseListener {
                     nhanVienBUS BUSNV = new nhanVienBUS();
 
                     nhanVienDTO nv = new nhanVienDTO(tenNV, chucVu, sdt, diaChi, email, trangThai);
-                    if (BUSNV.themNV(nv)) {
-                        nvGUI.them_mot_nv(nv);
-                        dispose();
-                        JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Thêm nhân viên thất bại nhập dữ liệu chưa đúng!");
+                    boolean success = true;
+                    for (nhanVienDTO x : BUSNV.getds_nhanVien()) {
+                        if (x.getSDT().equals(nv.getSDT())) {
+                            success = false;
+                            break;
+                        }
                     }
+                    if (success) {
+                        if (BUSNV.themNV(nv)) {
+                            nvGUI.them_mot_nv(nv);
+                            dispose();
+                            JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Thêm nhân viên thất bại nhập dữ liệu chưa đúng!");
+                        }
+                    }else {
+                        JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại!");
+                    }
+
                     break;
                 }
                 case "btnHuy": {
