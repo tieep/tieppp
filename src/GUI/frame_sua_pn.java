@@ -1,6 +1,7 @@
 
 package GUI;
 
+import BUS.KhoBUS;
 import BUS.Nhanvien_BUS;
 import BUS.chitietphieunhap_BUS;
 import BUS.nhacungcapBUS;
@@ -19,7 +20,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
@@ -49,13 +52,13 @@ public class frame_sua_pn extends JFrame {
         this.pnGUI = pnGUI;
         this.ctpnDTO = ctpn;
         
-    cbMaNV = new JComboBox<>();
+//    cbMaNV = new JComboBox<>();
     cbMaNCC = new JComboBox<>();
-        Nhanvien_BUS nhanvienBUS = new Nhanvien_BUS();
-    for (Nhanvien_DTO nv : nhanvienBUS.getlist()) {
-        cbMaNV.addItem(nv.getManv());
-    }
-    cbMaNV.setSelectedItem(pn.getMANV()); // Set the current value
+//        Nhanvien_BUS nhanvienBUS = new Nhanvien_BUS();
+//    for (Nhanvien_DTO nv : nhanvienBUS.getlist()) {
+//        cbMaNV.addItem(nv.getManv());
+//    }
+//    cbMaNV.setSelectedItem(pn.getMANV()); // Set the current value
 
     // Populate cbMaNCC with supplier IDs
     nhacungcapBUS nhacungcapBUS = new nhacungcapBUS();
@@ -63,15 +66,29 @@ public class frame_sua_pn extends JFrame {
         cbMaNCC.addItem(ncc.getMANCC());
     }
     cbMaNCC.setSelectedItem(pn.getMANCC());
-    
+    LocalDateTime ngayNhap = pnDTO.getNgay().atStartOfDay();
+    boolean isEditable = isEditableWithin24Hours(ngayNhap);
+    if (!isEditable) {
+        JOptionPane.showMessageDialog(this, "Quá 24 giờ, không thể sửa phiếu nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        dispose(); // Đóng frame
+        return; // Thoát khỏi constructor
+    }
     init();
     }
+public JTable getTable() {
+    return this.table; // `table` is your JTable instance
+}
+public DefaultTableModel getTableModel() {
+    return (DefaultTableModel) this.table.getModel(); // `table` is your JTable instance
+}
 
     private void init() {
         setTitle("SỬA CHI TIẾT PHIẾU NHẬP");
         setSize(800, 600);
         setLayout(new BorderLayout());
-
+        LocalDateTime ngayNhap = pnDTO.getNgay().atStartOfDay();
+        boolean isEditable = isEditableWithin24Hours(ngayNhap);
+       
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titleLabel = new JLabel("SỬA CHI TIẾT PHIẾU NHẬP");
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -86,20 +103,23 @@ public class frame_sua_pn extends JFrame {
 
         tfMaPN.setFont(font_text);
         tfMaPN.setEditable(false);
+        tfNgay.setEditable(false);
         tfMaPN.setBorder(BorderFactory.createEmptyBorder());
         tfMaPN.setHorizontalAlignment(JTextField.RIGHT);
         tfNgay.setFont(font_text);
         tfNgay.setBorder(BorderFactory.createEmptyBorder());
+        tfMaNV.setBorder(BorderFactory.createEmptyBorder());
         tfNgay.setHorizontalAlignment(JTextField.RIGHT);
+        System.err.println("tfngay"+pnDTO.getNgay());
         tfMaNV.setFont(font_text);
         tfMaNCC.setFont(font_text);
-
+        tfMaNV.setEditable(false);
         infoPanel.add(new JLabel("MAPN:"));
         infoPanel.add(tfMaPN);
         infoPanel.add(new JLabel("-- Ngày:"));
         infoPanel.add(tfNgay);
         infoPanel.add(new JLabel("-- MANV:"));
-        infoPanel.add(cbMaNV);
+        infoPanel.add(tfMaNV);
         infoPanel.add(new JLabel("-- MANCC:"));
         infoPanel.add(cbMaNCC);
 
@@ -109,30 +129,54 @@ public class frame_sua_pn extends JFrame {
 
         String[] columnNames = {"MASP", "Số lượng", "Mã size", "Giá nhập", "Thành tiền"};
         Object[][] data = new Object[ctpnDTO.size()][5];
-
+DecimalFormat dff = new DecimalFormat("#.###");
         for (int i = 0; i < ctpnDTO.size(); i++) {
             chitietphieunhap_DTO item = ctpnDTO.get(i);
             data[i][0] = item.getMasp();
             data[i][1] = item.getSoluong();
             data[i][2] = item.getMasize();
             data[i][3] = item.getGianhap();
-            data[i][4] = item.getThanhtien();
+            data[i][4] = dff.format(item.getThanhtien());
         }
 
         tableModel = new DefaultTableModel(data, columnNames);
-        tableModel = new DefaultTableModel(data, columnNames) {
+    tableModel = new DefaultTableModel(data, columnNames) {
     @Override
     public boolean isCellEditable(int row, int column) {
-        // Only allow editing of "Số lượng" (1) and "Giá nhập" (3) columns
-        return column == 1 || column == 3;
+        return isEditable && column == 1; // Restrict editing based on your condition
     }
 };
+
+        if (isEditable) {
+        // Only allow editing the supplier code and quantity
+        tableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Allow editing of quantity column (1)
+                return column == 1;
+            }
+        };
+    } else {
+        JOptionPane.showMessageDialog(this, "Quá 24 giờ, không thể sửa phiếu nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    
+    // Không cho phép chỉnh sửa bất kỳ cột nào
+    tableModel = new DefaultTableModel(data, columnNames) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Không cho phép chỉnh sửa bất kỳ cột nào
+            return false;
+        }
+    };
+}
+
+// Đặt lại mô hình bảng để cập nhật thay đổi
+
         tableModel.addTableModelListener(new TableModelListener() {
     @Override
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
-        DecimalFormat df = new DecimalFormat("#,###.00");
+        DecimalFormat df = new DecimalFormat("#.###");
 
         // Only trigger calculation if "Số lượng" or "Giá nhập" are changed
         if (column == 1 || column == 3) {
@@ -178,7 +222,7 @@ tableModel = new DefaultTableModel(data, columnNames) {
 
                 // Calculate "Thành tiền"
                 double thanhtien = soluong * gianhap;
-                DecimalFormat df = new DecimalFormat("#,###.00");
+                DecimalFormat df = new DecimalFormat("#.###");
                 tableModel.setValueAt(df.format(thanhtien), row, 4);
 
                 // Calculate "Tổng tiền"
@@ -207,7 +251,7 @@ tableModel = new DefaultTableModel(data, columnNames) {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         double tongTien = ctpnDTO.stream().mapToDouble(chitietphieunhap_DTO::getThanhtien).sum();
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        DecimalFormat df = new DecimalFormat("#,###.00");
+        DecimalFormat df = new DecimalFormat("#.###");
         tfTongTien = new JTextField(df.format(tongTien) + " Đ", 15);
         tfTongTien.setFont(font_text);
         tfTongTien.setEditable(false);
@@ -229,7 +273,9 @@ tableModel = new DefaultTableModel(data, columnNames) {
 
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
-
+         
+        table.setEnabled(isEditable);
+        table.setModel(tableModel);
         btnLuu.addMouseListener(new MouseListenerAdapter("Lưu"));
         btnHuy.addMouseListener(new MouseListenerAdapter("Hủy"));
 
@@ -260,9 +306,14 @@ tableModel = new DefaultTableModel(data, columnNames) {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
     }
+    private boolean isEditableWithin24Hours(LocalDateTime ngayNhap) {
+    LocalDateTime now = LocalDateTime.now();
+    return Duration.between(ngayNhap, now).toHours() < 24;
+
+}
 private ArrayList<chitietphieunhap_DTO> getUpdatedChitietPhieunhapFromTable() {
     ArrayList<chitietphieunhap_DTO> updatedList = new ArrayList<>();
-    DecimalFormat df = new DecimalFormat("#,###.00");
+    DecimalFormat df = new DecimalFormat("#.###");
 
     for (int i = 0; i < tableModel.getRowCount(); i++) {
         String masp = tableModel.getValueAt(i, 0).toString();
@@ -292,62 +343,86 @@ public void mouseClicked(MouseEvent e) {
         JPanel btn = (JPanel) e.getSource();
         switch (btn.getName()) {
             case "btnHuy":
-                int r1 = JOptionPane.showConfirmDialog(frame_sua_pn.this, "Những thông tin sẽ không được lưu sau khi thoát!\nBạn có muốn tiếp tục thoát?", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                if (r1 == JOptionPane.YES_OPTION) {
-                    dispose();
-                }
-                break;
+                    int r1 = JOptionPane.showConfirmDialog(frame_sua_pn.this, "Những thông tin sẽ không được lưu sau khi thoát!\nBạn có muốn tiếp tục thoát?", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (r1 == JOptionPane.YES_OPTION) {
+                        dispose();
+                    }
+                    break;
             case "btnLuu":
-                try {
-                    LocalDate date = LocalDate.parse(tfNgay.getText());
-                    String maNV = cbMaNV.getSelectedItem().toString();
-                    String maNcc = cbMaNCC.getSelectedItem().toString();
+    try {
+        DecimalFormat df = new DecimalFormat("#,###");
+        LocalDate date = LocalDate.parse(tfNgay.getText());
+        String maNV = tfMaNV.getText();
+        String maNcc = cbMaNCC.getSelectedItem().toString();
 
-                    // Kiểm tra giá trị tổng tiền có hợp lệ không
-                    String tongTienText = tfTongTien.getText().replace(" Đ", "").trim();
-                    double tongTien;
-                    try {
-                        tongTien = Double.parseDouble(tongTienText.replace(",", ""));
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(frame_sua_pn.this, "Vui lòng nhập tổng tiền hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return; // Thoát nếu tổng tiền không hợp lệ
-                    }
+        // Kiểm tra giá trị tổng tiền
+        String tongTienText = tfTongTien.getText().replace(" Đ", "").trim();
+        double tongTien = df.parse(tongTienText).doubleValue();
 
-                    phieunhap_BUS pnBUS = new phieunhap_BUS();
-                    phieunhap_DTO updatedPnDTO = new phieunhap_DTO(tfMaPN.getText(), maNV, date, tongTien, maNcc);
-                    pnBUS.update(updatedPnDTO);
+        // Cập nhật phiếu nhập
+        phieunhap_BUS pnBUS = new phieunhap_BUS();
+        KhoBUS kb=new KhoBUS();
+        phieunhap_DTO updatedPnDTO = new phieunhap_DTO(tfMaPN.getText(), maNV, date, tongTien, maNcc);
+        pnBUS.update(updatedPnDTO);
 
-                    // Lấy danh sách các chi tiết phiếu nhập từ bảng
-                    ArrayList<chitietphieunhap_DTO> updatedCtpnList = getUpdatedChitietPhieunhapFromTable();
+        // Lấy danh sách các chi tiết phiếu nhập từ bảng
+        ArrayList<chitietphieunhap_DTO> updatedCtpnList = getUpdatedChitietPhieunhapFromTable();
+        chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(pnDTO);
 
-                    chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(pnDTO);
+        // Cập nhật từng chi tiết phiếu nhập
+        for (chitietphieunhap_DTO updatedCtpnDTO : updatedCtpnList) {
+            // Lấy số lượng cũ từ cơ sở dữ liệu (thay vì chỉ lấy từ bảng)
+            int oldQuantity = ctpnBUS.getOldQuantity(updatedCtpnDTO.getMasp(), updatedCtpnDTO.getMasize(), updatedPnDTO.getMAPN());
+            int soluongMoi = updatedCtpnDTO.getSoluong(); // Số lượng mới từ DTO
+            int soLuongTonKho = kb.getSoLuongTonKho(updatedCtpnDTO.getMasp(), updatedCtpnDTO.getMasize());
+    if (soluongMoi > soLuongTonKho) {
+        JOptionPane.showMessageDialog(frame_sua_pn.this, "Không thể cập nhật số lượng sản phẩm " + updatedCtpnDTO.getMasp() + " vì số lượng mới nhập (" + soluongMoi + ") lớn hơn số lượng tồn kho (" + soLuongTonKho + ").", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return; // Ngừng thực hiện cập nhật và trả về lỗi
+    }
+            // Cập nhật thông tin chi tiết phiếu nhập
+            ctpnBUS.set(updatedCtpnDTO);
+            
+            // Cập nhật số lượng trong chitietsanpham
+            ctpnBUS.setAfter(updatedCtpnDTO, oldQuantity, soluongMoi); // Truyền số lượng cũ và mới
+        }
 
-                    // Cập nhật từng chi tiết phiếu nhập trong danh sách
-                    for (chitietphieunhap_DTO updatedCtpnDTO : updatedCtpnList) {
-                        ctpnBUS.set(updatedCtpnDTO); // Cập nhật từng chi tiết vào DB
-                    }
+        JOptionPane.showMessageDialog(frame_sua_pn.this, "Cập nhật thành công!");
 
-                    JOptionPane.showMessageDialog(frame_sua_pn.this, "Cập nhật thành công!");
-                    dispose();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame_sua_pn.this, "Có lỗi xảy ra: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
+        // Cập nhật GUI
+        for (int i = 0; i < pnGUI.getTable().getRowCount(); i++) {
+            if (pnGUI.getTable().getValueAt(i, 0).equals(tfMaPN.getText())) {
+                pnGUI.getTableModel().setValueAt(updatedPnDTO.getMANV(), i, 1);
+                pnGUI.getTableModel().setValueAt(updatedPnDTO.getNgay(), i, 2);
+                String formattedTongtien = df.format(updatedPnDTO.getTongtien());
+                pnGUI.getTableModel().setValueAt(formattedTongtien, i, 3);
+                pnGUI.getTableModel().setValueAt(updatedPnDTO.getMANCC(), i, 4);
                 break;
+            }
+        }
+        dispose();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(frame_sua_pn.this, "Có lỗi xảy ra: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+    break;
+
         }
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(frame_sua_pn.this, "Có lỗi xảy ra: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
+    
 }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             JPanel btn = (JPanel) e.getSource();
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setBackground(Color.DARK_GRAY);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             JPanel btn = (JPanel) e.getSource();
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setBackground(Cacthuoctinh_phuongthuc_chung.darkness_blue);
         }
     }

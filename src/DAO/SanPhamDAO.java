@@ -134,6 +134,34 @@ public class SanPhamDAO {
             Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+public void updateGiaBan(String maSP, double giaBanMoi) {
+        try {
+            mySQL.connect();
+            String query = "UPDATE sanpham SET PRICE = '" + giaBanMoi + "' WHERE MASP = '" + maSP + "'";
+            mySQL.executeUpdate(query);
+            mySQL.disconnect();
+        } catch (SQLException ex) {
+            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+public double getPrice(String maSP) {
+    double price = 0.0;
+    try {
+        mySQL.connect();
+        String query = "SELECT PRICE FROM sanpham WHERE MASP='" + maSP + "'";
+        ResultSet rs = mySQL.executeQuery(query);
+
+        if (rs.next()) {
+            price = rs.getDouble("PRICE"); // Lấy giá của sản phẩm
+        }
+
+        rs.close();
+        mySQL.disconnect();
+    } catch (SQLException ex) {
+        Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return price; // Trả về giá sản phẩm, nếu không tìm thấy sẽ trả về 0.0
+}
 
     public static void main(String[] args) {
         SanPhamDAO sp = new SanPhamDAO();

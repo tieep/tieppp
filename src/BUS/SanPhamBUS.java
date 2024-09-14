@@ -19,7 +19,15 @@ public class SanPhamBUS {
     public void setDsSP(ArrayList<SanPhamDTO> dsSP) {
         this.dsSP = dsSP;
     }
-    
+    public void updateGiaBan(String maSP, double giaBanMoi) {
+        SanPhamDAO spDAO=new SanPhamDAO();
+        spDAO.updateGiaBan(maSP, giaBanMoi);
+    }
+    public double getPrice(String maSP) {
+   SanPhamDAO spDAO=new SanPhamDAO();
+   return spDAO.getPrice(maSP);
+}
+
     public void list() {
         SanPhamDAO spDAO = new SanPhamDAO();
         dsSP = spDAO.list();

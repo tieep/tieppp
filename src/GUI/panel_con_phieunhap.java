@@ -32,7 +32,7 @@ public class panel_con_phieunhap extends JPanel implements MouseListener{
 		this.phieunhap_GUI = phieunhap_GUI;
 		this.clickedxoa = false;
 		
-		DecimalFormat format_double = new DecimalFormat("#,###.0");
+		DecimalFormat format_double = new DecimalFormat("#.###");
 		String l = format_double.format(h.getTongtien());
 		
 		

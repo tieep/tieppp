@@ -81,7 +81,7 @@ public class panel_con_nhapsanpham extends JPanel implements MouseListener {
 		String[] list_size = {"","SIZE1","SIZE2","SIZE2","SIZE4","SIZE5"};
 		
 		
-		DecimalFormat format_double = new DecimalFormat("#,###.0");
+		DecimalFormat format_double = new DecimalFormat("#.###");
 		
 		format_double.format(thanhtien);
 		
@@ -370,7 +370,7 @@ public class panel_con_nhapsanpham extends JPanel implements MouseListener {
 		if (!chitietsanpham_BUS.select_masize_by_MASP(this.return_sanpham()).contains(masize)) {
 			chitietsanpham_BUS.add(new chitietsanpham_DTO(masp, masize, soluong));
 		} else {
-			chitietsanpham_BUS.update(new chitietsanpham_DTO(masp, masize, soluong));
+			chitietsanpham_BUS.updateAfterTT(new chitietsanpham_DTO(masp, masize, soluong));
 		}
 		
 	}

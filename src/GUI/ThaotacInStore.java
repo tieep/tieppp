@@ -3,6 +3,7 @@ package GUI;
 import BUS.BUS_qlkh;
 import BUS.ChitietHD_BUS;
 import BUS.Hoadon_BUS;
+import BUS.KhoBUS;
 import BUS.Nhanvien_BUS;
 import BUS.SanPhamBUS;
 import BUS.SizeBUS;
@@ -57,6 +58,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -674,84 +677,122 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                 break;
             }
             case "Sửa": {
-                ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
-                if (!selectedListPN.isEmpty()) {
-                    String selectedMAPN = selectedListPN.get(0);
-                    if (selectedMAPN != null) {
-
-                        phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
-                        chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(selectedPhieuNhap);
-                        ArrayList<chitietphieunhap_DTO> ctpn = ctpnBUS.select_by_id(selectedPhieuNhap);
-                        frame_sua_pn fr = new frame_sua_pn(400, 600, selectedPhieuNhap, pnGUI, ctpn);
-
-                    }
-                    /*NOte: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "GUI.chitietphieunhap_GUI.set_tongtien()" because "this.chitietphieunhap_GUI" is null
-         hình như ở đây do tui tạo 1 cái JFrame mới nên lúc ấn xác nhận cái gui truyền vô nó k đúng
-                     */
-                } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
+            ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
+            if (!selectedListPN.isEmpty()) {
+                String selectedMAPN = selectedListPN.get(0); 
+                if (selectedMAPN != null) {
+                    
+                    phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id1(selectedMAPN);
+                    System.err.println("ngya"+selectedPhieuNhap);
+                    chitietphieunhap_BUS ctpnBUS=new chitietphieunhap_BUS(selectedPhieuNhap);
+                    ArrayList<chitietphieunhap_DTO> ctpn=ctpnBUS.select_by_id(selectedPhieuNhap);
+                    frame_sua_pn fr=new frame_sua_pn(400,600,selectedPhieuNhap, pnGUI,ctpn);
+                    
                 }
-                break;
+ /*NOte: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "GUI.chitietphieunhap_GUI.set_tongtien()" because "this.chitietphieunhap_GUI" is null
+         hình như ở đây do tui tạo 1 cái JFrame mới nên lúc ấn xác nhận cái gui truyền vô nó k đúng
+                */       
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
             }
-//        case "Sửa": {
-//    ArrayList<String> selectedListPN = pnGUI.getSelectedListPN();
-//    if (!selectedListPN.isEmpty()) {
-//        String selectedMAPN = selectedListPN.get(0);
-//        System.err.println("Đây là mapn:" + selectedMAPN); // Assuming single selection
-//        if (selectedMAPN != null) {
-//            // Lấy thông tin phieunhap_DTO từ MAPN
-//            phieunhap_DTO selectedPhieuNhap = pnBUS.select_by_id(selectedMAPN);
-//            System.out.println("đây là phiếu nhập dto " + selectedPhieuNhap);
-//            
-//            // Khởi tạo chitietphieunhap_GUI với dữ liệu phiếu nhập được chọn
-//            chitietphieunhap_GUI ctpn_GUI = new chitietphieunhap_GUI(800, 600, selectedPhieuNhap, pnGUI);
-//            System.out.println("trang chitietpn" + ctpn_GUI);
-//            
-//            // Thiết lập GUI
-//            ctpn_GUI.revalidate(); // Làm mới giao diện sau khi thêm thành phần
-//            ctpn_GUI.repaint();    // Vẽ lại giao diện
-//            
-//            // Sử dụng pack() để điều chỉnh kích thước khung cửa sổ
-//            
-//            
-//            // Chuyển chế độ GUI sang chế độ sửa
-//            ctpn_GUI.che_do_sua();
-//            
-//            // Hiển thị GUI
-//            ctpn_GUI.setVisible(true);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Không tìm thấy mã phiếu nhập.");
-//        }
-//    } else {
-//        JOptionPane.showMessageDialog(null, "Vui lòng chọn vào phiếu nhập bạn muốn sửa.");
-//    }
-//    break;
-//}
+            break;
+        }
 
             case "Xóa": {
-                switch (itemClicked.title.getText()) {
-                    case "Xóa":
-                        JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
-                        itemClicked.title.setText("Lưu/Thoát");
-                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
-                        break;
-                    case "Lưu/Thoát":
-                        Object[] options = {"Có", "Không"};
-                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa nhà cung cấp ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                        if (r2 == JOptionPane.YES_OPTION) {
-                            ArrayList<String> listDelete = pnGUI.getSelectedListPN();
-                            for (String i : listDelete) {
-                                pnBUS.delete(i);
-                                pnBUS.deleteInSQL(i);
-                            }
-                            pnGUI.addDataInTable(pnBUS.dsPN());
-                            JOptionPane.showMessageDialog(null, "Xóa thành công");
-                        }
-                        itemClicked.title.setText("Xóa");
-                        itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
-                        break;
+    switch (itemClicked.title.getText()) {
+        case "Xóa":
+            JOptionPane.showMessageDialog(null, "Để chọn nhiều ô cần xóa:\nKéo chuột\nGiữ Ctrl và click vào các ô cần xóa");
+            itemClicked.title.setText("Lưu/Thoát");
+            itemClicked.icon = new JLabel(new ImageIcon("./src/images/finish_icon.png"));
+            break;
+        case "Lưu/Thoát":
+            ArrayList<String> listDelete = pnGUI.getSelectedListPN1();
+            if (listDelete.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu nhập cần xóa.");
+                return;
+            }
+
+            // Kiểm tra thời gian có còn hợp lệ (24 giờ)
+            for (String mapn : listDelete) {
+                phieunhap_DTO phieuNhap = pnBUS.select_by_id1(mapn);
+                LocalDateTime ngayNhap = phieuNhap.getNgay().atStartOfDay();
+                if (!isEditableWithin24Hours(ngayNhap)) {
+                    JOptionPane.showMessageDialog(null, "Phiếu nhập " + mapn + " đã quá 24 giờ, không thể xóa.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
+            KhoBUS khoBUS = new KhoBUS();
+            // Kiểm tra sản phẩm trong kho
+            for (String mapn : listDelete) {
+                chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(pnBUS.select_by_id1(mapn));
+                ArrayList<chitietphieunhap_DTO> ctpnList = ctpnBUS.select_by_id(pnBUS.select_by_id1(mapn));
+
+                for (chitietphieunhap_DTO ctpn : ctpnList) {
+                    String masp = ctpn.getMasp();
+                    String maSize=ctpn.getMasize();
+                    int soluongNhap = ctpn.getSoluong();
+                    
+                    int soluongTonKho = khoBUS.getSoLuongTonKho(masp,maSize); // Lấy số lượng tồn kho hiện tại
+
+                    if (soluongNhap > soluongTonKho) {
+                        JOptionPane.showMessageDialog(null, "Phiếu nhập " + mapn + " chứa sản phẩm " + masp + " có số lượng nhiều hơn số lượng tồn kho, không thể xóa.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+              SanPhamBUS spBUS=new SanPhamBUS();
+            // Kiểm tra giá nhập và giá bán
+            for (String mapn : listDelete) {
+                chitietphieunhap_BUS ctpnBUS = new chitietphieunhap_BUS(pnBUS.select_by_id1(mapn));
+                ArrayList<chitietphieunhap_DTO> ctpnList = ctpnBUS.select_by_id(pnBUS.select_by_id1(mapn));
+
+                for (chitietphieunhap_DTO ctpn : ctpnList) {
+                    double giaNhap = ctpn.getGianhap();
+                    double giaBanHienTai = spBUS.getPrice(ctpn.getMasp()); // Lấy giá bán hiện tại
+                    double tySuatTang = 1.2; // Ví dụ tỷ suất tăng giá là 20%
+                      
+                    
+                        // Hiển thị thông báo yêu cầu nhập giá bán mới
+                        JTextField giaBanMoiField = new JTextField(10);
+                        giaBanMoiField.setEditable(false);
+                        giaBanMoiField.setBorder(BorderFactory.createEmptyBorder());
+                        JPanel panel = new JPanel();
+                        
+                        panel.add(new JLabel("Giá sản phẩm đang bán sẽ không thay đổi!"));
+                        panel.add(giaBanMoiField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel, "Lưu thay đổi?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            String giaBanMoiStr = giaBanMoiField.getText();
+                            if (!giaBanMoiStr.isEmpty()) {
+                                try {
+                                    double giaBanMoi = Double.parseDouble(giaBanMoiStr);
+                                    spBUS.updateGiaBan(ctpn.getMasp(), giaBanMoi); // Cập nhật giá bán mới
+                                } catch (NumberFormatException ex) {
+                                    JOptionPane.showMessageDialog(null, "Giá bán mới không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                                    return;
+                                }
+                            }
+                        }
+                    
+                }
+            }
+
+            Object[] options = {"Có", "Không"};
+            int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa phiếu nhập ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (r2 == JOptionPane.YES_OPTION) {
+                for (String i : listDelete) {
+                    pnBUS.delete(i);
+                    pnBUS.deleteInSQL(i);
+                }
+                pnGUI.addDataInTable(pnBUS.dsPN());
+                JOptionPane.showMessageDialog(null, "Xóa thành công");
+            }
+            itemClicked.title.setText("Xóa");
+            itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
+            break;
+    }
+}
 
         }
     }
@@ -847,7 +888,7 @@ public class ThaotacInStore extends JPanel implements MouseListener {
 
     }
 
-    public void thaotacNCC(String hanhdong, hanhdongGUI itemClicked) {
+        public void thaotacNCC(String hanhdong, hanhdongGUI itemClicked) {
         nhacungcapGUI nccGUI = (nhacungcapGUI) pageContent;
         nhacungcapBUS nccBUS = new nhacungcapBUS();
         switch (hanhdong) {
@@ -1289,5 +1330,15 @@ public class ThaotacInStore extends JPanel implements MouseListener {
     }
     private String getPriceInFormatPrice(String formatprice){ // đổi từ 100.000 đ -> 100000(String)
         return formatprice.replaceAll("[^0-9]", "");
+    }
+
+    private boolean isEditableWithin24Hours(LocalDateTime ngayNhap) {
+       LocalDateTime currentTime = LocalDateTime.now();
+    
+    // Tính toán khoảng thời gian giữa ngayNhap và currentTime
+    Duration duration = Duration.between(ngayNhap, currentTime);
+    
+    // Kiểm tra nếu khoảng thời gian là 24 giờ hoặc ít hơn
+    return duration.toHours() <= 24;
     }
 }

@@ -16,4 +16,9 @@ public class KhoBUS {
         ds = tkDAO.list(data_filters);
         return ds;
     }
+     public int getSoLuongTonKho(String maSP, String maSize) {
+        // Gọi hàm từ KhoDAO để lấy số lượng tồn kho
+        KhoDAO khoDAO=new KhoDAO();
+        return khoDAO.getSoLuongTon(maSP, maSize);
+}
 }

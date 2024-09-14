@@ -89,7 +89,12 @@ public class phieunhap_GUI extends JPanel implements MouseListener{
     public boolean isEditingEnabled = false;
     public thong_bao_phieunhap tbPN;
     frame_sua_pn frame_sua_phieunhap;
-
+public JTable getTable() {
+    return this.table; // `table` is your JTable instance
+}
+public DefaultTableModel getTableModel() {
+    return (DefaultTableModel) this.table.getModel(); // `table` is your JTable instance
+}
     public phieunhap_GUI(int chieurong, int chieucao) throws SQLException  {
         this.chieurong = chieurong;
         this.chieucao = chieucao;
@@ -162,36 +167,58 @@ public ArrayList<String> getSelectedListPN() {
         }
         return MANPNselected;
     }
-    public void addDataInTable(ArrayList<phieunhap_DTO> list) {
-        
-        Vector data;
-        DecimalFormat df = new DecimalFormat("#,###.00");
-        tableModel.setRowCount(0);
-        for (phieunhap_DTO n : list) {
-            data = new Vector();
-            data.add(n.getMAPN());
-            data.add(n.getMANV());
-            data.add(n.getNgay());
-            String formattedTongtien = df.format(n.getTongtien());
-            data.add(formattedTongtien);
-            data.add(n.getMANCC());
-            data.add("XEM");
-            tableModel.addRow(data);
+public ArrayList<String> getSelectedListPN1() {
+        ArrayList<String> MANPNselected = new ArrayList<>();
+        int[] quantity_rowSelected = table.getSelectedRows();
+        for (int row : quantity_rowSelected) {
+            MANPNselected.add((String) table.getValueAt(row, 0));
+            break;
         }
-        table.setModel(tableModel);
-        tableModel.fireTableDataChanged();
+        return MANPNselected;
     }
-    public void addLineDataInTable(phieunhap_DTO pn) {
-        Vector data = new Vector();
-        data.add(pn.getMAPN());
-        data.add(pn.getMANV());
-        data.add(pn.getNgay());
-        data.add(pn.getTongtien());
-        data.add(pn.getMANCC());
+   public void addDataInTable(ArrayList<phieunhap_DTO> list) {
+    Vector data;
+    DecimalFormat df = new DecimalFormat("#.###");  // Định dạng số
+    tableModel.setRowCount(0);
+    
+    for (phieunhap_DTO n : list) {
+        data = new Vector();
+        data.add(n.getMAPN());
+        data.add(n.getMANV());
+        data.add(n.getNgay());
+        
+        // Định dạng số và thêm " Đ" vào sau
+        String formattedTongtien = df.format(n.getTongtien()) + " Đ";
+        data.add(formattedTongtien);  // Thêm vào bảng
+        
+        data.add(n.getMANCC());
+        data.add("XEM");
         tableModel.addRow(data);
-        tableModel.fireTableDataChanged();
-
     }
+    
+    table.setModel(tableModel);
+    tableModel.fireTableDataChanged();  // Cập nhật bảng
+}
+
+public void addLineDataInTable(phieunhap_DTO pn) {
+    DecimalFormat df = new DecimalFormat("#.###");  // Định dạng số
+    Vector data = new Vector();
+    
+    data.add(pn.getMAPN());
+    data.add(pn.getMANV());
+    data.add(pn.getNgay());
+    
+    // Định dạng số và thêm " Đ" vào sau
+    String formattedTongtien = df.format(pn.getTongtien()) + " Đ";
+    data.add(formattedTongtien);  // Thêm vào bảng
+    
+    data.add(pn.getMANCC());
+    data.add("XEM");
+    tableModel.addRow(data);
+    
+    tableModel.fireTableDataChanged();  // Cập nhật bảng
+}
+
     private void cssHeaderTable(JTableHeader header) {
         header.setBackground(Cacthuoctinh_phuongthuc_chung.darkness_blue);
         header.setForeground(Cacthuoctinh_phuongthuc_chung.sky_blue);

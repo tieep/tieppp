@@ -16,7 +16,26 @@ public class KhoDAO {
             System.out.println("That bai");
         }
     }
+public int getSoLuongTon(String maSP, String maSize) {
+        int soLuongTon = 0;
+        try {
+            mySQL.connect();
+            String sql = """
+                         SELECT SOLUONG AS SOLUONGTON
+                         FROM chitietsanpham
+                         WHERE MASP = '""" + maSP + "' AND MASIZE = '" + maSize + "';";
 
+            ResultSet rs = mySQL.executeQuery(sql);
+            if (rs.next()) {
+                soLuongTon = rs.getInt("SOLUONGTON");
+            }
+            rs.close();
+            mySQL.disconnect();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return soLuongTon;
+    }
     public ArrayList<KhoDTO> list(ArrayList<String> data_filters) {
         String tuNgay = data_filters.get(0);
         String denNgay = data_filters.get(1);

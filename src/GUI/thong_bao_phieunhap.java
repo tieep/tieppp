@@ -166,6 +166,7 @@ public class thong_bao_phieunhap extends JPanel implements MouseListener{
 //				frame_thong_bao_phieunhap c = new frame_thong_bao_phieunhap(t, phieunhap_GUI);
 			} else {
 				JOptionPane.showMessageDialog(this, "Đã thêm thành công");
+                                phieunhap_DTO pn =  phieunhap_GUI.Frame_them_phieunhap().panel_them_phieunhap().return_pn();
                                 
 				this.phieunhap_GUI.Frame_them_phieunhap().setVisible(false);
                                 this.phieunhap_GUI.return_null_frame_them_phieu_nhap();
@@ -186,7 +187,7 @@ public class thong_bao_phieunhap extends JPanel implements MouseListener{
 				
 				this.phieunhap_GUI.update_gia_thap_hon();
 				
-				
+				phieunhap_DTO pn =  phieunhap_GUI.Frame_them_phieunhap().panel_them_phieunhap().return_pn();
                                 this.phieunhap_GUI.frame_thong_bao_phieunhap().setVisible(false);
                                 this.phieunhap_GUI.return_null_frame_thong_bao_phieunhap();
 				this.phieunhap_GUI.Frame_them_phieunhap().setVisible(false);

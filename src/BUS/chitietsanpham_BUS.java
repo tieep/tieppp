@@ -42,7 +42,7 @@ public class chitietsanpham_BUS {
 	}
         public void updateAfterTT(chitietsanpham_DTO d) throws SQLException {
 		DAO_chitietsanpham c = new DAO_chitietsanpham();
-		c.updateAfterTT(d);
+		c.updateAfterADD(d);
 	}
         
 	

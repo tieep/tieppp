@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import DAO.ConnectDataBase;
 import DAO.DAO_phieunhap;
+import DTO.chitietphieunhap_DTO;
 import DTO.phieunhap_DTO;
+import java.sql.SQLException;
 
 public class phieunhap_BUS {
 	private ArrayList<phieunhap_DTO> dspn;
@@ -18,8 +20,14 @@ public class phieunhap_BUS {
 		DAO_phieunhap c = new DAO_phieunhap();
 		this.dspn = c.select_all();
 	}
-	
-	
+	public int getOldQuantity(String masp, String masize, String mapn) throws SQLException{
+            DAO_phieunhap c = new DAO_phieunhap();
+            return c.getOldQuantity(masp, masize, mapn);
+        }
+	public void setAfterTT(chitietphieunhap_DTO d, int oldQuantity, int newQuantity) throws SQLException {
+            DAO_phieunhap c = new DAO_phieunhap();
+            c.setAfterTT(d, oldQuantity, newQuantity);
+        }
 	public void add(phieunhap_DTO h) {
 		DAO_phieunhap c = new DAO_phieunhap();
 		c.add(h);
@@ -61,6 +69,11 @@ public class phieunhap_BUS {
 	public phieunhap_DTO select_by_id(String t ) {
 		DAO_phieunhap c = new DAO_phieunhap();
 		return c.select_byid(t);
+		
+	}
+        public phieunhap_DTO select_by_id1(String t ) {
+		DAO_phieunhap c = new DAO_phieunhap();
+		return c.select_byid1(t);
 		
 	}
 	public ArrayList<phieunhap_DTO> dsPN(){

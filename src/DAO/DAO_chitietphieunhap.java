@@ -21,7 +21,61 @@ public class DAO_chitietphieunhap {
             e.printStackTrace();
         }
     }
+          public int getOldQuantity(String masp, String masize, String mapn) throws SQLException {
+    int oldQuantity = 0;
+    c.connect();
+    
+    String query = "SELECT SOLUONG FROM chitietphieunhap WHERE MASP = '" + masp + "' AND MASIZE = '" + masize + "' AND MAPN = '" + mapn + "'";
+    
+    try {
+        ResultSet rs = c.executeQuery(query);
+        if (rs.next()) {
+            oldQuantity = rs.getInt("SOLUONG");
+        }
+        rs.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        throw ex;
+    } finally {
+        c.disconnect();
+    }
 
+    return oldQuantity;
+}
+public void setAfterTT(chitietphieunhap_DTO d, int oldQuantity, int newQuantity) throws SQLException {
+    c.connect();
+    int currentQuantity = 0;
+
+    // Lấy số lượng hiện tại từ chitietsanpham
+    String selectSql = "SELECT SOLUONG FROM chitietsanpham WHERE MASP = '" + d.getMasp() + "' AND MASIZE = '" + d.getMasize() + "'";
+    try {
+        ResultSet rs = c.executeQuery(selectSql);
+        if (rs.next()) {
+            currentQuantity = rs.getInt("SOLUONG");
+        }
+        rs.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        c.disconnect();
+        throw ex; // Ném lại ngoại lệ để xử lý
+    }
+
+    // Tính toán số lượng cập nhật: hiện tại - số lượng cũ + số lượng mới
+    int updatedQuantity = currentQuantity - oldQuantity + newQuantity;
+
+    System.err.println("Số lượng hiện tại: " + currentQuantity);
+    System.err.println("Số lượng cũ: " + oldQuantity);
+    System.err.println("Số lượng mới: " + newQuantity);
+    System.err.println("Số lượng cập nhật: " + updatedQuantity);
+
+    // Cập nhật số lượng mới vào chitietsanpham
+    String updateSql = "UPDATE chitietsanpham SET SOLUONG = " + updatedQuantity +
+                       " WHERE MASP = '" + d.getMasp() + "' AND MASIZE = '" + d.getMasize() + "'";
+    c.executeUpdate(updateSql); // Ném lại ngoại lệ để xử lý
+    System.err.println("Cập nhật thành công số lượng mới");
+    System.out.println(updateSql);
+    c.disconnect();
+}
     public ArrayList<chitietphieunhap_DTO> list() {
         ArrayList<chitietphieunhap_DTO> ds = new ArrayList<chitietphieunhap_DTO>();
         try {

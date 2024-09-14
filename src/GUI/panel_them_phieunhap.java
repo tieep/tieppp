@@ -106,7 +106,7 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 		nhacungcapBUS nhacungcapBUS = new nhacungcapBUS();
 		sanPhamBUS = new SanPhamBUS();
 		
-		format_double = new DecimalFormat("#,###.0");
+		format_double = new DecimalFormat("#.###");
         
 		
 		
@@ -427,7 +427,16 @@ public class panel_them_phieunhap extends JPanel implements MouseListener{
 	public String get_newMAPN() {
 		return this.r[0];
 	}
-	
+	public phieunhap_DTO return_pn() {
+    // Create a new phieunhap_DTO with the required fields
+    this.phieunhap_DTO = new phieunhap_DTO(r[0], jl_manv.getText(), tongtien, (String) option_ncc.getSelectedItem());
+    
+    // Add the new phieunhap_DTO data to the table
+    this.phieunhap_GUI.addLineDataInTable(phieunhap_DTO);
+    
+    // Return the created phieunhap_DTO object if you need to use it elsewhere
+    return this.phieunhap_DTO;
+}
 	public void them_phieunhap() {
             
 		this.phieunhap_DTO = new phieunhap_DTO(r[0],jl_manv.getText() , tongtien,(String) option_ncc.getSelectedItem());
