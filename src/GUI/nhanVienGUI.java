@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.TaiKhoanBUS;
 import BUS.nhanVienBUS;
 import DTO.TaiKhoanDTO;
 import DTO.nhanVienDTO;
@@ -151,11 +152,37 @@ public class nhanVienGUI extends JPanel {
     public void delRow() {
         int[] selectedRows = table.getSelectedRows();
         nhanVienBUS busNV = new nhanVienBUS();
+        TaiKhoanBUS busTK = new TaiKhoanBUS();
+        ArrayList<TaiKhoanDTO> dstk = busTK.getDsTK();
+        boolean anyAccountDeleted = false; 
 
         for (int i = selectedRows.length - 1; i >= 0; i--) {
             String id = (String) dtm.getValueAt(selectedRows[i], 0);
-            if (busNV.xoaInSQL(id) == 1) {
-                dtm.removeRow(selectedRows[i]);
+            int success = busNV.xoaInSQL(id);
+
+            if (success == 1 || success == 0) {
+                boolean accountDeleted = false; 
+                for (TaiKhoanDTO tk : dstk) {
+                    if (tk.getMaNV().equals(id)) {
+                        Object[] options = {"Có", "Không"};
+                        int tt = JOptionPane.showOptionDialog(null, "Bạn có muốn xóa tài khoản của Nhân viên không?", "Thông báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (tt == JOptionPane.YES_OPTION) {
+                            busTK.delete(id);
+                            JOptionPane.showMessageDialog(null, "Đã xóa tài khoản thành công");
+                            accountDeleted = true;
+                            anyAccountDeleted = true;
+                        }
+                        break; 
+                    }
+                }
+
+                if (success == 1) {
+                    dtm.removeRow(selectedRows[i]);
+                }
+
+                if (accountDeleted) {
+                    dstk = busTK.getDsTK();
+                }
             }
         }
     }

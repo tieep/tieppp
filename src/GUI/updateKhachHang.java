@@ -145,7 +145,7 @@ public class updateKhachHang extends JFrame implements MouseListener {
                         }
                     }
                     if (success) {
-                        if (busKH.capnhatkh(khDTO)) {       //error
+                        if (busKH.capnhatkh(khDTO)) {       
                             khGUI.suaMotKhachHang(khDTO);
                             dispose();
                         }
