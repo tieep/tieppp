@@ -1261,23 +1261,14 @@ public class ThaotacInStore extends JPanel implements MouseListener {
                         break;
                     case "Lưu/Thoát":
                         Object[] options = {"Có", "Không"};
-                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa Nhân viên ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        int r2 = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn xóa?\nHành động này sẽ không thể hoàn tác", "Xóa size ", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                         if (r2 == JOptionPane.YES_OPTION) {
-                            ArrayList<String> listDelete = GUINV.lay_sd_chon();
-
-                            for (String i : listDelete) {
-                                BUSNV.xoaInSQL(i);
-                                BUSNV.xoaInBUS(i);
-                                System.err.println(i);
-                            }
-                            GUINV.reloadData(BUSNV.getds_nhanVien());
+                            GUINV.delRow();
                             JOptionPane.showMessageDialog(null, "Xóa thành công");
                         }
                         itemClicked.title.setText("Xóa");
                         itemClicked.icon = new JLabel(new ImageIcon("./src/images/remove_icon.png"));
                         break;
-                    default:
-                        throw new AssertionError("Trạng thái không hợp lệ: " + itemClicked.title.getText());
                 }
                 break;
             }

@@ -48,6 +48,7 @@ public class updateKhachHang extends JFrame implements MouseListener {
 
     public void init() {
         setLayout(new BorderLayout());
+        setUndecorated(true);
         setSize(380, 350);
         setPreferredSize(new Dimension(380, 350));
 

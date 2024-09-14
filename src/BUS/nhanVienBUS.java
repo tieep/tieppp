@@ -111,7 +111,7 @@ public class nhanVienBUS {
         } else if (checkSDT(nv.getSDT()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
-                    "Bắt đầu bằng số 0 và chỉ chứa 11 số",
+                    "Bắt đầu bằng số 0 và chỉ chứa 10 số",
                     "Thông báo",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
@@ -172,19 +172,19 @@ public class nhanVienBUS {
         return false;
     }
 
-    public void xoaInSQL(String id) {
+    public int xoaInSQL(String id) {
         nhanVienDAO dao = new nhanVienDAO();
-        dao.xoaNV(id);
+         return dao.xoaNV(id);
     }
 
-    public void xoaInBUS(String id) {
-        for (nhanVienDTO n : ds_nhanVien) {
-            if (n.getMANV().equals(id)) {
-                ds_nhanVien.remove(n);
-            }
-        }
-        
-    }
+//    public void xoaInBUS(String id) {
+//        for (nhanVienDTO n : ds_nhanVien) {
+//            if (n.getMANV().equals(id)) {
+//                ds_nhanVien.remove(n);
+//            }
+//        }
+//        
+//    }
     
     public ArrayList<nhanVienDTO> search(ArrayList<String> data_filter) {
         ArrayList<nhanVienDTO> re = new ArrayList<>();
