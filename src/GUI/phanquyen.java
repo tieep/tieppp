@@ -50,7 +50,7 @@ import javax.swing.table.TableModel;
  *
  * @author hp
  */
-public class phanquyen extends JPanel implements MouseListener {
+public class phanquyen extends JPanel{
 
     private int ccao, crong;
     private JTable table;
@@ -282,8 +282,7 @@ public class phanquyen extends JPanel implements MouseListener {
         for (int i = 0; i < JP_childNameQuyen.length; i++) {
             JPanel p = (JPanel) JP_childNameQuyen[i];
             quyenDTO duyet = new quyenDTO(p.getName());
-           System.out.println("Quyen dang duyet "+duyet.toString());
-           System.out.println("Quyen dang duyet co giong "+duyet.getMAQUYEN().equals(qDTO.getMAQUYEN()));
+           
            
             if (duyet.getMAQUYEN().equals(qDTO.getMAQUYEN())) {
                 
@@ -357,35 +356,4 @@ public void thaydoiJTable(){
     
 }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        JPanel btn = (JPanel) e.getSource();
-        btn.setBackground(Color.red);
-        btn.setOpaque(true);
-//        this.MAQUYEN= btn.getName();
-//        addDataInTable();
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

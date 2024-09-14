@@ -37,8 +37,6 @@ import DTO.chucnangDTO;
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 public class MenuChucNangStore extends JPanel implements MouseListener {
 
     private StoreScreen SS_main;
@@ -316,8 +314,13 @@ re.add(new chucnangDTO("NULLDX", "Đăng xuất"));
             changeColorJPanelChild(JP_selected, Cacthuoctinh_phuongthuc_chung.darkness_blue, Cacthuoctinh_phuongthuc_chung.sky_blue);
             JP_selected.addMouseListener(this);
         }
-
-        JPanel itemChucnang = (JPanel) e.getSource();
+        JPanel itemChucnang = null;
+        if(e == null){
+            Component[] list_chucnangGUI = this.getComponents();
+            itemChucnang = (JPanel) list_chucnangGUI[0];
+        }
+            
+        itemChucnang = (JPanel) e.getSource();
         changeColorJPanelChild(itemChucnang, Cacthuoctinh_phuongthuc_chung.sky_blue, Cacthuoctinh_phuongthuc_chung.darkness_blue);
         JP_selected = itemChucnang;
 

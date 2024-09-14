@@ -51,6 +51,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.text.DecimalFormat;
 
 public class CartGUI extends JPanel implements MouseListener {
 
@@ -183,11 +184,22 @@ searchKH.setForeground(Color.gray);
         wrapHeaderCart.add(checkBox1, BorderLayout.EAST);
 
     }
+    private String formatPrice(String price){// đổi từ giá 100000 -> 100,000 đ
+        if(!price.equals("")){
+            DecimalFormat FormatInt = new DecimalFormat("#,###");
+            return FormatInt.format(Integer.parseInt(price))+" đ";
+        }
+        return price;
+        
+    }
+    private String getPriceInFormatPrice(String formatprice){ // đổi từ 100.000 đ -> 100000(String)
+        return formatprice.replaceAll("[^0-9]", "");
+    }
 
     private void afterChecked() {
         double discount = kh.getDiem() * 1000;
-        double subTotal = Double.parseDouble(JL_value[0].getText());
-        double total = Double.parseDouble(JL_value[2].getText());
+        double subTotal = Double.parseDouble(getPriceInFormatPrice(JL_value[0].getText()));
+        double total = Double.parseDouble(getPriceInFormatPrice(JL_value[2].getText()));
         if (checkBox1.isSelected()) {
 
             if (discount > subTotal) {
@@ -235,12 +247,11 @@ searchKH.setForeground(Color.gray);
     }
 
     private JPanel product(int index, SanPhamDTO sp, String masizeluachon, int quantity) {
-        System.out.println("chayyyy");
         JPanel product = new JPanel(new BorderLayout(10, 0));
 
         JPanel wrapCenter = new JPanel(new GridLayout(3, 1, 0, 5));
 
-        JLabel price = new JLabel((int) sp.getPrice() + "", JLabel.CENTER);
+        JLabel price = new JLabel(formatPrice((int)sp.getPrice()+""), JLabel.CENTER);
         JLabel titleSize = new JLabel("Size", JLabel.CENTER);
 
         remove[index] = new JButton(new ImageIcon("./src/images/remove_icon.png"));
@@ -377,6 +388,7 @@ searchKH.setForeground(Color.gray);
     }
 
     public void sumTotal(double discount) {
+        
         String[] values = null;
         if (dsspAdd.isEmpty()) {
             values = new String[]{"", "", ""};
@@ -391,13 +403,11 @@ searchKH.setForeground(Color.gray);
             }
             values = new String[]{(int) sum + "", (int) discount + "", (int) (sum - discount) + ""};
         }
-
         for (int i = 0; i < values.length; i++) {
-            if (JL_value[i] == null) {
-                JL_value[i] = new JLabel(values[i]);
-            } else {
-                JL_value[i].setText(values[i]);
-            }
+            String newFormatPrice = formatPrice(values[i]);
+            if (JL_value[i] == null)
+                JL_value[i] = new JLabel();
+            JL_value[i].setText(newFormatPrice);
         }
     }
 
@@ -530,8 +540,8 @@ if (option == JOptionPane.YES_OPTION) {
                     String ngayHD = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                     String thoigian = new SimpleDateFormat("HH:mm:ss").format(new Date());
                     String maNV = StoreScreen.tkUSER.getMaNV();
-                    int giamgia = Integer.parseInt(JL_value[1].getText());
-                    int tongTien = Integer.parseInt(JL_value[2].getText());
+                    int giamgia = Integer.parseInt(getPriceInFormatPrice(JL_value[1].getText()));
+                    int tongTien = Integer.parseInt(getPriceInFormatPrice(JL_value[2].getText()));
 
                     Hoadon_DTO hd = new Hoadon_DTO(maHD, ngayHD, thoigian, kh.getMakh(), maNV, giamgia, tongTien);
                     hdBUS.addInSQL(hd);

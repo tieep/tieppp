@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -48,7 +49,7 @@ public final class TrangLichsuHD extends JPanel implements MouseListener{
     private Color backGroundColor;
     private Font f = new Font("Tahoma", Font.BOLD, 16);
     public  JPanel currentSelectedPanel = null;
-    private String[] columnNames = {"MAHD","Ngày" , "Thời gian", "MAKH", "MANV", "Giảm", "Thanh toán"};
+    private String[] columnNames = {"MAHD","Ngày" , "Thời gian", "MAKH", "MANV", "Giảm (đ)", "Thanh toán"};
     public TrangLichsuHD(int chieurong, int chieucao) throws SQLException {
         this.chieurong = chieurong;
         this.chieucao = chieucao;
@@ -112,8 +113,8 @@ public final class TrangLichsuHD extends JPanel implements MouseListener{
         JLabel lab2 = new JLabel(Integer.toString(hd.getMaKH()), JLabel.CENTER);
         JLabel lab3 = new JLabel((String) hd.getMaNV(), JLabel.CENTER);
         JLabel lab4 = new JLabel((String) hd.getMaHD(), JLabel.CENTER);
-        JLabel lab5 = new JLabel(Integer.toString(hd.getTongTien()), JLabel.CENTER);
-        JLabel lab6 = new JLabel(Integer.toString(hd.getGiamgia()), JLabel.CENTER);
+        JLabel lab5 = new JLabel(formatPrice(String.valueOf((int)hd.getTongTien())), JLabel.CENTER);
+        JLabel lab6 = new JLabel(formatPrice(String.valueOf((int)hd.getGiamgia())), JLabel.CENTER);
         JLabel lab7 = new JLabel((String) hd.getThoigian(), JLabel.CENTER);
         pa.add(lab4);
         pa.add(lab1);
@@ -256,7 +257,18 @@ public final class TrangLichsuHD extends JPanel implements MouseListener{
         revalidate();
         repaint();
     }
-
+    
+    private String formatPrice(String price){// đổi từ giá 100000 -> 100,000 đ
+        if(!price.equals("")){
+            DecimalFormat FormatInt = new DecimalFormat("#,###");
+            return FormatInt.format(Integer.parseInt(price));
+        }
+        return price;
+        
+    }
+    private String getPriceInFormatPrice(String formatprice){ // đổi từ 100.000 đ -> 100000(String)
+        return formatprice.replaceAll("[^0-9]", "");
+    }
     
 
     public void reloadSearch(ArrayList<Hoadon_DTO> listhd) throws SQLException {
@@ -302,7 +314,7 @@ public final class TrangLichsuHD extends JPanel implements MouseListener{
                 try {//{"MAHD","Ngày" , "Thời gian", "MAKH", "MANV", "Giảm", "Thanh toán"};
                     //String maHD, String ngayHD,String time, String maKH, String maNV,String giamgia, String tongtien
                     
-                    ChitietHD_GUI s = new ChitietHD_GUI((int)right.getPreferredSize().getWidth(), chieucao, LCont.get(0), LCont.get(1), LCont.get(2), LCont.get(3), LCont.get(4), LCont.get(5), LCont.get(6));
+                    ChitietHD_GUI s = new ChitietHD_GUI((int)right.getPreferredSize().getWidth(), chieucao, LCont.get(0), LCont.get(1), LCont.get(2), LCont.get(3), LCont.get(4), getPriceInFormatPrice(LCont.get(5)), getPriceInFormatPrice(LCont.get(6)));
                     right.removeAll();
                     right.add(s);
                     right.revalidate();

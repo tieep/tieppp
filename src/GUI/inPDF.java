@@ -42,6 +42,7 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.styledxmlparser.jsoup.nodes.Element;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.DecimalFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -211,13 +212,13 @@ public class inPDF {
             infor1.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor1);
             
-            Paragraph infor2 = new Paragraph((int)c.getGia()+"");
+            Paragraph infor2 = new Paragraph(formatPrice((int)c.getGia()+""));
                 infor2.setFontSize(4);
             infor2.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor2);
             
             
-              Paragraph infor3 = new Paragraph((int)c.getTt()+"");
+              Paragraph infor3 = new Paragraph(formatPrice((int)c.getTt()+""));
                 infor3.setFontSize(4);
             infor3.setTextAlignment(TextAlignment.CENTER); 
             chitietsanpham.addCell(infor3);
@@ -231,7 +232,7 @@ public class inPDF {
         labelTOTAL.setFont(font);
         labelTOTAL.setFontSize(6);
         labelTOTAL.setMarginTop(10f);
-        labelTOTAL.add((hdDTO.getTongTien()+hdDTO.getGiamgia())+"");
+        labelTOTAL.add(formatPrice(hdDTO.getTongTien()+hdDTO.getGiamgia()+"")+" đ");
         labelTOTAL.setMarginBottom(0);
         doc.add(labelTOTAL);
         
@@ -239,7 +240,7 @@ public class inPDF {
          labelGG.add(new Text("Tiền giảm giá ").setBold());
          labelGG.setFont(font);
         labelGG.setFontSize(6);
-        labelGG.add((hdDTO.getGiamgia())+"");
+        labelGG.add(formatPrice(hdDTO.getGiamgia()+"")+" đ");
          labelGG.setMarginBottom(0);
         doc.add(labelGG);
         
@@ -248,7 +249,7 @@ public class inPDF {
                 labelTTSP.add(new Text("Thành tiền ").setBold());
         labelTTSP.setFontSize(6);
         labelTTSP.setFont(font);
-        labelTTSP.add((hdDTO.getTongTien())+"");
+        labelTTSP.add(formatPrice(hdDTO.getTongTien()+"")+" đ");
          labelTTSP.setMarginBottom(0);
         doc.add(labelTTSP);
         
@@ -269,6 +270,14 @@ labelThanks.setFontSize(8);
     }
     public static void main(String[] args) throws FileNotFoundException, SQLException, IOException {
         inPDF in= new inPDF("HD4");
+        
+    }
+     private String formatPrice(String price){// đổi từ giá 100000 -> 100,000 đ
+        if(!price.equals("")){
+            DecimalFormat FormatInt = new DecimalFormat("#,###");
+            return FormatInt.format(Integer.parseInt(price));
+        }
+        return price;
         
     }
 }

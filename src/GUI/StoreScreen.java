@@ -42,7 +42,7 @@ public class StoreScreen extends JFrame {
     }
 
     public StoreScreen() {
-        tkUSER = new TaiKhoanDTO("NV012", "hoa", "1234", "2016-09-03", "QQLHT", 1);
+        tkUSER = new TaiKhoanDTO("AD1", "AD1", "SangHard!", "2023-02-13", "QQLHT", 1);
         quyenBUS qBUS = new quyenBUS();
         quyenUser = qBUS.searchquyenDTO(tkUSER.getMaQuyen());
         chieurong = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
