@@ -88,7 +88,7 @@ public class nhanVienDAO {
 //            e.printStackTrace();
 //        }
 //    }
-    public void xoaNV(String id) {
+    public int xoaNV(String id) {
         try {
             c.connect();
 
@@ -98,14 +98,17 @@ public class nhanVienDAO {
             if (rs.next() && rs.getInt(1) > 0) {
                 String updateSql = "UPDATE NHANVIEN SET TRANGTHAI = 0 WHERE MANV = '" + id + "'";
                 c.executeUpdate(updateSql);
+                return 0; 
             } else {
                 String delSql = "DELETE FROM NHANVIEN WHERE MANV = '" + id + "'";
                 c.executeUpdate(delSql);
+                return 1; 
             }
-
-            c.disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1; 
+        } finally {
+            c.disconnect();
         }
     }
 

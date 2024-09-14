@@ -80,7 +80,7 @@ public class khachHangBUS {
         } else if (kiemtra_Sdt(kh.getSoDienThoai()) == false) {
             Object[] options = {"Đồng ý"};
             JOptionPane.showOptionDialog(null,
-                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa 11 số ",
+                    "Số điện thoại bắt đầu bằng số 0 và chỉ chứa 10 số ",
                     "Thông báo",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,

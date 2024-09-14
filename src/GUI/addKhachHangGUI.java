@@ -61,7 +61,9 @@ public class addKhachHangGUI extends JFrame implements MouseListener {
 
         public addKhachHang(int w, int h) {
             tfTen = new JTextField();
+            tfTen.setFont(font_text);
             tfSdt = new JTextField();
+            tfSdt.setFont(font_text);
             init(w, h);
         }
 
